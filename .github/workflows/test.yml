@@ -28,4 +28,7 @@ jobs:
       run: GOEXPERIMENT=rangefunc go test -race -covermode=atomic -coverprofile=coverage.out
       
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4.0.1
+      env:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        slug: hsldymq/goiter
