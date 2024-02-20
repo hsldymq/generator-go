@@ -33,5 +33,5 @@ jobs:
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4.0.1
       env:
-        token: ${{ secrets.CODECOV_TOKEN }}
+        token: ${{ secrets.codecov.CODECOV_TOKEN }}
         slug: hsldymq/goiter
