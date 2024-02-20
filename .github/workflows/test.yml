@@ -26,6 +26,9 @@ jobs:
 
     - name: Test
       run: GOEXPERIMENT=rangefunc go test -race -covermode=atomic -coverprofile=coverage.out
+
+    - name: check
+      run: echo ${{ secrets.CODECOV_TOKEN }} 
       
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4.0.1
