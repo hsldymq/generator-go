@@ -2,7 +2,7 @@ package goiter
 
 import (
 	"fmt"
-	"reflect"
+	"maps"
 	"testing"
 )
 
@@ -17,7 +17,7 @@ func TestMapIter(t *testing.T) {
 		actual[k] = v
 	}
 
-	if !reflect.DeepEqual(expect, actual) {
+	if !maps.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
 }

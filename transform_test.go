@@ -2,7 +2,7 @@ package goiter
 
 import (
 	"fmt"
-	"reflect"
+	"slices"
 	"testing"
 )
 
@@ -13,7 +13,7 @@ func TestPickK(t *testing.T) {
 	}
 
 	expect := []int{0, 1, 2}
-	if !reflect.DeepEqual(expect, actual) {
+	if !slices.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
 }
@@ -25,7 +25,7 @@ func TestPickV(t *testing.T) {
 	}
 
 	expect := []int{7, 8, 9}
-	if !reflect.DeepEqual(expect, actual) {
+	if !slices.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
 }
@@ -40,7 +40,7 @@ func TestTransform11(t *testing.T) {
 	}
 
 	expect := []string{"1", "2", "3"}
-	if !reflect.DeepEqual(expect, actual) {
+	if !slices.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
 }
@@ -57,11 +57,11 @@ func TestTransform12(t *testing.T) {
 	}
 
 	expectK := []int{10, 11, 12}
-	if !reflect.DeepEqual(expectK, actualK) {
+	if !slices.Equal(expectK, actualK) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectK, actualK))
 	}
 	expectV := []string{"0", "1", "2"}
-	if !reflect.DeepEqual(expectV, actualV) {
+	if !slices.Equal(expectV, actualV) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectV, actualV))
 	}
 }
@@ -76,7 +76,7 @@ func TestTransform21(t *testing.T) {
 	}
 
 	expect := []string{"0_1", "1_2", "2_3"}
-	if !reflect.DeepEqual(expect, actual) {
+	if !slices.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
 }
@@ -93,11 +93,11 @@ func TestTransform22(t *testing.T) {
 	}
 
 	expectK := []string{"10", "11", "12"}
-	if !reflect.DeepEqual(expectK, actualK) {
+	if !slices.Equal(expectK, actualK) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectK, actualK))
 	}
 	expectV := []string{"101", "102", "103"}
-	if !reflect.DeepEqual(expectV, actualV) {
+	if !slices.Equal(expectV, actualV) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectV, actualV))
 	}
 }
