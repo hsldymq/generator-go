@@ -51,16 +51,16 @@ func TestTransform12(t *testing.T) {
 	}
 	actualK := make([]int, 0, 3)
 	actualV := make([]string, 0, 3)
-	for k, v := range Transform12(SliceIterElem([]int{1, 2, 3}), transformFunc) {
+	for k, v := range Transform12(SliceIterIdx([]int{1, 2, 3}), transformFunc) {
 		actualK = append(actualK, k)
 		actualV = append(actualV, v)
 	}
 
-	expectK := []int{11, 12, 13}
+	expectK := []int{10, 11, 12}
 	if !reflect.DeepEqual(expectK, actualK) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectK, actualK))
 	}
-	expectV := []string{"1", "2", "3"}
+	expectV := []string{"0", "1", "2"}
 	if !reflect.DeepEqual(expectV, actualV) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectV, actualV))
 	}
