@@ -6,7 +6,7 @@ import (
 	"iter"
 )
 
-func SliceIter[T any](s []T, backward ...bool) iter.Seq2[int, T] {
+func Slice[T any](s []T, backward ...bool) iter.Seq2[int, T] {
 	return func(yield func(int, T) bool) {
 		if len(backward) == 0 || !backward[0] {
 			for idx, elem := range s {
@@ -24,10 +24,10 @@ func SliceIter[T any](s []T, backward ...bool) iter.Seq2[int, T] {
 	}
 }
 
-func SliceIterElem[T any](s []T, backward ...bool) iter.Seq[T] {
-	return PickV[int, T](SliceIter(s, backward...))
+func SliceElem[T any](s []T, backward ...bool) iter.Seq[T] {
+	return PickV[int, T](Slice(s, backward...))
 }
 
-func SliceIterIdx[T any](s []T, backward ...bool) iter.Seq[int] {
-	return PickK[int, T](SliceIter(s, backward...))
+func SliceIdx[T any](s []T, backward ...bool) iter.Seq[int] {
+	return PickK[int, T](Slice(s, backward...))
 }

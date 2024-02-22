@@ -10,7 +10,7 @@ import (
 
 func TestPickK(t *testing.T) {
 	actual := make([]int, 0, 3)
-	for idx := range PickK(SliceIter([]int{7, 8, 9})) {
+	for idx := range PickK(Slice([]int{7, 8, 9})) {
 		actual = append(actual, idx)
 	}
 
@@ -22,7 +22,7 @@ func TestPickK(t *testing.T) {
 
 func TestPickV(t *testing.T) {
 	actual := make([]int, 0, 3)
-	for v := range PickV(SliceIter([]int{7, 8, 9})) {
+	for v := range PickV(Slice([]int{7, 8, 9})) {
 		actual = append(actual, v)
 	}
 
@@ -32,12 +32,12 @@ func TestPickV(t *testing.T) {
 	}
 }
 
-func TestTransform11(t *testing.T) {
+func TestT11(t *testing.T) {
 	transformFunc := func(v int) string {
 		return fmt.Sprintf("%d", v)
 	}
 	actual := make([]string, 0, 3)
-	for v := range T11(SliceIterElem([]int{1, 2, 3}), transformFunc) {
+	for v := range T11(SliceElem([]int{1, 2, 3}), transformFunc) {
 		actual = append(actual, v)
 	}
 
@@ -47,13 +47,13 @@ func TestTransform11(t *testing.T) {
 	}
 }
 
-func TestTransform12(t *testing.T) {
+func TestT12(t *testing.T) {
 	transformFunc := func(v int) (int, string) {
 		return v + 10, fmt.Sprintf("%d", v)
 	}
 	actualK := make([]int, 0, 3)
 	actualV := make([]string, 0, 3)
-	for k, v := range T12(SliceIterIdx([]int{1, 2, 3}), transformFunc) {
+	for k, v := range T12(SliceIdx([]int{1, 2, 3}), transformFunc) {
 		actualK = append(actualK, k)
 		actualV = append(actualV, v)
 	}
@@ -68,12 +68,12 @@ func TestTransform12(t *testing.T) {
 	}
 }
 
-func TestTransform21(t *testing.T) {
+func TestT21(t *testing.T) {
 	transformFunc := func(k int, v int) string {
 		return fmt.Sprintf("%d_%d", k, v)
 	}
 	actual := make([]string, 0, 3)
-	for v := range T21(SliceIter([]int{1, 2, 3}), transformFunc) {
+	for v := range T21(Slice([]int{1, 2, 3}), transformFunc) {
 		actual = append(actual, v)
 	}
 
@@ -83,13 +83,13 @@ func TestTransform21(t *testing.T) {
 	}
 }
 
-func TestTransform22(t *testing.T) {
+func TestT22(t *testing.T) {
 	transformFunc := func(k int, v int) (string, string) {
 		return fmt.Sprintf("%d", k+10), fmt.Sprintf("%d", v+100)
 	}
 	actualK := make([]string, 0, 3)
 	actualV := make([]string, 0, 3)
-	for k, v := range T22(SliceIter([]int{1, 2, 3}), transformFunc) {
+	for k, v := range T22(Slice([]int{1, 2, 3}), transformFunc) {
 		actualK = append(actualK, k)
 		actualV = append(actualV, v)
 	}

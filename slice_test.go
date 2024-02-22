@@ -10,7 +10,7 @@ import (
 
 func TestSliceIter(t *testing.T) {
 	actual := make([]int, 0, 3)
-	for v := range SliceIterIdx([]int{7, 8, 9}) {
+	for v := range SliceIdx([]int{7, 8, 9}) {
 		actual = append(actual, v)
 	}
 	expect := []int{0, 1, 2}
@@ -19,7 +19,7 @@ func TestSliceIter(t *testing.T) {
 	}
 
 	actual2 := make([]int, 0, 3)
-	for idx := range SliceIterElem([]int{7, 8, 9}, true) {
+	for idx := range SliceElem([]int{7, 8, 9}, true) {
 		actual2 = append(actual2, idx)
 	}
 	expect2 := []int{9, 8, 7}
