@@ -37,7 +37,7 @@ func TestTransform11(t *testing.T) {
 		return fmt.Sprintf("%d", v)
 	}
 	actual := make([]string, 0, 3)
-	for v := range Transform11(SliceIterElem([]int{1, 2, 3}), transformFunc) {
+	for v := range T11(SliceIterElem([]int{1, 2, 3}), transformFunc) {
 		actual = append(actual, v)
 	}
 
@@ -53,7 +53,7 @@ func TestTransform12(t *testing.T) {
 	}
 	actualK := make([]int, 0, 3)
 	actualV := make([]string, 0, 3)
-	for k, v := range Transform12(SliceIterIdx([]int{1, 2, 3}), transformFunc) {
+	for k, v := range T12(SliceIterIdx([]int{1, 2, 3}), transformFunc) {
 		actualK = append(actualK, k)
 		actualV = append(actualV, v)
 	}
@@ -73,7 +73,7 @@ func TestTransform21(t *testing.T) {
 		return fmt.Sprintf("%d_%d", k, v)
 	}
 	actual := make([]string, 0, 3)
-	for v := range Transform21(SliceIter([]int{1, 2, 3}), transformFunc) {
+	for v := range T21(SliceIter([]int{1, 2, 3}), transformFunc) {
 		actual = append(actual, v)
 	}
 
@@ -89,7 +89,7 @@ func TestTransform22(t *testing.T) {
 	}
 	actualK := make([]string, 0, 3)
 	actualV := make([]string, 0, 3)
-	for k, v := range Transform22(SliceIter([]int{1, 2, 3}), transformFunc) {
+	for k, v := range T22(SliceIter([]int{1, 2, 3}), transformFunc) {
 		actualK = append(actualK, k)
 		actualV = append(actualV, v)
 	}

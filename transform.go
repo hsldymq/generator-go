@@ -5,18 +5,18 @@ package goiter
 import "iter"
 
 func PickK[K, V any](seq iter.Seq2[K, V]) iter.Seq[K] {
-	return Transform21(seq, func(k K, _ V) K {
+	return T21(seq, func(k K, _ V) K {
 		return k
 	})
 }
 
 func PickV[K, V any](seq iter.Seq2[K, V]) iter.Seq[V] {
-	return Transform21(seq, func(_ K, v V) V {
+	return T21(seq, func(_ K, v V) V {
 		return v
 	})
 }
 
-func Transform11[In, Out any](
+func T11[In, Out any](
 	seq iter.Seq[In],
 	transformFunc func(In) Out,
 ) iter.Seq[Out] {
@@ -35,7 +35,7 @@ func Transform11[In, Out any](
 	}
 }
 
-func Transform12[In, OutK, OutV any](
+func T12[In, OutK, OutV any](
 	seq iter.Seq[In],
 	transformFunc func(In) (OutK, OutV),
 ) iter.Seq2[OutK, OutV] {
@@ -54,7 +54,7 @@ func Transform12[In, OutK, OutV any](
 	}
 }
 
-func Transform21[InK, InV, Out any](
+func T21[InK, InV, Out any](
 	seq iter.Seq2[InK, InV],
 	transformFunc func(InK, InV) Out,
 ) iter.Seq[Out] {
@@ -73,7 +73,7 @@ func Transform21[InK, InV, Out any](
 	}
 }
 
-func Transform22[InK, InV, OutK, OutV any](
+func T22[InK, InV, OutK, OutV any](
 	seq iter.Seq2[InK, InV],
 	transformFunc func(InK, InV) (OutK, OutV),
 ) iter.Seq2[OutK, OutV] {
