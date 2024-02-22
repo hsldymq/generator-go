@@ -37,7 +37,7 @@ func TestT11(t *testing.T) {
 		return fmt.Sprintf("%d", v)
 	}
 	actual := make([]string, 0, 3)
-	for v := range T11(SliceElem([]int{1, 2, 3}), transformFunc) {
+	for v := range T1(SliceElem([]int{1, 2, 3}), transformFunc) {
 		actual = append(actual, v)
 	}
 
@@ -89,7 +89,7 @@ func TestT22(t *testing.T) {
 	}
 	actualK := make([]string, 0, 3)
 	actualV := make([]string, 0, 3)
-	for k, v := range T22(Slice([]int{1, 2, 3}), transformFunc) {
+	for k, v := range T2(Slice([]int{1, 2, 3}), transformFunc) {
 		actualK = append(actualK, k)
 		actualV = append(actualV, v)
 	}
