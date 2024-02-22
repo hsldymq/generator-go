@@ -8,14 +8,14 @@ import (
 	"testing"
 )
 
-func TestMapIter(t *testing.T) {
+func TestMap(t *testing.T) {
 	expect := map[string]int{
 		"foo": 1,
 		"bar": 2,
 	}
 
 	actual := map[string]int{}
-	for k, v := range MapIter(expect) {
+	for k, v := range Map(expect) {
 		actual[k] = v
 	}
 
