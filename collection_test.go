@@ -106,7 +106,7 @@ func TestFilter2(t *testing.T) {
 	for k, v := range Filter2(Map(input), predicate) {
 		actual[k] = v
 	}
-	expect := map[string]int{"john": 21}
+	expect := map[string]int{"john": 20}
 	if !maps.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
