@@ -59,3 +59,22 @@ func Channel[T any](c <-chan T) iter.Seq[T] {
 		}
 	}
 }
+
+func Filter[T any](seq iter.Seq[T], predicate func(T) bool) iter.Seq[T] {
+	return func(yield func(T) bool) {
+		next, stop := iter.Pull(seq)
+		defer stop()
+		for {
+			v, ok := next()
+			if !ok {
+				return
+			}
+			if !predicate(v) {
+				continue
+			}
+			if !yield(v) {
+				return
+			}
+		}
+	}
+}

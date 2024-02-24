@@ -82,3 +82,17 @@ func TestChannel(t *testing.T) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
 }
+
+func TestFilter(t *testing.T) {
+	predicate := func(v int) bool {
+		return v%2 == 0
+	}
+	actual := make([]int, 0, 3)
+	for v := range Filter(Range(0, 10), predicate) {
+		actual = append(actual, v)
+	}
+	expect := []int{0, 2, 4, 6, 8}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+}
