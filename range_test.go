@@ -112,7 +112,7 @@ func TestRangeStep(t *testing.T) {
 		t.Fatalf("test RangeStep failed, expect %d, got %v", expectInt8, actualInt8)
 	}
 
-	// overflowing test 2: incremental iteration, stepSize causes addition overflow
+	// overflowing test 2: produces increasing sequence
 	actualInt8 = make([]int8, 0)
 	for each := range RangeStep(int8(120), int8(127), 10) {
 		actualInt8 = append(actualInt8, each)
@@ -122,7 +122,7 @@ func TestRangeStep(t *testing.T) {
 		t.Fatalf("test RangeStep failed, expect %d, got %v", expectInt8, actualInt8)
 	}
 
-	// overflowing test 3: decremental iteration, stepSize causes subtraction overflow
+	// overflowing test 3: produces decreasing sequence
 	actualInt8 = make([]int8, 0)
 	for each := range RangeStep(int8(-120), int8(-128), 10) {
 		actualInt8 = append(actualInt8, each)
