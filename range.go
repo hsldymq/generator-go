@@ -53,17 +53,17 @@ func RangeStep[T tInt, S tInt](start, stop T, stepSize S) iter.Seq[T] {
 	}
 }
 
-func willOverflow[T tInt](v T, step uint64, add bool) bool {
+func willOverflow[T tInt](v T, step uint64, inc bool) bool {
 	tMax := int64(intMax(v))
 	tMin := int64(intMin(v))
 
 	if tMax != math.MaxInt64 && step >= uint64(tMax-tMin+1) {
 		return true
 	}
-	if add && v+T(step) < v {
+	if inc && v+T(step) < v {
 		return true
 	}
-	if !add && v-T(step) > v {
+	if !inc && v-T(step) > v {
 		return true
 	}
 
