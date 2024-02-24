@@ -4,6 +4,7 @@ package goiter
 
 import (
 	"fmt"
+	"maps"
 	"slices"
 	"testing"
 )
@@ -30,6 +31,19 @@ func TestPickV(t *testing.T) {
 	if !slices.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
+}
+
+func TestSwapKV(t *testing.T) {
+	input := map[string]int{"1": 1, "2": 2}
+	actual := make(map[int]string)
+	for k, v := range SwapKV(Map(input)) {
+		actual[k] = v
+	}
+	expect := map[int]string{1: "1", 2: "2"}
+	if !maps.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
 }
 
 func TestT11(t *testing.T) {

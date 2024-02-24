@@ -16,6 +16,12 @@ func PickV[K, V any](seq iter.Seq2[K, V]) iter.Seq[V] {
 	})
 }
 
+func SwapKV[K, V any](seq iter.Seq2[K, V]) iter.Seq2[V, K] {
+	return T2(seq, func(k K, v V) (V, K) {
+		return v, k
+	})
+}
+
 func T1[In, Out any](
 	seq iter.Seq[In],
 	transformer func(In) Out,
