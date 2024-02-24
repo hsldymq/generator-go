@@ -96,3 +96,18 @@ func TestFilter(t *testing.T) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
 }
+
+func TestFilter2(t *testing.T) {
+	predicate := func(name string, age int) bool {
+		return name == "john"
+	}
+	input := map[string]int{"john": 20, "jane": 18}
+	actual := map[string]int{}
+	for k, v := range Filter2(Map(input), predicate) {
+		actual[k] = v
+	}
+	expect := map[string]int{"john": 21}
+	if !maps.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+}

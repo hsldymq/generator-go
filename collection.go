@@ -78,3 +78,22 @@ func Filter[T any](seq iter.Seq[T], predicate func(T) bool) iter.Seq[T] {
 		}
 	}
 }
+
+func Filter2[K any, V any](seq iter.Seq2[K, V], predicate func(K, V) bool) iter.Seq2[K, V] {
+	return func(yield func(K, V) bool) {
+		next, stop := iter.Pull2(seq)
+		defer stop()
+		for {
+			k, v, ok := next()
+			if !ok {
+				return
+			}
+			if !predicate(k, v) {
+				continue
+			}
+			if !yield(k, v) {
+				return
+			}
+		}
+	}
+}
