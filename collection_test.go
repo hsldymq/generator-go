@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func TestSliceIter(t *testing.T) {
+func TestSlice(t *testing.T) {
 	actual := make([]int, 0, 3)
 	for v := range SliceIdx([]int{7, 8, 9}) {
 		actual = append(actual, v)
@@ -41,6 +41,23 @@ func TestMap(t *testing.T) {
 	}
 
 	if !maps.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+}
+
+func TestChannel(t *testing.T) {
+	ch := make(chan int, 3)
+	ch <- 1
+	ch <- 2
+	ch <- 3
+	close(ch)
+
+	actual := make([]int, 0, 3)
+	for v := range Channel(ch) {
+		actual = append(actual, v)
+	}
+	expect := []int{1, 2, 3}
+	if !slices.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
 }
