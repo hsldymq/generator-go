@@ -4,6 +4,7 @@ package goiter
 
 import (
 	"fmt"
+	"maps"
 	"slices"
 	"testing"
 )
@@ -41,10 +42,7 @@ func TestSlice(t *testing.T) {
 }
 
 func TestMap(t *testing.T) {
-	input := map[string]int{
-		"foo": 1,
-		"bar": 2,
-	}
+	input := map[string]int{"foo": 1, "bar": 2}
 	actual := make([]int, 0, 2)
 	for v := range MapVal(input) {
 		actual = append(actual, v)
@@ -53,6 +51,15 @@ func TestMap(t *testing.T) {
 	expect := []int{1, 2}
 	if !slices.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
+	actual2 := make(map[string]bool)
+	for k := range MapKey(input) {
+		actual2[k] = true
+	}
+	expect2 := map[string]bool{"foo": true, "bar": true}
+	if !maps.Equal(expect2, actual2) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect2, actual2))
 	}
 }
 
