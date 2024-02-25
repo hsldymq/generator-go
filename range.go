@@ -15,7 +15,7 @@ func Range[T tInt](start, stop T) iter.Seq[T] {
 // It is similar to Python's range function, but with some differences:
 //  1. stepSize does not accept negative numbers. Whether iterating forward or backward, stepSize must be positive.
 //     so you don't need to consider adjusting the sign of step according to the direction of iteration, It is the absolute value of the step parameter of Python range function.
-//  2. Providing a value less than 0 for stepSize will not return an error, but will not yield any values.
+//  2. Providing a value less than or equal to 0 for stepSize will not return an error, it simply not yield any values.
 func RangeStep[T tInt, S tInt](start, stop T, stepSize S) iter.Seq[T] {
 	if stepSize <= 0 {
 		// 0 will lead to infinite loops
