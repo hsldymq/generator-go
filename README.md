@@ -9,7 +9,7 @@ goiter provides some iterator generation functions for some common scenarios und
 
 # Examples
 ### Example 1: Traversal of an encapsulated collection
-Suppose you want to provide traversal capability for a slice in a structure to the outside, but do not want to expose the slice, you can use the goiter.Slice or goiter.SliceElem function.
+Suppose you want to provide traversal capability for a slice in a structure to the outside, but do not want to expose the slice, you can use the `goiter.Slice` or `goiter.SliceElem` function.
 ```go
 //go:build goexperiment.rangefunc
 
@@ -44,7 +44,7 @@ func Handle(school *School) {
 ```
 
 ### Example 2: Range function
-goiter.Range and goiter.RangeStep provide similar functionality to the Python range function
+`goiter.Range` and `goiter.RangeStep` provide similar functionality to the Python range function
 
 ```go
 //go:build goexperiment.rangefunc
