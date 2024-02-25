@@ -133,27 +133,27 @@ func Handle(school *School) {
 
 ### collection
 
-* goiter.Slice
-* goiter.SliceElem
-* goiter.SliceIdx
-* goiter.Map
-* goiter.MapVal
-* goiter.MapKey
-* goiter.Channel
-* goiter.Concat
-* goiter.Concat2
-* goiter.Filter
-* goiter.Filter2
+* `goiter.Slice`
+* `goiter.SliceElem`
+* `goiter.SliceIdx`
+* `goiter.Map`
+* `goiter.MapVal`
+* `goiter.MapKey`
+* `goiter.Channel`
+* `goiter.Concat`
+* `goiter.Concat2`
+* `goiter.Filter`
+* `goiter.Filter2`
 
 ### range
-* goiter.Range
-* goiter.RangeStep
+* `goiter.Range`
+* `goiter.RangeStep`
 
 ### transformation
-* goiter.PickK
-* goiter.PickV
-* goiter.SwapKV
-* goiter.T1
-* goiter.T2
-* goiter.T12
-* goiter.T21
+* `goiter.PickK`
+* `goiter.PickV`
+* `goiter.SwapKV`
+* `goiter.T1`
+* `goiter.T2`
+* `goiter.T12`
+* `goiter.T21`
