@@ -6,6 +6,7 @@ Rangefunc is a feature introduced in golang 1.22, which is equivalent to the Gen
 
 goiter provides some iterator generation functions for some common scenarios under this feature.
 
+To use this package, you shoud enable rangefunc experiment feature.
 
 # Examples
 ### Example 1: Traversal of an encapsulated collection
