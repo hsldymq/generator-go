@@ -83,6 +83,33 @@ func TestChannel(t *testing.T) {
 	}
 }
 
+func TestConcat(t *testing.T) {
+	c1 := []int{1, 2, 3}
+	c2 := []int{4, 5, 6}
+	actual := make([]int, 0, 6)
+	for v := range Concat(SliceElem(c1), SliceElem(c2)) {
+		actual = append(actual, v)
+	}
+	expect := []int{1, 2, 3, 4, 5, 6}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+}
+
+func TestConcat2(t *testing.T) {
+	m1 := map[string]int{"k1": 1, "k2": 2}
+	m2 := map[string]int{"k3": 3, "k4": 4}
+
+	actual := make(map[string]int)
+	for k, v := range Concat2(Map(m1), Map(m2)) {
+		actual[k] = v
+	}
+	expect := map[string]int{"k1": 1, "k2": 2, "k3": 3, "k4": 4}
+	if !maps.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+}
+
 func TestFilter(t *testing.T) {
 	predicate := func(v int) bool {
 		return v%2 == 0

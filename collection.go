@@ -67,6 +67,48 @@ func Channel[T any](c <-chan T) iter.Seq[T] {
 	}
 }
 
+// Concat returns an iterator that allows you to traverse multiple iterators in sequence.
+func Concat[T any](seqs ...iter.Seq[T]) iter.Seq[T] {
+	return func(yield func(T) bool) {
+		for _, seq := range seqs {
+			func() {
+				next, stop := iter.Pull(seq)
+				defer stop()
+				for {
+					v, ok := next()
+					if !ok {
+						return
+					}
+					if !yield(v) {
+						return
+					}
+				}
+			}()
+		}
+	}
+}
+
+// Concat2 returns an iterator that allows you to traverse multiple iterators in sequence.
+func Concat2[K any, V any](seqs ...iter.Seq2[K, V]) iter.Seq2[K, V] {
+	return func(yield func(K, V) bool) {
+		for _, seq := range seqs {
+			func() {
+				next, stop := iter.Pull2(seq)
+				defer stop()
+				for {
+					k, v, ok := next()
+					if !ok {
+						return
+					}
+					if !yield(k, v) {
+						return
+					}
+				}
+			}()
+		}
+	}
+}
+
 // Filter returns an iterator that only yields the values of the input iterator that satisfy a predicate.
 func Filter[T any](seq iter.Seq[T], predicate func(T) bool) iter.Seq[T] {
 	return func(yield func(T) bool) {
