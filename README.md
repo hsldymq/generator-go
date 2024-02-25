@@ -140,6 +140,8 @@ func Handle(school *School) {
 * goiter.MapVal
 * goiter.MapKey
 * goiter.Channel
+* goiter.Concat
+* goiter.Concat2
 * goiter.Filter
 * goiter.Filter2
 
