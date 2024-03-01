@@ -5,9 +5,15 @@ package goiter
 import (
 	"iter"
 	"math"
+	"time"
 )
 
-func Range[T tInt](start, stop T) iter.Seq[T] {
+type TInt interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64 |
+		~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64
+}
+
+func Range[T TInt](start, stop T) iter.Seq[T] {
 	return RangeStep(start, stop, 1)
 }
 
@@ -16,7 +22,7 @@ func Range[T tInt](start, stop T) iter.Seq[T] {
 //  1. stepSize does not accept negative numbers. Whether iterating forward or backward, stepSize must be positive.
 //     so you don't need to consider adjusting the sign of step according to the direction of iteration, It is the absolute value of the step parameter of Python range function.
 //  2. Providing a value less than or equal to 0 for stepSize will not return an error, it simply not yield any values.
-func RangeStep[T tInt, S tInt](start, stop T, stepSize S) iter.Seq[T] {
+func RangeStep[T TInt, S TInt](start, stop T, stepSize S) iter.Seq[T] {
 	if stepSize <= 0 {
 		// 0 will lead to infinite loops
 		return func(yield func(T) bool) {}
@@ -58,7 +64,37 @@ func RangeStep[T tInt, S tInt](start, stop T, stepSize S) iter.Seq[T] {
 	}
 }
 
-func willOverflow[T tInt](v T, step uint64, inc bool) bool {
+// RangeTime is similar to RangeStep, but it is specifically used for iterating over time, and it can iterate time forward or backward.
+// The interval parameter is its step size, which can be any positive duration.
+// Unlike the half-open interval represented by the start and end parameters of RangeStep, the from and to parameters of RangeTime represent a closed interval.
+func RangeTime(from time.Time, to time.Time, interval time.Duration) iter.Seq[time.Time] {
+	if interval <= 0 {
+		return func(yield func(time.Time) bool) {}
+	}
+
+	return func(yield func(time.Time) bool) {
+		if from.Before(to) || from.Equal(to) {
+			t := from
+			for t.Before(to) || t.Equal(to) {
+				if !yield(t) {
+					return
+				}
+				t = t.Add(interval)
+			}
+		} else {
+			t := from
+			for t.After(to) || t.Equal(to) {
+				if !yield(t) {
+					return
+				}
+				t = t.Add(-interval)
+			}
+		}
+	}
+
+}
+
+func willOverflow[T TInt](v T, step uint64, inc bool) bool {
 	tMax := int64(intMax(v))
 	tMin := int64(intMin(v))
 
@@ -75,12 +111,7 @@ func willOverflow[T tInt](v T, step uint64, inc bool) bool {
 	return false
 }
 
-type tInt interface {
-	~int | ~int8 | ~int16 | ~int32 | ~int64 |
-		~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64
-}
-
-func intMin[T tInt](v T) T {
+func intMin[T TInt](v T) T {
 	ones := ^T(0)
 	if ones < 0 {
 		return ^(ones ^ (1 << (countBits(ones) - 1)))
@@ -88,7 +119,7 @@ func intMin[T tInt](v T) T {
 	return 0
 }
 
-func intMax[T tInt](v T) T {
+func intMax[T TInt](v T) T {
 	ones := ^T(0)
 	if ones < 0 {
 		return ones ^ (1 << (countBits(ones) - 1))
@@ -96,7 +127,7 @@ func intMax[T tInt](v T) T {
 	return ones
 }
 
-func countBits[T tInt](v T) int {
+func countBits[T TInt](v T) int {
 	v = 1
 	for _, bits := range [4]int{8, 16, 32} {
 		if v<<bits == 0 {
