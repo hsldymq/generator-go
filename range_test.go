@@ -29,6 +29,20 @@ func TestRangeStep(t *testing.T) {
 		t.Fatalf("test RangeStep failed, expect %d, got %v", expect, actual)
 	}
 
+	actual = make([]int, 0)
+	i := 0
+	for each := range RangeStep(0, 8, 2) {
+		actual = append(actual, each)
+		i++
+		if i >= 3 {
+			break
+		}
+	}
+	expect = []int{0, 2, 4}
+	if !slices.Equal(expect, actual) {
+		t.Fatalf("test RangeStep failed, expect %d, got %v", expect, actual)
+	}
+
 	actualUint8 := make([]uint8, 0)
 	for each := range RangeStep(uint8(100), uint8(251), 50) {
 		actualUint8 = append(actualUint8, each)
