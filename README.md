@@ -153,6 +153,7 @@ func Handle(school *School) {
 ### range
 * `goiter.Range`
 * `goiter.RangeStep`
+* `goiter.RangeTime`
 
 ### transformation
 * `goiter.PickK`
