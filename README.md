@@ -8,6 +8,10 @@ goiter provides some iterator generation functions for some common scenarios und
 
 To use this package, you shoud enable rangefunc experiment feature.
 
+# Requirements
+* golang version >= 1.22.0
+* enable rangefunc feature
+
 # Examples
 ### Example 1: Traversal of an encapsulated collection
 Suppose you want to provide traversal capability for a slice in a struct to outside, but do not want to expose the slice, you can use the `goiter.Slice` or `goiter.SliceElem` function.
