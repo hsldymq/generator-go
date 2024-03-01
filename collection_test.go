@@ -20,8 +20,8 @@ func TestSlice(t *testing.T) {
 	}
 
 	actual2 := make([]int, 0, 3)
-	for idx := range SliceElem([]int{7, 8, 9}, true) {
-		actual2 = append(actual2, idx)
+	for v := range SliceElem([]int{7, 8, 9}, true) {
+		actual2 = append(actual2, v)
 	}
 	expect2 := []int{9, 8, 7}
 	if !slices.Equal(expect2, actual2) {
@@ -38,6 +38,18 @@ func TestSlice(t *testing.T) {
 	expect3 := []int{7}
 	if !slices.Equal(expect3, actual3) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect3, actual3))
+	}
+
+	actual4 := make([]int, 0, 3)
+	for v := range SliceElem([]int{7, 8, 9}, true) {
+		if v == 7 {
+			continue
+		}
+		actual4 = append(actual4, v)
+	}
+	expect4 := []int{9, 8}
+	if !slices.Equal(expect4, actual4) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect4, actual4))
 	}
 }
 
@@ -60,6 +72,18 @@ func TestMap(t *testing.T) {
 	expect2 := map[string]bool{"foo": true, "bar": true}
 	if !maps.Equal(expect2, actual2) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect2, actual2))
+	}
+
+	actual3 := make(map[string]bool)
+	for k := range MapKey(map[string]int{"foo": 1, "bar": 2, "baz": 3}) {
+		if k == "bar" {
+			continue
+		}
+		actual3[k] = true
+	}
+	expect3 := map[string]bool{"foo": true, "baz": true}
+	if !maps.Equal(expect3, actual3) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect3, actual3))
 	}
 }
 
