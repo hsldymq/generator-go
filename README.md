@@ -10,7 +10,7 @@ To use this package, you shoud enable rangefunc experiment feature.
 
 # Requirements
 * golang version >= 1.22.0
-* enable rangefunc feature
+* enable rangefunc feature by building with GOEXPERIMENT=rangefunc
 
 # Examples
 ### Example 1: Traversal of an encapsulated collection
