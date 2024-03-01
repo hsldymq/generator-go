@@ -128,7 +128,7 @@ func IterStudentInfo(seq iter.Seq[*Student]) iter.Seq2[string, int] {
 }
 
 func Handle(school *School) {
-	for name, age  := range IterStudentInfo(school.Students()) {
+	for name, age := range IterStudentInfo(school.Students()) {
 		fmt.Printf("name: %s, age: %d\n", name, age)
 	}
 }
