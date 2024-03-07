@@ -86,7 +86,7 @@ func T12[In, OutK, OutV any](
 	}
 }
 
-// T21 is similar to T1, but it obtains the values from the input iterator and yields new key-value pairs after transformation.
+// T21 is similar to T2, but it obtains the key-value pairs from the input iterator and yields another value after transformation.
 func T21[InK, InV, Out any](
 	seq iter.Seq2[InK, InV],
 	transformer func(InK, InV) Out,
