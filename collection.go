@@ -148,3 +148,21 @@ func Filter2[K any, V any](seq iter.Seq2[K, V], predicate func(K, V) bool) iter.
 		}
 	}
 }
+
+// Count counts the number of elements yielded by the input iterator.
+func Count[V any](seq iter.Seq[V]) int {
+	count := 0
+	for _ = range seq {
+		count++
+	}
+	return count
+}
+
+// Count2 counts the number of elements yielded by the input iterator.
+func Count2[K any, V any](seq iter.Seq2[K, V]) int {
+	count := 0
+	for _, _ = range seq {
+		count++
+	}
+	return count
+}

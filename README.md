@@ -149,6 +149,8 @@ func Handle(school *School) {
 * `goiter.Concat2`
 * `goiter.Filter`
 * `goiter.Filter2`
+* `goiter.Count`
+* `goiter.Count2`
 
 ### range
 * `goiter.Range`
