@@ -13,13 +13,16 @@ func TestFilter(t *testing.T) {
 	predicate := func(v int) bool {
 		return v%2 == 0
 	}
-	actual := make([]int, 0, 3)
+	actual := []int{}
 	for v := range Filter(Range(0, 10), predicate) {
 		actual = append(actual, v)
 	}
 	expect := []int{0, 2, 4, 6, 8}
 	if !slices.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
+	for _ = range Filter(Range(0, 10), predicate) {
 	}
 }
 
@@ -36,6 +39,10 @@ func TestFilter2(t *testing.T) {
 	if !maps.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
+
+	for _, _ = range Filter2(Map(input), predicate) {
+		break
+	}
 }
 
 func TestDistinct(t *testing.T) {
@@ -43,10 +50,14 @@ func TestDistinct(t *testing.T) {
 	for each := range Distinct(SliceElem([]int{1, 2, 3, 4, 4, 3, 2, 1})) {
 		actual = append(actual, each)
 	}
-
 	expect := []int{1, 2, 3, 4}
 	if !slices.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
+	//
+	for _ = range Distinct(SliceElem([]int{1, 2, 3, 4, 4, 3, 2, 1})) {
+		break
 	}
 }
 
@@ -76,6 +87,11 @@ func TestDistinctK(t *testing.T) {
 	if !slices.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
+
+	//
+	for _, _ = range DistinctK(T12(SliceElem(input), transFunc)) {
+		break
+	}
 }
 
 func TestDistinctV(t *testing.T) {
@@ -104,6 +120,11 @@ func TestDistinctV(t *testing.T) {
 	if !slices.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
+
+	//
+	for _, _ = range DistinctV(T12(SliceElem(input), transFunc)) {
+		break
+	}
 }
 
 func TestDistinctBy(t *testing.T) {
@@ -129,6 +150,11 @@ func TestDistinctBy(t *testing.T) {
 	}
 	if !slices.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
+	//
+	for _ = range DistinctBy(SliceElem(input), transFunc) {
+		break
 	}
 }
 
@@ -156,5 +182,10 @@ func TestDistinctBy2(t *testing.T) {
 	}
 	if !slices.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
+	//
+	for _, _ = range DistinctBy2(T12(SliceElem(input), transFunc), keySelector) {
+		break
 	}
 }
