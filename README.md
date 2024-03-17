@@ -146,10 +146,17 @@ func Handle(school *School) {
 * `goiter.Channel`
 * `goiter.Concat`
 * `goiter.Concat2`
-* `goiter.Filter`
-* `goiter.Filter2`
 * `goiter.Count`
 * `goiter.Count2`
+
+## filter
+* `goiter.Filter`
+* `goiter.Filter2`
+* `goiter.Distinct`
+* `goiter.DistinctK`
+* `goiter.DistinctV`
+* `goiter.DistinctBy`
+* `goiter.DistinctBy2`
 
 ### range
 * `goiter.Range`

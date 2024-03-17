@@ -6,6 +6,24 @@ import (
 	"iter"
 )
 
+func newDistinctor[T comparable]() *distinctor[T] {
+	return &distinctor[T]{
+		dm: map[T]bool{},
+	}
+}
+
+type distinctor[T comparable] struct {
+	dm map[T]bool
+}
+
+func (d *distinctor[T]) mark(key T) bool {
+	if _, ok := d.dm[key]; !ok {
+		d.dm[key] = true
+		return true
+	}
+	return false
+}
+
 // Slice returns an iterator that allows you to traverse a slice in a forward or reverse direction.
 func Slice[T any](s []T, backward ...bool) iter.Seq2[int, T] {
 	return func(yield func(int, T) bool) {
@@ -100,46 +118,6 @@ func Concat2[K any, V any](seqs ...iter.Seq2[K, V]) iter.Seq2[K, V] {
 					}
 				}
 			}()
-		}
-	}
-}
-
-// Filter returns an iterator that only yields the values of the input iterator that satisfy a predicate.
-func Filter[T any](seq iter.Seq[T], predicate func(T) bool) iter.Seq[T] {
-	return func(yield func(T) bool) {
-		next, stop := iter.Pull(seq)
-		defer stop()
-		for {
-			v, ok := next()
-			if !ok {
-				return
-			}
-			if !predicate(v) {
-				continue
-			}
-			if !yield(v) {
-				return
-			}
-		}
-	}
-}
-
-// Filter2 returns an iterator that only yields the key-values of the input iterator that satisfy a predicate.
-func Filter2[K any, V any](seq iter.Seq2[K, V], predicate func(K, V) bool) iter.Seq2[K, V] {
-	return func(yield func(K, V) bool) {
-		next, stop := iter.Pull2(seq)
-		defer stop()
-		for {
-			k, v, ok := next()
-			if !ok {
-				return
-			}
-			if !predicate(k, v) {
-				continue
-			}
-			if !yield(k, v) {
-				return
-			}
 		}
 	}
 }

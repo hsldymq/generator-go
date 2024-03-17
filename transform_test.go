@@ -82,29 +82,29 @@ func TestT12(t *testing.T) {
 
 	actualK := make([]int, 0, 3)
 	actualV := make([]string, 0, 3)
-	for k, v := range T12(SliceIdx([]int{1, 2, 3}), transformFunc) {
+	for k, v := range T12(SliceElem([]int{1, 2, 3}), transformFunc) {
 		actualK = append(actualK, k)
 		actualV = append(actualV, v)
 	}
-	expectK := []int{10, 11, 12}
+	expectK := []int{11, 12, 13}
 	if !slices.Equal(expectK, actualK) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectK, actualK))
 	}
-	expectV := []string{"0", "1", "2"}
+	expectV := []string{"1", "2", "3"}
 	if !slices.Equal(expectV, actualV) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectV, actualV))
 	}
 
 	actualK = make([]int, 0, 3)
 	i := 0
-	for k, _ := range T12(SliceIdx([]int{1, 2, 3}), transformFunc) {
+	for k, _ := range T12(SliceElem([]int{1, 2, 3}), transformFunc) {
 		actualK = append(actualK, k)
 		i++
 		if i >= 2 {
 			break
 		}
 	}
-	expectK = []int{10, 11}
+	expectK = []int{11, 12}
 	if !slices.Equal(expectK, actualK) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectK, actualK))
 	}

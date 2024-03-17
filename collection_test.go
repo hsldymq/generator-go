@@ -10,37 +10,37 @@ import (
 )
 
 func TestSlice(t *testing.T) {
-	actual2 := make([]int, 0, 3)
+	actual1 := make([]int, 0, 3)
 	for v := range SliceElem([]int{7, 8, 9}, true) {
-		actual2 = append(actual2, v)
+		actual1 = append(actual1, v)
 	}
-	expect2 := []int{9, 8, 7}
-	if !slices.Equal(expect2, actual2) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect2, actual2))
+	expect1 := []int{9, 8, 7}
+	if !slices.Equal(expect1, actual1) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect1, actual1))
 	}
 
-	actual3 := make([]int, 0, 1)
+	actual2 := make([]int, 0, 1)
 	for _, v := range Slice([]int{7, 8, 9}) {
 		if v == 8 {
 			break
 		}
-		actual3 = append(actual3, v)
+		actual2 = append(actual2, v)
 	}
-	expect3 := []int{7}
-	if !slices.Equal(expect3, actual3) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect3, actual3))
+	expect2 := []int{7}
+	if !slices.Equal(expect2, actual2) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect2, actual2))
 	}
 
-	actual4 := make([]int, 0, 3)
+	actual3 := make([]int, 0, 3)
 	for v := range SliceElem([]int{7, 8, 9}, true) {
 		if v == 7 {
 			break
 		}
-		actual4 = append(actual4, v)
+		actual3 = append(actual3, v)
 	}
-	expect4 := []int{9, 8}
-	if !slices.Equal(expect4, actual4) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect4, actual4))
+	expect3 := []int{9, 8}
+	if !slices.Equal(expect3, actual3) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect3, actual3))
 	}
 }
 
@@ -144,35 +144,6 @@ func TestConcat2(t *testing.T) {
 		actual[name] = age
 	}
 	expect = map[string]int{"john": 25, "jane": 20, "joe": 35}
-	if !maps.Equal(expect, actual) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
-	}
-}
-
-func TestFilter(t *testing.T) {
-	predicate := func(v int) bool {
-		return v%2 == 0
-	}
-	actual := make([]int, 0, 3)
-	for v := range Filter(Range(0, 10), predicate) {
-		actual = append(actual, v)
-	}
-	expect := []int{0, 2, 4, 6, 8}
-	if !slices.Equal(expect, actual) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
-	}
-}
-
-func TestFilter2(t *testing.T) {
-	predicate := func(name string, age int) bool {
-		return name == "john"
-	}
-	input := map[string]int{"john": 20, "jane": 18}
-	actual := map[string]int{}
-	for k, v := range Filter2(Map(input), predicate) {
-		actual[k] = v
-	}
-	expect := map[string]int{"john": 20}
 	if !maps.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
