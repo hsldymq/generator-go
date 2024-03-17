@@ -23,6 +23,7 @@ func TestFilter(t *testing.T) {
 	}
 
 	for _ = range Filter(Range(0, 10), predicate) {
+		break
 	}
 }
 
