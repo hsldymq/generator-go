@@ -30,11 +30,6 @@ func SliceElem[T any](s []T, backward ...bool) iter.Seq[T] {
 	return PickV[int, T](Slice(s, backward...))
 }
 
-// SliceIdx only yields the indices of a slice.
-func SliceIdx[T any](s []T, backward ...bool) iter.Seq[int] {
-	return PickK[int, T](Slice(s, backward...))
-}
-
 // Map returns an iterator that allows you to traverse a map.
 func Map[K comparable, V any](m map[K]V) iter.Seq2[K, V] {
 	return func(yield func(K, V) bool) {

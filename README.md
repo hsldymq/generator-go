@@ -140,7 +140,6 @@ func Handle(school *School) {
 
 * `goiter.Slice`
 * `goiter.SliceElem`
-* `goiter.SliceIdx`
 * `goiter.Map`
 * `goiter.MapVal`
 * `goiter.MapKey`
