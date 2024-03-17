@@ -160,3 +160,21 @@ func DistinctBy2[K any, V any, DK comparable](seq iter.Seq2[K, V], keySelector f
 		}
 	}
 }
+
+func newDistinctor[T comparable]() *distinctor[T] {
+	return &distinctor[T]{
+		dm: map[T]bool{},
+	}
+}
+
+type distinctor[T comparable] struct {
+	dm map[T]bool
+}
+
+func (d *distinctor[T]) mark(key T) bool {
+	if _, ok := d.dm[key]; !ok {
+		d.dm[key] = true
+		return true
+	}
+	return false
+}

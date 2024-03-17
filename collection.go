@@ -6,24 +6,6 @@ import (
 	"iter"
 )
 
-func newDistinctor[T comparable]() *distinctor[T] {
-	return &distinctor[T]{
-		dm: map[T]bool{},
-	}
-}
-
-type distinctor[T comparable] struct {
-	dm map[T]bool
-}
-
-func (d *distinctor[T]) mark(key T) bool {
-	if _, ok := d.dm[key]; !ok {
-		d.dm[key] = true
-		return true
-	}
-	return false
-}
-
 // Slice returns an iterator that allows you to traverse a slice in a forward or reverse direction.
 func Slice[T any](s []T, backward ...bool) iter.Seq2[int, T] {
 	return func(yield func(int, T) bool) {
