@@ -52,13 +52,27 @@ func MapKey[K comparable, V any](m map[K]V) iter.Seq[K] {
 }
 
 // Channel yields the values from a channel, it will stop when the channel is closed.
-func Channel[T any](c <-chan T) iter.Seq[T] {
-	return func(yield func(T) bool) {
+func Channel[V any](c <-chan V) iter.Seq[V] {
+	return func(yield func(V) bool) {
 		for v := range c {
 			if !yield(v) {
 				return
 			}
 		}
+	}
+}
+
+// Empty returns an empty iterator.
+func Empty[V any]() iter.Seq[V] {
+	return func(yield func(V) bool) {
+		return
+	}
+}
+
+// Empty2 is iter.Seq2 version of Empty
+func Empty2[K any, V any]() iter.Seq2[K, V] {
+	return func(yield func(K, V) bool) {
+		return
 	}
 }
 
