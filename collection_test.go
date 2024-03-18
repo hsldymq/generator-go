@@ -86,6 +86,28 @@ func TestChannel(t *testing.T) {
 	}
 }
 
+func TestEmpty(t *testing.T) {
+	i := 0
+	for _ = range Empty[int]() {
+		i++
+	}
+
+	if i != 0 {
+		t.Fatal(fmt.Sprintf("expect: 0, actual: %d", i))
+	}
+}
+
+func TestEmpty2(t *testing.T) {
+	i := 0
+	for _, _ = range Empty2[string, int]() {
+		i++
+	}
+
+	if i != 0 {
+		t.Fatal(fmt.Sprintf("expect: 0, actual: %d", i))
+	}
+}
+
 func TestConcat(t *testing.T) {
 	c1 := []int{1, 2, 3}
 	c2 := []int{4, 5, 6}
