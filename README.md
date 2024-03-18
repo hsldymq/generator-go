@@ -144,6 +144,8 @@ func Handle(school *School) {
 * `goiter.MapVal`
 * `goiter.MapKey`
 * `goiter.Channel`
+* `goiter.Empty`
+* `goiter.Empty2`
 * `goiter.Concat`
 * `goiter.Concat2`
 * `goiter.Count`
