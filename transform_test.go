@@ -43,6 +43,21 @@ func TestSwapKV(t *testing.T) {
 	if !maps.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
+}
+
+func TestCombineKV(t *testing.T) {
+	input := map[string]int{"1": 1, "2": 2}
+	actual := make([]KVPair[string, int], 0)
+	for kvPair := range CombineKV(OrderV(Map(input))) {
+		actual = append(actual, *kvPair)
+	}
+	expect := []KVPair[string, int]{
+		{K: "1", V: 1},
+		{K: "2", V: 2},
+	}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
 
 }
 

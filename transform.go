@@ -4,6 +4,11 @@ package goiter
 
 import "iter"
 
+type KVPair[K, V any] struct {
+	K K
+	V V
+}
+
 // PickK yields the keys of a sequence of key-value pairs.
 func PickK[K, V any](seq iter.Seq2[K, V]) iter.Seq[K] {
 	return T21(seq, func(k K, _ V) K {
@@ -22,6 +27,13 @@ func PickV[K, V any](seq iter.Seq2[K, V]) iter.Seq[V] {
 func SwapKV[K, V any](seq iter.Seq2[K, V]) iter.Seq2[V, K] {
 	return T2(seq, func(k K, v V) (V, K) {
 		return v, k
+	})
+}
+
+// CombineKV yields KVPairs after combining the keys and values obtained from the input iterator.
+func CombineKV[K, V any](seq iter.Seq2[K, V]) iter.Seq[*KVPair[K, V]] {
+	return T21(seq, func(k K, v V) *KVPair[K, V] {
+		return &KVPair[K, V]{K: k, V: v}
 	})
 }
 
