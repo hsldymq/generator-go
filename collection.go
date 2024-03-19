@@ -27,7 +27,7 @@ func Slice[T any](s []T, backward ...bool) iter.Seq2[int, T] {
 
 // SliceElem only yields the elements of a slice.
 func SliceElem[T any](s []T, backward ...bool) iter.Seq[T] {
-	return PickV[int, T](Slice(s, backward...))
+	return PickV(Slice(s, backward...))
 }
 
 // Map returns an iterator that allows you to traverse a map.
@@ -43,12 +43,12 @@ func Map[K comparable, V any](m map[K]V) iter.Seq2[K, V] {
 
 // MapVal only yields the values of a map.
 func MapVal[K comparable, V any](m map[K]V) iter.Seq[V] {
-	return PickV[K, V](Map(m))
+	return PickV(Map(m))
 }
 
 // MapKey only yields the keys of a map.
 func MapKey[K comparable, V any](m map[K]V) iter.Seq[K] {
-	return PickK[K, V](Map(m))
+	return PickK(Map(m))
 }
 
 // Channel yields the values from a channel, it will stop when the channel is closed.
