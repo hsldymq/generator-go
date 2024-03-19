@@ -35,21 +35,21 @@ type School struct {
 	students []*Student
 }
 
-func (s *School) Students() iter.Seq2[int, *Student] {
-	return goiter.Slice(s.students)
+// Students returns an iterator that yields each student, instead of exposing the slice of students directly
+func (s *School) Students() iter.Seq[*Student] {
+	return goiter.SliceElem(s.students)
 }
 
-// in another package
-
 func Handle(school *School) {
-	for _, student := range school.Students() {
+	// iterate each student like a regular slice
+	for student := range school.Students() {
 		fmt.Println(student.Name)
 	}
 }
 ```
 
 ### Example 2: Range function
-`goiter.Range` and `goiter.RangeStep` provide similar functionality to the Python range function
+`goiter.Range` and `goiter.RangeStep` provide similar functionality to the Python's range function
 
 ```go
 //go:build goexperiment.rangefunc
