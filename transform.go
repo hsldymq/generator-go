@@ -4,7 +4,7 @@ package goiter
 
 import "iter"
 
-type KVPair[K, V any] struct {
+type KV[K, V any] struct {
 	K K
 	V V
 }
@@ -31,9 +31,9 @@ func SwapKV[K, V any](seq iter.Seq2[K, V]) iter.Seq2[V, K] {
 }
 
 // CombineKV yields KVPairs after combining the keys and values obtained from the input iterator.
-func CombineKV[K, V any](seq iter.Seq2[K, V]) iter.Seq[*KVPair[K, V]] {
-	return T21(seq, func(k K, v V) *KVPair[K, V] {
-		return &KVPair[K, V]{K: k, V: v}
+func CombineKV[K, V any](seq iter.Seq2[K, V]) iter.Seq[*KV[K, V]] {
+	return T21(seq, func(k K, v V) *KV[K, V] {
+		return &KV[K, V]{K: k, V: v}
 	})
 }
 

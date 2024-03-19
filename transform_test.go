@@ -47,11 +47,11 @@ func TestSwapKV(t *testing.T) {
 
 func TestCombineKV(t *testing.T) {
 	input := map[string]int{"1": 1, "2": 2}
-	actual := make([]KVPair[string, int], 0)
+	actual := make([]KV[string, int], 0)
 	for kvPair := range CombineKV(OrderV(Map(input))) {
 		actual = append(actual, *kvPair)
 	}
-	expect := []KVPair[string, int]{
+	expect := []KV[string, int]{
 		{K: "1", V: 1},
 		{K: "2", V: 2},
 	}
