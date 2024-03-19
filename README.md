@@ -160,6 +160,15 @@ func Handle(school *School) {
 * `goiter.DistinctBy`
 * `goiter.DistinctBy2`
 
+### ordering
+* `goiter.Order`
+* `goiter.OrderK`
+* `goiter.OrderV`
+* `goiter.OrderBy`
+* `goiter.OrderBy2`
+* `goiter.StableOrderBy`
+* `goiter.StableOrderBy2`
+
 ### range
 * `goiter.Range`
 * `goiter.RangeStep`
@@ -169,6 +178,7 @@ func Handle(school *School) {
 * `goiter.PickK`
 * `goiter.PickV`
 * `goiter.SwapKV`
+* `goiter.CombineKV`
 * `goiter.T1`
 * `goiter.T2`
 * `goiter.T12`
