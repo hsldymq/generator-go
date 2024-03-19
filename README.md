@@ -118,16 +118,15 @@ func (s *School) Students() iter.Seq[*Student] {
 	return goiter.SliceElem(s.students)
 }
 
-// in another package
-
+// IterStudentInfo returns a new iterator that yields the age and name of each student
 func IterStudentInfo(seq iter.Seq[*Student]) iter.Seq2[string, int] {
-	// This will return a new iterator that yields the age and name of each student
 	return goiter.T12(seq, func(student *Student) (string, int) {
 		return student.Name, student.Age 
 	})
 }
 
 func Handle(school *School) {
+	// so each round of iteration will yield a student's name and age, instead of a student struct
 	for name, age := range IterStudentInfo(school.Students()) {
 		fmt.Printf("name: %s, age: %d\n", name, age)
 	}
