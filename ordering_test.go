@@ -195,14 +195,14 @@ func TestStableOrderBy2(t *testing.T) {
 		name string
 		age  int
 	}
-	input := map[string]int{
-		"bob":   25,
-		"eve":   30,
-		"alice": 25,
+	input := []person{
+		{"bob", 25},
+		{"eve", 30},
+		{"alice", 25},
 	}
 	actual := []person{}
-	for k, v := range StableOrderBy2(Map(input), func(a, b *KV[string, int]) int { return cmp.Compare(a.V, b.V) }) {
-		actual = append(actual, person{name: k, age: v})
+	for _, v := range StableOrderBy2(Slice(input), func(a, b *KV[int, person]) int { return cmp.Compare(a.V.age, b.V.age) }) {
+		actual = append(actual, v)
 	}
 	expect := []person{
 		{"bob", 25},
