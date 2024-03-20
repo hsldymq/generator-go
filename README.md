@@ -140,8 +140,8 @@ func PrintNamesAges(school *School) {
 package example4
 
 import (
-	"fmt"
-	"github.com/hsldymq/goiter"
+    "fmt"
+    "github.com/hsldymq/goiter"
 )
 
 func FilterDemo() {
