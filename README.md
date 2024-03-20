@@ -149,10 +149,10 @@ func FilterDemo() {
     iterator := goiter.Filter(goiter.SliceElem(input), func(v int) bool {
         return v % 2 == 0
     }) 
-	// this will print 2 4 6 8 10
-	for each := range iterator {
-		fmt.Printf("%d ", each)
-	}
+    // this will print 2 4 6 8 10
+    for each := range iterator {
+        fmt.Printf("%d ", each)
+    }
 }
 
 func DistinctDemo() {
