@@ -177,10 +177,10 @@ import (
 
 func Demo() {
     input := []int{1, 4, 3, 2}
-	// this will print 1 2 3 4
-	for each := range goiter.Order(goiter.SliceElem(input)) {
-		fmt.Printf("%d ", each)
-	}
+    // this will print 1 2 3 4
+    for each := range goiter.Order(goiter.SliceElem(input)) {
+        fmt.Printf("%d ", each)
+    }
 
     // pass true as the second argument to sort in descending order
     // this will print 4 3 2 1
