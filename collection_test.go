@@ -44,6 +44,31 @@ func TestSlice(t *testing.T) {
 	}
 }
 
+func TestSliceSourceElem(t *testing.T) {
+	input := []int{7, 8, 9}
+	iterator := SliceSourceElem(func() []int { return input })
+	actual1 := make([]int, 0, 3)
+	for each := range iterator {
+		actual1 = append(actual1, each)
+	}
+	expect1 := []int{7, 8, 9}
+	if !slices.Equal(expect1, actual1) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect1, actual1))
+	}
+
+	// replace the original slice with a new one, and the iterator should traverse the new slice instead of the old one.
+	input = []int{1, 2, 3}
+	actual2 := make([]int, 0, 3)
+	for each := range iterator {
+		actual2 = append(actual2, each)
+	}
+	expect2 := []int{1, 2, 3}
+	if !slices.Equal(expect2, actual2) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect2, actual2))
+	}
+
+}
+
 func TestMap(t *testing.T) {
 	input := map[string]int{"foo": 1, "bar": 2}
 	actual := make([]int, 0, 2)
@@ -62,6 +87,54 @@ func TestMap(t *testing.T) {
 	}
 	expect2 := map[string]bool{"foo": true, "bar": true}
 	if !maps.Equal(expect2, actual2) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect2, actual2))
+	}
+}
+
+func TestMapSourceVal(t *testing.T) {
+	input := map[string]int{"foo": 1, "bar": 2}
+	iterator := MapSourceVal(func() map[string]int { return input })
+
+	actual1 := make([]int, 0, 2)
+	for v := range Order(iterator) {
+		actual1 = append(actual1, v)
+	}
+	expect1 := []int{1, 2}
+	if !slices.Equal(expect1, actual1) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect1, actual1))
+	}
+
+	input = map[string]int{"alice": 25, "bob": 20, "eve": 21}
+	actual2 := make([]int, 0, 3)
+	for v := range Order(iterator) {
+		actual2 = append(actual2, v)
+	}
+	expect2 := []int{20, 21, 25}
+	if !slices.Equal(expect2, actual2) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect2, actual2))
+	}
+}
+
+func TestMapSourceKey(t *testing.T) {
+	input := map[string]int{"foo": 1, "bar": 2}
+	iterator := MapSourceKey(func() map[string]int { return input })
+
+	actual1 := make([]string, 0, 2)
+	for v := range Order(iterator) {
+		actual1 = append(actual1, v)
+	}
+	expect1 := []string{"bar", "foo"}
+	if !slices.Equal(expect1, actual1) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect1, actual1))
+	}
+
+	input = map[string]int{"eve": 21, "alice": 25, "bob": 20}
+	actual2 := make([]string, 0, 3)
+	for v := range Order(iterator) {
+		actual2 = append(actual2, v)
+	}
+	expect2 := []string{"alice", "bob", "eve"}
+	if !slices.Equal(expect2, actual2) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect2, actual2))
 	}
 }

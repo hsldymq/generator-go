@@ -196,10 +196,16 @@ func DoOrdering() {
 
 * `goiter.Slice`
 * `goiter.SliceElem`
+* `goiter.SliceSource`
+* `goiter.SliceSourceElem`
 * `goiter.Map`
 * `goiter.MapVal`
 * `goiter.MapKey`
+* `goiter.MapSource`
+* `goiter.MapSourceVal`
+* `goiter.MapSourceKey`
 * `goiter.Channel`
+* `goiter.ChannelSource`
 * `goiter.Empty`
 * `goiter.Empty2`
 * `goiter.Concat`
