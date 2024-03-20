@@ -133,6 +133,63 @@ func Handle(school *School) {
 }
 ```
 
+### Example 4: Filter
+```go
+//go:build goexperiment.rangefunc
+
+package example4
+
+import (
+	"fmt"
+	"github.com/hsldymq/goiter"
+)
+
+func DoFilter() {
+    input := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+    predicate := func(v int) bool { 
+        return v % 2 == 0 
+    }
+	// this will print 2 4 6 8 10
+	for each := range goiter.Filter(goiter.SliceElem(input), predicate) {
+		fmt.Printf("%d ", each)
+	}
+}
+
+func DoDistinct() {
+    input := []int{1, 2, 3, 3, 2, 1}
+    // this will print 1 2 3
+    for each := range goiter.Distinct(goiter.SliceElem(input)) {
+        fmt.Printf("%d ", each)
+    }
+}
+```
+
+### Example 5: Ordering
+```go
+//go:build goexperiment.rangefunc
+
+package example5
+
+import (
+	"fmt"
+	"github.com/hsldymq/goiter"
+)
+
+func DoOrdering() {
+    input := []int{1, 4, 3, 2}
+	// this will print 1 2 3 4
+	for each := range goiter.Order(goiter.SliceElem(input)) {
+		fmt.Printf("%d ", each)
+	}
+
+    // pass true as the second argument to sort in descending order
+    // this will print 4 3 2 1
+    for each := range goiter.Order(goiter.SliceElem(input), true) {
+        fmt.Printf("%d ", each)
+    }
+}
+```
+
 # List of goiter functions
 
 ### collection
