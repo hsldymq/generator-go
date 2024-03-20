@@ -15,36 +15,37 @@ To use this package, you shoud enable rangefunc experiment feature.
 # Examples
 ### Example 1: Traversal of an encapsulated collection
 Suppose you want to provide traversal capability for a slice in a struct to outside, but do not want to expose the slice, you can use the `goiter.Slice` or `goiter.SliceElem` function.
+
 ```go
 //go:build goexperiment.rangefunc
 
 package example1
 
 import (
-	"fmt"
-	"github.com/hsldymq/goiter"
-	"iter"
+    "fmt"
+    "github.com/hsldymq/goiter"
+    "iter"
 )
 
 type Student struct {
-	Name string
-	Age  int
+    Name string
+    Age  int
 }
 
 type School struct {
-	students []*Student
+    students []*Student
 }
 
 // Students returns an iterator that yields each student, instead of exposing the slice of students directly
 func (s *School) Students() iter.Seq[*Student] {
-	return goiter.SliceElem(s.students)
+    return goiter.SliceElem(s.students)
 }
 
-func Handle(school *School) {
-	// iterate each student like a regular slice
-	for student := range school.Students() {
-		fmt.Println(student.Name)
-	}
+func PrintNames(school *School) {
+    // iterate each student like a regular slice
+    for student := range school.Students() {
+        fmt.Println(student.Name)
+    }
 }
 ```
 
@@ -57,79 +58,78 @@ func Handle(school *School) {
 package example2
 
 import (
-	"fmt"
-	"github.com/hsldymq/goiter"
+    "fmt"
+    "github.com/hsldymq/goiter"
 )
 
-func PrintInts() {
-	// This will print 0 1 2 3 4 5 6 7 8 9
-	// It is equivalent to Python `range(0, 10)` or Golang `for v := range 10`
-	for v := range goiter.Range(0, 10) {
-		fmt.Printf("%d ", v)
-	}
-	fmt.Println()
+func Demo() {
+    // This will print 0 1 2 3 4 5 6 7 8 9
+    // It is equivalent to Python `range(0, 10)` or Golang `for v := range 10`
+    for v := range goiter.Range(0, 10) {
+        fmt.Printf("%d ", v)
+    }
+    fmt.Println()
 
-	// This will print 5 4 3 2 1 0 -1 -2 -3 -4
-	for v := range goiter.Range(5, -5) {
-		fmt.Printf("%d ", v)
-	}
-	fmt.Println()
+    // This will print 5 4 3 2 1 0 -1 -2 -3 -4
+    for v := range goiter.Range(5, -5) {
+        fmt.Printf("%d ", v)
+    }
+    fmt.Println()
 
-	// This will print 0 2 4 6 8
-	for v := range goiter.RangeStep(0, 10, 2) {
-		fmt.Printf("%d ", v)
-	}
-	fmt.Println()
+    // This will print 0 2 4 6 8
+    for v := range goiter.RangeStep(0, 10, 2) {
+        fmt.Printf("%d ", v)
+    }
+    fmt.Println()
 
-	// This will print 5 3 1 -1 -3
-	// When iterating in reverse, you still need to provide a positive step, so you don't need to adjust the sign of the step based on the direction of the iteration.
-	// If you provide a step of 0 or a negative number, RangeStep will not iterate over any values.
-	// This is different from the range function in Python.
-	for v := range goiter.RangeStep(5, -5, 2) {
-		fmt.Printf("%d ", v)
-	}
-	fmt.Println()
+    // This will print 5 3 1 -1 -3
+    // When iterating in reverse, you still need to provide a positive step, so you don't need to adjust the sign of the step based on the direction of the iteration.
+    // If you provide a step of 0 or a negative number, RangeStep will not iterate over any values.
+    // This is different from the range function in Python.
+    for v := range goiter.RangeStep(5, -5, 2) {
+        fmt.Printf("%d ", v)
+    }
+    fmt.Println()
 }
 ```
 
 ### Example 3: Transformation
 You can chain an iterator to another iterator for chained processing, so you can implement functions such as data transformation
+
 ```go
 //go:build goexperiment.rangefunc
 
 package example3
 
 import (
-	"fmt"
-	"github.com/hsldymq/goiter"
-	"iter"
+    "fmt"
+    "github.com/hsldymq/goiter"
+    "iter"
 )
 
 type Student struct {
-	Name string
-	Age  int
+    Name string
+    Age  int
 }
 
 type School struct {
-	students []*Student
+    students []*Student
 }
 
 func (s *School) Students() iter.Seq[*Student] {
-	return goiter.SliceElem(s.students)
+    return goiter.SliceElem(s.students)
 }
 
-// IterStudentInfo returns a new iterator that yields the age and name of each student
-func IterStudentInfo(seq iter.Seq[*Student]) iter.Seq2[string, int] {
-	return goiter.T12(seq, func(student *Student) (string, int) {
-		return student.Name, student.Age 
-	})
-}
-
-func Handle(school *School) {
-	// so each round of iteration will yield a student's name and age, instead of a student struct
-	for name, age := range IterStudentInfo(school.Students()) {
-		fmt.Printf("name: %s, age: %d\n", name, age)
-	}
+func PrintNamesAges(school *School) {
+    // this iterator yields the age and name of each student
+    iterator := goiter.T12(school.Students(), func(student *Student) (string, int) {
+        return student.Name, student.Age
+    })
+    
+    // so each round of iteration will yield a student's name and age, instead of a student struct
+    for name, age := range iterator {
+        fmt.Printf("name: %s, age: %d\n", name, age)
+    }
 }
 ```
 
@@ -144,18 +144,18 @@ import (
 	"github.com/hsldymq/goiter"
 )
 
-func DoFilter() {
+func FilterDemo() {
     input := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-    predicate := func(v int) bool { 
-        return v % 2 == 0 
-    }
+    iterator := goiter.Filter(goiter.SliceElem(input), func(v int) bool {
+        return v % 2 == 0
+    }) 
 	// this will print 2 4 6 8 10
-	for each := range goiter.Filter(goiter.SliceElem(input), predicate) {
+	for each := range iterator {
 		fmt.Printf("%d ", each)
 	}
 }
 
-func DoDistinct() {
+func DistinctDemo() {
     input := []int{1, 2, 3, 3, 2, 1}
     // this will print 1 2 3
     for each := range goiter.Distinct(goiter.SliceElem(input)) {
@@ -175,7 +175,7 @@ import (
 	"github.com/hsldymq/goiter"
 )
 
-func DoOrdering() {
+func Demo() {
     input := []int{1, 4, 3, 2}
 	// this will print 1 2 3 4
 	for each := range goiter.Order(goiter.SliceElem(input)) {
