@@ -124,32 +124,16 @@ func T21[InK, InV, Out any](
 }
 
 func Zip[T1, T2 any](seq1 iter.Seq[T1], seq2 iter.Seq[T2]) iter.Seq[*Zipped[T1, T2]] {
-	return func(yield func(*Zipped[T1, T2]) bool) {
-		p1, stop1 := iter.Pull(seq1)
-		defer stop1()
-		p2, stop2 := iter.Pull(seq2)
-		defer stop2()
-
-		for {
-			v1, ok1 := p1()
-			v2, ok2 := p2()
-			if !ok1 || !ok2 {
-				return
-			}
-
-			v := &Zipped[T1, T2]{
-				V1: v1,
-				V2: v2,
-			}
-			if !yield(v) {
-				return
-			}
+	return ZipAs(seq1, seq2, func(v1 T1, v2 T2) *Zipped[T1, T2] {
+		return &Zipped[T1, T2]{
+			V1: v1,
+			V2: v2,
 		}
-	}
+	})
 }
 
-func ZipAs[In1, In2, Out1, Out2 any](seq1 iter.Seq[In1], seq2 iter.Seq[In2], transformer func(In1, In2) (Out1, Out2)) iter.Seq[*Zipped[Out1, Out2]] {
-	return func(yield func(*Zipped[Out1, Out2]) bool) {
+func ZipAs[In1, In2, Out any](seq1 iter.Seq[In1], seq2 iter.Seq[In2], transformer func(In1, In2) Out) iter.Seq[Out] {
+	return func(yield func(Out) bool) {
 		p1, stop1 := iter.Pull(seq1)
 		defer stop1()
 		p2, stop2 := iter.Pull(seq2)
@@ -162,12 +146,8 @@ func ZipAs[In1, In2, Out1, Out2 any](seq1 iter.Seq[In1], seq2 iter.Seq[In2], tra
 				return
 			}
 
-			out1, out2 := transformer(in1, in2)
-			v := &Zipped[Out1, Out2]{
-				V1: out1,
-				V2: out2,
-			}
-			if !yield(v) {
+			out := transformer(in1, in2)
+			if !yield(out) {
 				return
 			}
 		}
