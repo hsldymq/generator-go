@@ -239,6 +239,54 @@ func TestRangeTime(t *testing.T) {
 	}
 }
 
+func TestSequence(t *testing.T) {
+	genFib := func() GeneratorFunc[int] {
+		a, b := 0, 1
+		return func() (int, bool) {
+			a, b = b, a+b
+			return a, true
+		}
+	}
+
+	actual := make([]int, 0, 10)
+	i := 0
+	for v := range Sequence(genFib()) {
+		actual = append(actual, v)
+		i++
+		if i >= 10 {
+			break
+		}
+	}
+	expect := []int{1, 1, 2, 3, 5, 8, 13, 21, 34, 55}
+	if !slices.Equal(expect, actual) {
+		t.Fatalf("test Sequence failed, expect %v, got %v", expect, actual)
+	}
+}
+
+func TestSequence2(t *testing.T) {
+	genFib := func() GeneratorFunc2[int, int] {
+		n := 0
+		a, b := 0, 1
+		return func() (int, int, bool) {
+			a, b = b, a+b
+			n++
+			return n, a, true
+		}
+	}
+
+	actual := make([]int, 0, 10)
+	for n, v := range Sequence2(genFib()) {
+		actual = append(actual, v)
+		if n >= 10 {
+			break
+		}
+	}
+	expect := []int{1, 1, 2, 3, 5, 8, 13, 21, 34, 55}
+	if !slices.Equal(expect, actual) {
+		t.Fatalf("test Sequence failed, expect %v, got %v", expect, actual)
+	}
+}
+
 func TestIntMax(t *testing.T) {
 	if intMax(uint(0)) != uint(math.MaxUint) {
 		t.Fatalf("test uint expect %d, got %v", uint(math.MaxUint), intMax(uint(0)))
