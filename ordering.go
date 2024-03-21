@@ -3,9 +3,9 @@
 package goiter
 
 import (
-	"cmp"
-	"iter"
-	"slices"
+    "cmp"
+    "iter"
+    "slices"
 )
 
 // Order sorts the elements of the input iterator and returns a new iterator whose elements are arranged in ascending or descending order.
