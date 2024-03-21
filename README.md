@@ -243,7 +243,7 @@ func Demo() {
 * `goiter.Reverse`
 * `goiter.Reverse2`
 
-### transformation
+### transform
 * `goiter.PickK`
 * `goiter.PickV`
 * `goiter.SwapKV`
@@ -252,6 +252,12 @@ func Demo() {
 * `goiter.T2`
 * `goiter.T12`
 * `goiter.T21`
+* `goiter.Zip`
+* `goiter.ZipAs`
+* `goiter.ToSlice`
+* `goiter.ToMap`
+* `goiter.ToMapBy`
+* `goiter.ToMapByV`
 
 ### filter
 * `goiter.Filter`
