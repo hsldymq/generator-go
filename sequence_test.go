@@ -240,6 +240,7 @@ func TestRangeTime(t *testing.T) {
 }
 
 func TestSequence(t *testing.T) {
+	// case 1
 	genFib := func() GeneratorFunc[int] {
 		a, b := 0, 1
 		return func() (int, bool) {
@@ -247,7 +248,6 @@ func TestSequence(t *testing.T) {
 			return a, true
 		}
 	}
-
 	actual := make([]int, 0, 10)
 	i := 0
 	for v := range Sequence(genFib()) {
@@ -261,9 +261,30 @@ func TestSequence(t *testing.T) {
 	if !slices.Equal(expect, actual) {
 		t.Fatalf("test Sequence failed, expect %v, got %v", expect, actual)
 	}
+
+	// case 2
+	genAlphabet := func(until rune) GeneratorFunc[string] {
+		c := 'a'
+		return func() (string, bool) {
+			if c > until {
+				return "", false
+			}
+			c++
+			return string(c - 1), true
+		}
+	}
+	actual2 := make([]string, 0, 10)
+	for v := range Sequence(genAlphabet('g')) {
+		actual2 = append(actual2, v)
+	}
+	expect2 := []string{"a", "b", "c", "d", "e", "f", "g"}
+	if !slices.Equal(expect2, actual2) {
+		t.Fatalf("test Sequence failed, expect %v, got %v", expect2, actual2)
+	}
 }
 
 func TestSequence2(t *testing.T) {
+	// case 1
 	genFib := func() GeneratorFunc2[int, int] {
 		n := 0
 		a, b := 0, 1
@@ -284,6 +305,28 @@ func TestSequence2(t *testing.T) {
 	expect := []int{1, 1, 2, 3, 5, 8, 13, 21, 34, 55}
 	if !slices.Equal(expect, actual) {
 		t.Fatalf("test Sequence failed, expect %v, got %v", expect, actual)
+	}
+
+	// case 2
+	genAlphabet := func(until rune) GeneratorFunc2[int, string] {
+		n := 0
+		c := 'a'
+		return func() (int, string, bool) {
+			if c > until {
+				return 0, "", false
+			}
+			n++
+			c++
+			return n, string(c - 1), true
+		}
+	}
+	actual2 := make([]string, 0, 10)
+	for _, v := range Sequence2(genAlphabet('g')) {
+		actual2 = append(actual2, v)
+	}
+	expect2 := []string{"a", "b", "c", "d", "e", "f", "g"}
+	if !slices.Equal(expect2, actual2) {
+		t.Fatalf("test Sequence failed, expect %v, got %v", expect2, actual2)
 	}
 }
 
