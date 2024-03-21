@@ -10,6 +10,8 @@ import (
 
 type GeneratorFunc[T any] func() (T, bool)
 
+type GeneratorFunc2[K, V any] func() (K, V, bool)
+
 type TInt interface {
 	~int | ~int8 | ~int16 | ~int32 | ~int64 |
 		~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64
@@ -136,6 +138,20 @@ func Sequence[T any](generator func() (T, bool)) iter.Seq[T] {
 				return
 			}
 			if !yield(v) {
+				return
+			}
+		}
+	}
+}
+
+func Sequence2[K, V any](generator func() (K, V, bool)) iter.Seq2[K, V] {
+	return func(yield func(K, V) bool) {
+		for {
+			k, v, hasMore := generator()
+			if !hasMore {
+				return
+			}
+			if !yield(k, v) {
 				return
 			}
 		}
