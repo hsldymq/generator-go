@@ -231,24 +231,6 @@ func Demo() {
 * `goiter.Count`
 * `goiter.Count2`
 
-## filter
-* `goiter.Filter`
-* `goiter.Filter2`
-* `goiter.Distinct`
-* `goiter.DistinctK`
-* `goiter.DistinctV`
-* `goiter.DistinctBy`
-* `goiter.DistinctBy2`
-
-### ordering
-* `goiter.Order`
-* `goiter.OrderK`
-* `goiter.OrderV`
-* `goiter.OrderBy`
-* `goiter.OrderBy2`
-* `goiter.StableOrderBy`
-* `goiter.StableOrderBy2`
-
 ### sequence
 * `goiter.Range`
 * `goiter.RangeStep`
@@ -269,3 +251,21 @@ func Demo() {
 * `goiter.T2`
 * `goiter.T12`
 * `goiter.T21`
+
+## filter
+* `goiter.Filter`
+* `goiter.Filter2`
+* `goiter.Distinct`
+* `goiter.DistinctK`
+* `goiter.DistinctV`
+* `goiter.DistinctBy`
+* `goiter.DistinctBy2`
+
+### ordering
+* `goiter.Order`
+* `goiter.OrderK`
+* `goiter.OrderV`
+* `goiter.OrderBy`
+* `goiter.OrderBy2`
+* `goiter.StableOrderBy`
+* `goiter.StableOrderBy2`
