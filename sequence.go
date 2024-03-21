@@ -17,11 +17,11 @@ func Range[T TInt](start, stop T) iter.Seq[T] {
 	return RangeStep(start, stop, 1)
 }
 
-// RangeStep extends the ability to range over integers, allowing iteration from any integer and stepping forward or backward.
+// RangeStep extends the ability to Range function, allowing iteration from any integer and stepping forward or backward in any step.
 // It is similar to Python's range function, but with some differences:
 //  1. stepSize does not accept negative numbers. Whether iterating forward or backward, stepSize must be positive.
 //     so you don't need to consider adjusting the sign of step according to the direction of iteration, It is the absolute value of the step parameter of Python range function.
-//  2. Providing a value less than or equal to 0 for stepSize will not return an error, it simply not yield any values.
+//  2. Providing a value less than or equal to 0 for stepSize will not return an error, it simply doesn't yield any values.
 func RangeStep[T TInt, S TInt](start, stop T, stepSize S) iter.Seq[T] {
 	if stepSize <= 0 {
 		// 0 will lead to infinite loops
@@ -67,6 +67,20 @@ func RangeStep[T TInt, S TInt](start, stop T, stepSize S) iter.Seq[T] {
 // RangeTime is similar to RangeStep, but it is specifically used for iterating over time, and it can iterate time forward or backward.
 // The interval parameter is its step size, which can be any positive duration.
 // Unlike the half-open interval represented by the start and end parameters of RangeStep, the from and to parameters of RangeTime represent a closed interval.
+// For example:
+//
+//	from := time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC)
+//	to := time.Date(2021, 1, 1, 5, 0, 0, 0, time.UTC)
+//	for t := range RangeTime(from, to, time.Hour) {
+//			fmt.Println(t.Format("15:04:05"))
+//	}
+//	the above code will print:
+//		00:00:00
+//		01:00:00
+//		02:00:00
+//		03:00:00
+//		04:00:00
+//		05:00:00
 func RangeTime(from time.Time, to time.Time, interval time.Duration) iter.Seq[time.Time] {
 	if interval <= 0 {
 		return func(yield func(time.Time) bool) {}
@@ -97,19 +111,11 @@ func RangeTime(from time.Time, to time.Time, interval time.Duration) iter.Seq[ti
 func Concat[T any](seqs ...iter.Seq[T]) iter.Seq[T] {
 	return func(yield func(T) bool) {
 		for _, seq := range seqs {
-			func() {
-				next, stop := iter.Pull(seq)
-				defer stop()
-				for {
-					v, ok := next()
-					if !ok {
-						return
-					}
-					if !yield(v) {
-						return
-					}
+			for v := range seq {
+				if !yield(v) {
+					return
 				}
-			}()
+			}
 		}
 	}
 }
@@ -118,19 +124,11 @@ func Concat[T any](seqs ...iter.Seq[T]) iter.Seq[T] {
 func Concat2[K any, V any](seqs ...iter.Seq2[K, V]) iter.Seq2[K, V] {
 	return func(yield func(K, V) bool) {
 		for _, seq := range seqs {
-			func() {
-				next, stop := iter.Pull2(seq)
-				defer stop()
-				for {
-					k, v, ok := next()
-					if !ok {
-						return
-					}
-					if !yield(k, v) {
-						return
-					}
+			for k, v := range seq {
+				if !yield(k, v) {
+					return
 				}
-			}()
+			}
 		}
 	}
 }
