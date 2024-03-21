@@ -131,15 +131,15 @@ func T21[InK, InV, Out any](
 }
 
 func Zip[T1, T2 any](seq1 iter.Seq[T1], seq2 iter.Seq[T2]) iter.Seq[*Zipped[T1, T2]] {
-	return ZipAs(seq1, seq2, func(zippedIF *ZippedE[T1, T2]) *Zipped[T1, T2] {
+	return ZipAs(seq1, seq2, func(zipped *ZippedE[T1, T2]) *Zipped[T1, T2] {
 		return &Zipped[T1, T2]{
-			V1: zippedIF.V1,
-			V2: zippedIF.V2,
+			V1: zipped.V1,
+			V2: zipped.V2,
 		}
 	})
 }
 
-func ZipAs[In1, In2, Out any](seq1 iter.Seq[In1], seq2 iter.Seq[In2], transformer func(zippedIF *ZippedE[In1, In2]) Out, exhaust ...bool) iter.Seq[Out] {
+func ZipAs[In1, In2, Out any](seq1 iter.Seq[In1], seq2 iter.Seq[In2], transformer func(*ZippedE[In1, In2]) Out, exhaust ...bool) iter.Seq[Out] {
 	return func(yield func(Out) bool) {
 		shouldExhaust := false
 		if len(exhaust) > 0 {

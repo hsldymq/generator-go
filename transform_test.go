@@ -228,6 +228,58 @@ func TestZip(t *testing.T) {
 }
 
 func TestZipAs(t *testing.T) {
+	type person struct {
+		Name string
+		Age  int
+	}
+	transformer := func(zipped *ZippedE[string, int]) person {
+		p := person{
+			Name: zipped.V1,
+			Age:  zipped.V2,
+		}
+		if !zipped.OK1 {
+			p.Name = "?"
+		}
+		if !zipped.OK2 {
+			p.Age = -1
+		}
+		return p
+	}
+
+	// case 1
+	nameSeq := SliceElem([]string{"Alice", "Bob", "Eve"})
+	ageSeq := SliceElem([]int{20, 21})
+	zipSeq := ZipAs(nameSeq, ageSeq, transformer, true)
+	actual := make([]person, 0, 3)
+	for each := range zipSeq {
+		actual = append(actual, each)
+	}
+	expect := []person{
+		{Name: "Alice", Age: 20},
+		{Name: "Bob", Age: 21},
+		{Name: "Eve", Age: -1},
+	}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
+	// case 2
+	nameSeq = SliceElem([]string{"Alice", "Bob", "Eve"})
+	ageSeq = SliceElem([]int{20, 21, 22, 23})
+	zipSeq = ZipAs(nameSeq, ageSeq, transformer, true)
+	actual = make([]person, 0, 4)
+	for each := range zipSeq {
+		actual = append(actual, each)
+	}
+	expect = []person{
+		{Name: "Alice", Age: 20},
+		{Name: "Bob", Age: 21},
+		{Name: "Eve", Age: 22},
+		{Name: "?", Age: 23},
+	}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
 }
 
 func TestToSlice(t *testing.T) {
