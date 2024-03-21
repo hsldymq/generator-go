@@ -9,6 +9,11 @@ type KV[K, V any] struct {
 	V V
 }
 
+type Zipped[T1, T2 any] struct {
+	V1 T1
+	V2 T2
+}
+
 // PickK yields the keys of a sequence of key-value pairs.
 func PickK[K, V any](seq iter.Seq2[K, V]) iter.Seq[K] {
 	return T21(seq, func(k K, _ V) K {
@@ -116,4 +121,95 @@ func T21[InK, InV, Out any](
 			}
 		}
 	}
+}
+
+func Zip[T1, T2 any](seq1 iter.Seq[T1], seq2 iter.Seq[T2]) iter.Seq[*Zipped[T1, T2]] {
+	return func(yield func(*Zipped[T1, T2]) bool) {
+		p1, stop1 := iter.Pull(seq1)
+		defer stop1()
+		p2, stop2 := iter.Pull(seq2)
+		defer stop2()
+
+		for {
+			v1, ok1 := p1()
+			v2, ok2 := p2()
+			if !ok1 || !ok2 {
+				return
+			}
+
+			v := &Zipped[T1, T2]{
+				V1: v1,
+				V2: v2,
+			}
+			if !yield(v) {
+				return
+			}
+		}
+	}
+}
+
+func ZipAs[In1, In2, Out1, Out2 any](seq1 iter.Seq[In1], seq2 iter.Seq[In2], transformer func(In1, In2) (Out1, Out2)) iter.Seq[*Zipped[Out1, Out2]] {
+	return func(yield func(*Zipped[Out1, Out2]) bool) {
+		p1, stop1 := iter.Pull(seq1)
+		defer stop1()
+		p2, stop2 := iter.Pull(seq2)
+		defer stop2()
+
+		for {
+			in1, ok1 := p1()
+			in2, ok2 := p2()
+			if !ok1 || !ok2 {
+				return
+			}
+
+			out1, out2 := transformer(in1, in2)
+			v := &Zipped[Out1, Out2]{
+				V1: out1,
+				V2: out2,
+			}
+			if !yield(v) {
+				return
+			}
+		}
+	}
+}
+
+func ToSlice[T any](seq iter.Seq[T]) []T {
+	var result []T
+	for each := range seq {
+		result = append(result, each)
+	}
+	return result
+}
+
+func ToMap[K comparable, V any](seq iter.Seq2[K, V]) map[K]V {
+	result := make(map[K]V)
+	for k, v := range seq {
+		result[k] = v
+	}
+	return result
+}
+
+func ToMapBy[InK any, InV any, OutK comparable, OutV any](
+	seq iter.Seq2[InK, InV],
+	transformer func(InK, InV) (OutK, OutV),
+) map[OutK]OutV {
+	result := make(map[OutK]OutV)
+	for k, v := range seq {
+		kk, vv := transformer(k, v)
+		result[kk] = vv
+	}
+	return result
+}
+
+func ToMapByV[V any, OutK comparable, OutV any](
+	seq iter.Seq[V],
+	transformer func(V) (OutK, OutV),
+) map[OutK]OutV {
+	result := make(map[OutK]OutV)
+	for v := range seq {
+		kk, vv := transformer(v)
+		result[kk] = vv
+	}
+	return result
 }

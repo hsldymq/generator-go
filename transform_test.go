@@ -188,3 +188,116 @@ func TestT22(t *testing.T) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectV, actualV))
 	}
 }
+
+func TestZip(t *testing.T) {
+	// case 1
+	seq1 := SliceElem([]string{"Alice", "Bob", "Eve"})
+	seq2 := SliceElem([]int{20, 21, 22, 23}) // seq2 has one more element than seq1
+	actual := make([]Zipped[string, int], 0, 3)
+	for v := range Zip(seq1, seq2) {
+		actual = append(actual, *v)
+	}
+	expect := []Zipped[string, int]{
+		{V1: "Alice", V2: 20},
+		{V1: "Bob", V2: 21},
+		{V1: "Eve", V2: 22},
+	}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
+	// case 2
+	seq1 = SliceElem([]string{"Alice", "Bob", "Eve"})
+	seq2 = SliceElem([]int{20, 21, 22, 23})
+	actual = make([]Zipped[string, int], 0, 2)
+	i := 0
+	for v := range Zip(seq1, seq2) {
+		actual = append(actual, *v)
+		i++
+		if i >= 2 {
+			break
+		}
+	}
+	expect = []Zipped[string, int]{
+		{V1: "Alice", V2: 20},
+		{V1: "Bob", V2: 21},
+	}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+}
+
+func TestZipAs(t *testing.T) {
+}
+
+func TestToSlice(t *testing.T) {
+	seq := func(yield func(int) bool) {
+		yield(1)
+		yield(2)
+		yield(3)
+	}
+
+	actual := ToSlice(seq)
+	expect := []int{1, 2, 3}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+}
+
+func TestToMap(t *testing.T) {
+	seq := func(yield func(string, int) bool) {
+		yield("alice", 20)
+		yield("bob", 21)
+		yield("eve", 22)
+	}
+
+	actual := ToMap(seq)
+	expect := map[string]int{
+		"alice": 20,
+		"bob":   21,
+		"eve":   22,
+	}
+	if !maps.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+}
+
+func TestToMapBy(t *testing.T) {
+	seq := func(yield func(string, string) bool) {
+		yield("Alice", "Paris")
+		yield("Bob", "Shanghai")
+		yield("Eve", "Bangkok")
+	}
+
+	actual := ToMapBy(seq, func(name string, city string) (string, string) {
+		return name + "_" + city, string(name[0]) + "_" + string(city[0])
+	})
+	expect := map[string]string{
+		"Alice_Paris":  "A_P",
+		"Bob_Shanghai": "B_S",
+		"Eve_Bangkok":  "E_B",
+	}
+	if !maps.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+}
+
+func TestToMapByV(t *testing.T) {
+	seq := func(yield func(string) bool) {
+		yield("alice")
+		yield("bob")
+		yield("eve")
+	}
+
+	actual := ToMapByV(seq, func(name string) (string, int) {
+		return name, len(name)
+	})
+	expect := map[string]int{
+		"alice": 5,
+		"bob":   3,
+		"eve":   3,
+	}
+	if !maps.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+}
