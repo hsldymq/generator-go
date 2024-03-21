@@ -49,9 +49,7 @@ func PrintNames(school *School) {
 }
 ```
 
-### Example 2: Range function
-`goiter.Range` and `goiter.RangeStep` provide similar functionality to the Python's range function
-
+### Example 2: Sequence generation
 ```go
 //go:build goexperiment.rangefunc
 
@@ -62,7 +60,8 @@ import (
     "github.com/hsldymq/goiter"
 )
 
-func Demo() {
+// goiter.Range and goiter.RangeStep provide similar functionality to the Python's range function
+func RangeDemo() {
     // This will print 0 1 2 3 4 5 6 7 8 9
     // It is equivalent to Python `range(0, 10)` or Golang `for v := range 10`
     for v := range goiter.Range(0, 10) {
@@ -90,6 +89,27 @@ func Demo() {
         fmt.Printf("%d ", v)
     }
     fmt.Println()
+}
+
+// goiter.Sequence is general purpose sequence generator, you can use it to generate any sequence you want 
+// here is an example of generating Fibonacci sequence
+func SequenceDemo() {
+    genFib := func(n int) goiter.GeneratorFunc[int] {
+        a, b := 0, 1
+        return func() (int, bool) {
+            if n <= 0 {
+                return 0, false
+            }
+            n--
+            a, b = b, a+b
+            return a, true
+        }
+    }
+
+    // this will print first 5 Fibonacci numbers: 1 1 2 3 5
+    for v := range goiter.Sequence(genFib(5)) {
+        fmt.Printf("%d ", v)
+    }
 }
 ```
 
