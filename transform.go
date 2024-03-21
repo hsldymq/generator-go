@@ -14,8 +14,7 @@ type Zipped[T1, T2 any] struct {
 	V2 T2
 }
 
-// ZippedIF is the intermediate form that ZipAs function yields.
-type ZippedIF[T1, T2 any] struct {
+type ZippedE[T1, T2 any] struct {
 	V1  T1
 	OK1 bool
 	V2  T2
@@ -132,7 +131,7 @@ func T21[InK, InV, Out any](
 }
 
 func Zip[T1, T2 any](seq1 iter.Seq[T1], seq2 iter.Seq[T2]) iter.Seq[*Zipped[T1, T2]] {
-	return ZipAs(seq1, seq2, func(zippedIF *ZippedIF[T1, T2]) *Zipped[T1, T2] {
+	return ZipAs(seq1, seq2, func(zippedIF *ZippedE[T1, T2]) *Zipped[T1, T2] {
 		return &Zipped[T1, T2]{
 			V1: zippedIF.V1,
 			V2: zippedIF.V2,
@@ -140,7 +139,7 @@ func Zip[T1, T2 any](seq1 iter.Seq[T1], seq2 iter.Seq[T2]) iter.Seq[*Zipped[T1, 
 	})
 }
 
-func ZipAs[In1, In2, Out any](seq1 iter.Seq[In1], seq2 iter.Seq[In2], transformer func(zippedIF *ZippedIF[In1, In2]) Out, exhaust ...bool) iter.Seq[Out] {
+func ZipAs[In1, In2, Out any](seq1 iter.Seq[In1], seq2 iter.Seq[In2], transformer func(zippedIF *ZippedE[In1, In2]) Out, exhaust ...bool) iter.Seq[Out] {
 	return func(yield func(Out) bool) {
 		shouldExhaust := false
 		if len(exhaust) > 0 {
@@ -162,7 +161,7 @@ func ZipAs[In1, In2, Out any](seq1 iter.Seq[In1], seq2 iter.Seq[In2], transforme
 				return
 			}
 
-			out := transformer(&ZippedIF[In1, In2]{
+			out := transformer(&ZippedE[In1, In2]{
 				V1:  in1,
 				OK1: ok1,
 				V2:  in2,
