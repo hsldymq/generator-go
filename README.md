@@ -208,8 +208,6 @@ func Demo() {
 * `goiter.ChannelSource`
 * `goiter.Empty`
 * `goiter.Empty2`
-* `goiter.Concat`
-* `goiter.Concat2`
 * `goiter.Count`
 * `goiter.Count2`
 
@@ -231,10 +229,14 @@ func Demo() {
 * `goiter.StableOrderBy`
 * `goiter.StableOrderBy2`
 
-### range
+### sequence
 * `goiter.Range`
 * `goiter.RangeStep`
 * `goiter.RangeTime`
+* `goiter.Concat`
+* `goiter.Concat2`
+* `goiter.Reverse`
+* `goiter.Reverse2`
 
 ### transformation
 * `goiter.PickK`

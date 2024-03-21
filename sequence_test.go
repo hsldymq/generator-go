@@ -3,6 +3,8 @@
 package goiter
 
 import (
+	"fmt"
+	"maps"
 	"math"
 	"slices"
 	"testing"
@@ -300,5 +302,128 @@ func TestIntMin(t *testing.T) {
 	}
 	if intMin(int64(0)) != int64(math.MinInt64) {
 		t.Fatalf("test int64 expect %d, got %d", int64(math.MinInt64), intMin(int64(0)))
+	}
+}
+
+func TestConcat(t *testing.T) {
+	c1 := []int{1, 2, 3}
+	c2 := []int{4, 5, 6}
+	actual := make([]int, 0, 6)
+	for v := range Concat(SliceElem(c1), SliceElem(c2)) {
+		actual = append(actual, v)
+	}
+	expect := []int{1, 2, 3, 4, 5, 6}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
+	c1 = []int{4, 5, 6}
+	c2 = []int{7, 8, 9}
+	actual = make([]int, 0, 6)
+	for v := range Concat(SliceElem(c1), SliceElem(c2)) {
+		if v == 8 {
+			break
+		}
+		actual = append(actual, v)
+	}
+	expect = []int{4, 5, 6, 7}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+}
+
+func TestConcat2(t *testing.T) {
+	type person struct {
+		name string
+		age  int
+	}
+	p1 := []person{{"john", 25}, {"jane", 20}}
+	i1 := T12(SliceElem(p1), func(p person) (string, int) {
+		return p.name, p.age
+	})
+	p2 := []person{{"joe", 35}, {"ann", 30}, {"josh", 15}}
+	i2 := T12(SliceElem(p2), func(p person) (string, int) {
+		return p.name, p.age
+	})
+
+	actual := make(map[string]int)
+	for name, age := range Concat2(i1, i2) {
+		actual[name] = age
+	}
+	expect := map[string]int{"john": 25, "jane": 20, "joe": 35, "ann": 30, "josh": 15}
+	if !maps.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
+	actual = make(map[string]int)
+	for name, age := range Concat2(i1, i2) {
+		if name == "ann" {
+			break
+		}
+		actual[name] = age
+	}
+	expect = map[string]int{"john": 25, "jane": 20, "joe": 35}
+	if !maps.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+}
+
+func TestReverse(t *testing.T) {
+	input := []int{1, 2, 3, 4, 5}
+
+	actual := make([]int, 0, 5)
+	for v := range Reverse(SliceElem(input)) {
+		actual = append(actual, v)
+	}
+	expect := []int{5, 4, 3, 2, 1}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
+	actual = make([]int, 0, 3)
+	for v := range Reverse(SliceElem(input)) {
+		if v < 3 {
+			break
+		}
+		actual = append(actual, v)
+	}
+	expect = []int{5, 4, 3}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+}
+
+func TestReverse2(t *testing.T) {
+	input := []int{1, 2, 3, 4, 5}
+
+	actual := make([]KV[int, int], 0, 5)
+	for idx, v := range Reverse2(Slice(input)) {
+		actual = append(actual, KV[int, int]{K: idx, V: v})
+	}
+	expect := []KV[int, int]{
+		{K: 4, V: 5},
+		{K: 3, V: 4},
+		{K: 2, V: 3},
+		{K: 1, V: 2},
+		{K: 0, V: 1},
+	}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
+	actual = make([]KV[int, int], 0, 3)
+	for idx, v := range Reverse2(Slice(input)) {
+		if v < 3 {
+			break
+		}
+		actual = append(actual, KV[int, int]{K: idx, V: v})
+	}
+	expect = []KV[int, int]{
+		{K: 4, V: 5},
+		{K: 3, V: 4},
+		{K: 2, V: 3},
+	}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
 }

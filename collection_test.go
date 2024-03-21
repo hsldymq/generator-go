@@ -181,69 +181,6 @@ func TestEmpty2(t *testing.T) {
 	}
 }
 
-func TestConcat(t *testing.T) {
-	c1 := []int{1, 2, 3}
-	c2 := []int{4, 5, 6}
-	actual := make([]int, 0, 6)
-	for v := range Concat(SliceElem(c1), SliceElem(c2)) {
-		actual = append(actual, v)
-	}
-	expect := []int{1, 2, 3, 4, 5, 6}
-	if !slices.Equal(expect, actual) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
-	}
-
-	c1 = []int{4, 5, 6}
-	c2 = []int{7, 8, 9}
-	actual = make([]int, 0, 6)
-	for v := range Concat(SliceElem(c1), SliceElem(c2)) {
-		if v == 8 {
-			break
-		}
-		actual = append(actual, v)
-	}
-	expect = []int{4, 5, 6, 7}
-	if !slices.Equal(expect, actual) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
-	}
-}
-
-func TestConcat2(t *testing.T) {
-	type person struct {
-		name string
-		age  int
-	}
-	p1 := []person{{"john", 25}, {"jane", 20}}
-	i1 := T12(SliceElem(p1), func(p person) (string, int) {
-		return p.name, p.age
-	})
-	p2 := []person{{"joe", 35}, {"ann", 30}, {"josh", 15}}
-	i2 := T12(SliceElem(p2), func(p person) (string, int) {
-		return p.name, p.age
-	})
-
-	actual := make(map[string]int)
-	for name, age := range Concat2(i1, i2) {
-		actual[name] = age
-	}
-	expect := map[string]int{"john": 25, "jane": 20, "joe": 35, "ann": 30, "josh": 15}
-	if !maps.Equal(expect, actual) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
-	}
-
-	actual = make(map[string]int)
-	for name, age := range Concat2(i1, i2) {
-		if name == "ann" {
-			break
-		}
-		actual[name] = age
-	}
-	expect = map[string]int{"john": 25, "jane": 20, "joe": 35}
-	if !maps.Equal(expect, actual) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
-	}
-}
-
 func TestCount(t *testing.T) {
 	input := []int{1, 2, 3, 4, 5}
 	seq := Filter(SliceElem(input), func(v int) bool {

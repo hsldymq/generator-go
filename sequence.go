@@ -91,7 +91,88 @@ func RangeTime(from time.Time, to time.Time, interval time.Duration) iter.Seq[ti
 			}
 		}
 	}
+}
 
+// Concat returns an iterator that allows you to traverse multiple iterators in sequence.
+func Concat[T any](seqs ...iter.Seq[T]) iter.Seq[T] {
+	return func(yield func(T) bool) {
+		for _, seq := range seqs {
+			func() {
+				next, stop := iter.Pull(seq)
+				defer stop()
+				for {
+					v, ok := next()
+					if !ok {
+						return
+					}
+					if !yield(v) {
+						return
+					}
+				}
+			}()
+		}
+	}
+}
+
+// Concat2 returns an iterator that allows you to traverse multiple iterators in sequence.
+func Concat2[K any, V any](seqs ...iter.Seq2[K, V]) iter.Seq2[K, V] {
+	return func(yield func(K, V) bool) {
+		for _, seq := range seqs {
+			func() {
+				next, stop := iter.Pull2(seq)
+				defer stop()
+				for {
+					k, v, ok := next()
+					if !ok {
+						return
+					}
+					if !yield(k, v) {
+						return
+					}
+				}
+			}()
+		}
+	}
+}
+
+func Reverse[T any](seq iter.Seq[T]) iter.Seq[T] {
+	return func(yield func(T) bool) {
+		var buffer []T
+		next, stop := iter.Pull(seq)
+		defer stop()
+		for {
+			v, ok := next()
+			if !ok {
+				break
+			}
+			buffer = append(buffer, v)
+		}
+		for i := len(buffer) - 1; i >= 0; i-- {
+			if !yield(buffer[i]) {
+				return
+			}
+		}
+	}
+}
+
+func Reverse2[K, V any](seq iter.Seq2[K, V]) iter.Seq2[K, V] {
+	return func(yield func(K, V) bool) {
+		var buffer []*KV[K, V]
+		next, stop := iter.Pull2(seq)
+		defer stop()
+		for {
+			k, v, ok := next()
+			if !ok {
+				break
+			}
+			buffer = append(buffer, &KV[K, V]{K: k, V: v})
+		}
+		for i := len(buffer) - 1; i >= 0; i-- {
+			if !yield(buffer[i].K, buffer[i].V) {
+				return
+			}
+		}
+	}
 }
 
 func willOverflow[T TInt](v T, step uint64, inc bool) bool {

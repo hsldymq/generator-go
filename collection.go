@@ -122,48 +122,6 @@ func Empty2[K any, V any]() iter.Seq2[K, V] {
 	}
 }
 
-// Concat returns an iterator that allows you to traverse multiple iterators in sequence.
-func Concat[T any](seqs ...iter.Seq[T]) iter.Seq[T] {
-	return func(yield func(T) bool) {
-		for _, seq := range seqs {
-			func() {
-				next, stop := iter.Pull(seq)
-				defer stop()
-				for {
-					v, ok := next()
-					if !ok {
-						return
-					}
-					if !yield(v) {
-						return
-					}
-				}
-			}()
-		}
-	}
-}
-
-// Concat2 returns an iterator that allows you to traverse multiple iterators in sequence.
-func Concat2[K any, V any](seqs ...iter.Seq2[K, V]) iter.Seq2[K, V] {
-	return func(yield func(K, V) bool) {
-		for _, seq := range seqs {
-			func() {
-				next, stop := iter.Pull2(seq)
-				defer stop()
-				for {
-					k, v, ok := next()
-					if !ok {
-						return
-					}
-					if !yield(k, v) {
-						return
-					}
-				}
-			}()
-		}
-	}
-}
-
 // Count counts the number of elements yielded by the input iterator.
 func Count[V any](seq iter.Seq[V]) int {
 	count := 0
