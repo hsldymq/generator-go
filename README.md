@@ -156,7 +156,7 @@ func PrintNamesAges(school *School) {
 }
 ```
 
-### Example 4: Filter
+### Example 4: Filtering
 ```go
 //go:build goexperiment.rangefunc
 
