@@ -121,6 +121,8 @@ func Transform21[InT1, InT2, Out any](
 	}
 }
 
+// Zip is like python's zip function, it takes two iterators and returns an iterator of combined 2-tuple struct values,
+// where the i-th struct contains the i-th element from each of the argument iterators.
 func Zip[T1, T2 any](seq1 iter.Seq[T1], seq2 iter.Seq[T2]) iter.Seq[*Zipped[T1, T2]] {
 	return ZipAs(seq1, seq2, func(zipped *ZippedE[T1, T2]) *Zipped[T1, T2] {
 		return &Zipped[T1, T2]{
@@ -130,6 +132,7 @@ func Zip[T1, T2 any](seq1 iter.Seq[T1], seq2 iter.Seq[T2]) iter.Seq[*Zipped[T1, 
 	})
 }
 
+// ZipAs is a more general version of Zip.
 func ZipAs[InT1, InT2, Out any](seq1 iter.Seq[InT1], seq2 iter.Seq[InT2], transformer func(*ZippedE[InT1, InT2]) Out, exhaust ...bool) iter.Seq[Out] {
 	return func(yield func(Out) bool) {
 		shouldExhaust := false

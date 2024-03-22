@@ -8,10 +8,12 @@ import (
 	"sync/atomic"
 )
 
+// Once returns an iterator that can only be iterated over once;
+// it cannot be reused after the iteration is complete or after breaking out of the loop. On subsequent attempts, it will not yield any values.
 func Once[T any](seq iter.Seq[T]) iter.Seq[T] {
-	count := int64(0)
+	flag := int32(0)
 	return func(yield func(T) bool) {
-		if atomic.AddInt64(&count, 1) > 1 {
+		if !atomic.CompareAndSwapInt32(&flag, 0, 1) {
 			return
 		}
 
@@ -30,10 +32,11 @@ func Once[T any](seq iter.Seq[T]) iter.Seq[T] {
 	}
 }
 
+// Once2 is the iter.Seq2 version of Once.
 func Once2[T1, T2 any](seq iter.Seq2[T1, T2]) iter.Seq2[T1, T2] {
-	count := int64(0)
+	flag := int32(0)
 	return func(yield func(T1, T2) bool) {
-		if atomic.AddInt64(&count, 1) > 1 {
+		if !atomic.CompareAndSwapInt32(&flag, 0, 1) {
 			return
 		}
 
@@ -52,10 +55,13 @@ func Once2[T1, T2 any](seq iter.Seq2[T1, T2]) iter.Seq2[T1, T2] {
 	}
 }
 
+// ContinuableOnce is similar to the Once function.
+// The difference is that if you break out of the iteration midway, it will continue to yield the remaining elements upon subsequent iterations until all values have been yielded.
 func ContinuableOnce[T any](seq iter.Seq[T]) iter.Seq[T] {
 	return continuable(Once(seq))
 }
 
+// ContinuableOnce2 is the iter.Seq2 version of ContinuableOnce.
 func ContinuableOnce2[T1, T2 any](seq iter.Seq2[T1, T2]) iter.Seq2[T1, T2] {
 	return continuable2(Once2(seq))
 }
