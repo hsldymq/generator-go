@@ -20,11 +20,13 @@ func OnceDemo() {
 			break
 		}
 	}
+	fmt.Println()
 
 	// so this won't print anything.
 	for v := range iterator {
 		fmt.Printf("%d ", v)
 	}
+	fmt.Println()
 }
 
 func ContinuableOnceDemo() {
@@ -41,14 +43,17 @@ func ContinuableOnceDemo() {
 			break
 		}
 	}
+	fmt.Println()
 
 	// so this will print the remaining elements: 4 5 6
 	for v := range iterator {
 		fmt.Printf("%d ", v)
 	}
+	fmt.Println()
 
 	// and this won't print anything because all elements have been yielded, iterator is unusable now.
 	for v := range iterator {
 		fmt.Printf("%d ", v)
 	}
+	fmt.Println()
 }
