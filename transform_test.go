@@ -9,9 +9,9 @@ import (
 	"testing"
 )
 
-func TestPickK(t *testing.T) {
+func TestPick1(t *testing.T) {
 	actual := make([]int, 0, 3)
-	for idx := range PickK(Slice([]int{7, 8, 9})) {
+	for idx := range PickV1(Slice([]int{7, 8, 9})) {
 		actual = append(actual, idx)
 	}
 
@@ -21,9 +21,9 @@ func TestPickK(t *testing.T) {
 	}
 }
 
-func TestPickV(t *testing.T) {
+func TestPick2(t *testing.T) {
 	actual := make([]int, 0, 3)
-	for v := range PickV(Slice([]int{7, 8, 9})) {
+	for v := range PickV2(Slice([]int{7, 8, 9})) {
 		actual = append(actual, v)
 	}
 
@@ -33,32 +33,16 @@ func TestPickV(t *testing.T) {
 	}
 }
 
-func TestSwapKV(t *testing.T) {
+func TestSwap(t *testing.T) {
 	input := map[string]int{"1": 1, "2": 2}
 	actual := make(map[int]string)
-	for k, v := range SwapKV(Map(input)) {
-		actual[k] = v
+	for val, key := range Swap(Map(input)) {
+		actual[val] = key
 	}
 	expect := map[int]string{1: "1", 2: "2"}
 	if !maps.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
-}
-
-func TestCombineKV(t *testing.T) {
-	input := map[string]int{"1": 1, "2": 2}
-	actual := make([]KV[string, int], 0)
-	for kvPair := range CombineKV(OrderV(Map(input))) {
-		actual = append(actual, *kvPair)
-	}
-	expect := []KV[string, int]{
-		{K: "1", V: 1},
-		{K: "2", V: 2},
-	}
-	if !slices.Equal(expect, actual) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
-	}
-
 }
 
 func TestT11(t *testing.T) {
@@ -67,7 +51,7 @@ func TestT11(t *testing.T) {
 	}
 
 	actual := make([]string, 0, 3)
-	for v := range T1(SliceElem([]int{1, 2, 3}), transformFunc) {
+	for v := range Transform(SliceElem([]int{1, 2, 3}), transformFunc) {
 		actual = append(actual, v)
 	}
 	expect := []string{"1", "2", "3"}
@@ -77,7 +61,7 @@ func TestT11(t *testing.T) {
 
 	actual = make([]string, 0, 2)
 	i := 0
-	for v := range T1(SliceElem([]int{1, 2, 3}), transformFunc) {
+	for v := range Transform(SliceElem([]int{1, 2, 3}), transformFunc) {
 		actual = append(actual, v)
 		i++
 		if i >= 2 {
@@ -95,33 +79,33 @@ func TestT12(t *testing.T) {
 		return v + 10, fmt.Sprintf("%d", v)
 	}
 
-	actualK := make([]int, 0, 3)
-	actualV := make([]string, 0, 3)
-	for k, v := range T12(SliceElem([]int{1, 2, 3}), transformFunc) {
-		actualK = append(actualK, k)
-		actualV = append(actualV, v)
+	actualV1 := make([]int, 0, 3)
+	actualV2 := make([]string, 0, 3)
+	for v1, v2 := range Transform12(SliceElem([]int{1, 2, 3}), transformFunc) {
+		actualV1 = append(actualV1, v1)
+		actualV2 = append(actualV2, v2)
 	}
-	expectK := []int{11, 12, 13}
-	if !slices.Equal(expectK, actualK) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectK, actualK))
+	expectV1 := []int{11, 12, 13}
+	if !slices.Equal(expectV1, actualV1) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectV1, actualV1))
 	}
-	expectV := []string{"1", "2", "3"}
-	if !slices.Equal(expectV, actualV) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectV, actualV))
+	expectV2 := []string{"1", "2", "3"}
+	if !slices.Equal(expectV2, actualV2) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectV2, actualV2))
 	}
 
-	actualK = make([]int, 0, 3)
+	actualV1 = make([]int, 0, 3)
 	i := 0
-	for k, _ := range T12(SliceElem([]int{1, 2, 3}), transformFunc) {
-		actualK = append(actualK, k)
+	for v1, _ := range Transform12(SliceElem([]int{1, 2, 3}), transformFunc) {
+		actualV1 = append(actualV1, v1)
 		i++
 		if i >= 2 {
 			break
 		}
 	}
-	expectK = []int{11, 12}
-	if !slices.Equal(expectK, actualK) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectK, actualK))
+	expectV1 = []int{11, 12}
+	if !slices.Equal(expectV1, actualV1) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectV1, actualV1))
 	}
 }
 
@@ -131,7 +115,7 @@ func TestT21(t *testing.T) {
 	}
 
 	actual := make([]string, 0, 3)
-	for v := range T21(Slice([]int{1, 2, 3}), transformFunc) {
+	for v := range Transform21(Slice([]int{1, 2, 3}), transformFunc) {
 		actual = append(actual, v)
 	}
 	expect := []string{"0_1", "1_2", "2_3"}
@@ -141,7 +125,7 @@ func TestT21(t *testing.T) {
 
 	actual = make([]string, 0, 3)
 	i := 0
-	for v := range T21(Slice([]int{1, 2, 3}), transformFunc) {
+	for v := range Transform21(Slice([]int{1, 2, 3}), transformFunc) {
 		actual = append(actual, v)
 		i++
 		if i >= 2 {
@@ -159,33 +143,33 @@ func TestT22(t *testing.T) {
 		return fmt.Sprintf("%d", k+10), fmt.Sprintf("%d", v+100)
 	}
 
-	actualK := make([]string, 0, 3)
-	actualV := make([]string, 0, 3)
-	for k, v := range T2(Slice([]int{1, 2, 3}), transformFunc) {
-		actualK = append(actualK, k)
-		actualV = append(actualV, v)
+	actualV1 := make([]string, 0, 3)
+	actualV2 := make([]string, 0, 3)
+	for v1, v2 := range Transform2(Slice([]int{1, 2, 3}), transformFunc) {
+		actualV1 = append(actualV1, v1)
+		actualV2 = append(actualV2, v2)
 	}
-	expectK := []string{"10", "11", "12"}
-	if !slices.Equal(expectK, actualK) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectK, actualK))
+	expectV1 := []string{"10", "11", "12"}
+	if !slices.Equal(expectV1, actualV1) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectV1, actualV1))
 	}
-	expectV := []string{"101", "102", "103"}
-	if !slices.Equal(expectV, actualV) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectV, actualV))
+	expectV2 := []string{"101", "102", "103"}
+	if !slices.Equal(expectV2, actualV2) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectV2, actualV2))
 	}
 
-	actualV = make([]string, 0, 3)
+	actualV2 = make([]string, 0, 3)
 	i := 0
-	for _, v := range T2(Slice([]int{1, 2, 3}), transformFunc) {
-		actualV = append(actualV, v)
+	for _, v := range Transform2(Slice([]int{1, 2, 3}), transformFunc) {
+		actualV2 = append(actualV2, v)
 		i++
 		if i >= 2 {
 			break
 		}
 	}
-	expectV = []string{"101", "102"}
-	if !slices.Equal(expectV, actualV) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectV, actualV))
+	expectV2 = []string{"101", "102"}
+	if !slices.Equal(expectV2, actualV2) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expectV2, actualV2))
 	}
 }
 

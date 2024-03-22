@@ -4,11 +4,6 @@ package goiter
 
 import "iter"
 
-type KV[K, V any] struct {
-	K K
-	V V
-}
-
 type Zipped[T1, T2 any] struct {
 	V1 T1
 	V2 T2
@@ -21,37 +16,29 @@ type ZippedE[T1, T2 any] struct {
 	OK2 bool
 }
 
-// PickK yields the keys of a sequence of key-value pairs.
-func PickK[K, V any](seq iter.Seq2[K, V]) iter.Seq[K] {
-	return T21(seq, func(k K, _ V) K {
-		return k
+// PickV1 returns an iterator that yields the first element of each 2-Tuple provided by the input iterator.
+func PickV1[T1, T2 any](seq iter.Seq2[T1, T2]) iter.Seq[T1] {
+	return Transform21(seq, func(v1 T1, _ T2) T1 {
+		return v1
 	})
 }
 
-// PickV yields the values of a sequence of key-value pairs.
-func PickV[K, V any](seq iter.Seq2[K, V]) iter.Seq[V] {
-	return T21(seq, func(_ K, v V) V {
-		return v
+// PickV2 returns an iterator that yields the second element of each 2-Tuple provided by the input iterator.
+func PickV2[T1, T2 any](seq iter.Seq2[T1, T2]) iter.Seq[T2] {
+	return Transform21(seq, func(_ T1, v2 T2) T2 {
+		return v2
 	})
 }
 
-// SwapKV yields key-value pairs after swapping the position of the keys and values obtained by the input iterator.
-func SwapKV[K, V any](seq iter.Seq2[K, V]) iter.Seq2[V, K] {
-	return T2(seq, func(k K, v V) (V, K) {
-		return v, k
+// Swap returns an iterator that yields new 2-tuples by swapping the positions of the elements within each 2-Tuple provided by the input iterator.
+func Swap[T1, T2 any](seq iter.Seq2[T1, T2]) iter.Seq2[T2, T1] {
+	return Transform2(seq, func(v1 T1, v2 T2) (T2, T1) {
+		return v2, v1
 	})
 }
 
-// CombineKV yields KVPairs after combining the keys and values obtained from the input iterator.
-func CombineKV[K, V any](seq iter.Seq2[K, V]) iter.Seq[*KV[K, V]] {
-	return T21(seq, func(k K, v V) *KV[K, V] {
-		return &KV[K, V]{K: k, V: v}
-	})
-}
-
-// T1 return a transforming iterator, where T stands for transform.
-// It applies the transformer function to the values obtained from the input iterator, and then yields the result.
-func T1[In, Out any](
+// Transform returns an iterator, it yields new values by applying the transformer function to each value provided by the input iterator.
+func Transform[In, Out any](
 	seq iter.Seq[In],
 	transformer func(In) Out,
 ) iter.Seq[Out] {
@@ -63,15 +50,16 @@ func T1[In, Out any](
 			if !ok {
 				return
 			}
-			if !yield(transformer(v)) {
+			out := transformer(v)
+			if !yield(out) {
 				return
 			}
 		}
 	}
 }
 
-// T2 is similar to T1, but it obtains the key-value pairs from the input iterator and yields new key-value pairs after transformation.
-func T2[InT1, InT2, OutT1, OutT2 any](
+// Transform2 is the iter.Seq2 version of Transform function.
+func Transform2[InT1, InT2, OutT1, OutT2 any](
 	seq iter.Seq2[InT1, InT2],
 	transformer func(InT1, InT2) (OutT1, OutT2),
 ) iter.Seq2[OutT1, OutT2] {
@@ -79,19 +67,20 @@ func T2[InT1, InT2, OutT1, OutT2 any](
 		next, stop := iter.Pull2(seq)
 		defer stop()
 		for {
-			k, v, ok := next()
+			v1, v2, ok := next()
 			if !ok {
 				return
 			}
-			if !yield(transformer(k, v)) {
+			out1, out2 := transformer(v1, v2)
+			if !yield(out1, out2) {
 				return
 			}
 		}
 	}
 }
 
-// T12 is similar to T1, but it obtains the values from the input iterator and yields new key-value pairs after transformation.
-func T12[In, OutT1, OutT2 any](
+// Transform12 is similar to Transform, but it yields 2-tuple values after transformation instead of single-values.
+func Transform12[In, OutT1, OutT2 any](
 	seq iter.Seq[In],
 	transformer func(In) (OutT1, OutT2),
 ) iter.Seq2[OutT1, OutT2] {
@@ -103,15 +92,16 @@ func T12[In, OutT1, OutT2 any](
 			if !ok {
 				return
 			}
-			if !yield(transformer(v)) {
+			out1, out2 := transformer(v)
+			if !yield(out1, out2) {
 				return
 			}
 		}
 	}
 }
 
-// T21 is similar to T2, but it only yields transform values without keys.
-func T21[InT1, InT2, Out any](
+// Transform21 is similar to Transform2, but it only yields transform single-values instead of 2-tuple values
+func Transform21[InT1, InT2, Out any](
 	seq iter.Seq2[InT1, InT2],
 	transformer func(InT1, InT2) Out,
 ) iter.Seq[Out] {
@@ -123,7 +113,8 @@ func T21[InT1, InT2, Out any](
 			if !ok {
 				return
 			}
-			if !yield(transformer(k, v)) {
+			out := transformer(k, v)
+			if !yield(out) {
 				return
 			}
 		}
@@ -183,37 +174,37 @@ func ToSlice[T any](seq iter.Seq[T]) []T {
 	return result
 }
 
-// ToMap converts an iterator of key-value pairs to a map.
-func ToMap[K comparable, V any](seq iter.Seq2[K, V]) map[K]V {
-	result := make(map[K]V)
-	for k, v := range seq {
-		result[k] = v
+// ToMap converts an iterator that yields 2-tuple to a map, where the first element of the tuple is the key and the second element is the value.
+func ToMap[T1 comparable, T2 any](seq iter.Seq2[T1, T2]) map[T1]T2 {
+	result := make(map[T1]T2)
+	for key, val := range seq {
+		result[key] = val
 	}
 	return result
 }
 
-// ToMapBy takes every element from the input iterator, applies the transformer function to it, and then stores the result in a map.
+// ToMapBy transform every element provided from the input iterator to a key-value pair, and then returns a map.
 func ToMapBy[T any, OutK comparable, OutV any](
 	seq iter.Seq[T],
 	transformer func(T) (OutK, OutV),
 ) map[OutK]OutV {
 	result := make(map[OutK]OutV)
 	for v := range seq {
-		kk, vv := transformer(v)
-		result[kk] = vv
+		key, val := transformer(v)
+		result[key] = val
 	}
 	return result
 }
 
-// ToMapBy2 is similar to ToMapBy, but it takes 2-tuple from the input iterator.
+// ToMapBy2 is similar to ToMapBy, but it takes 2-Tuple from the input iterator.
 func ToMapBy2[InT1 any, InT2 any, OutK comparable, OutV any](
 	seq iter.Seq2[InT1, InT2],
 	transformer func(InT1, InT2) (OutK, OutV),
 ) map[OutK]OutV {
 	result := make(map[OutK]OutV)
-	for k, v := range seq {
-		kk, vv := transformer(k, v)
-		result[kk] = vv
+	for v1, v2 := range seq {
+		key, val := transformer(v1, v2)
+		result[key] = val
 	}
 	return result
 }

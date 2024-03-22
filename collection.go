@@ -16,7 +16,7 @@ func Slice[T any](s []T, backward ...bool) iter.Seq2[int, T] {
 
 // SliceElem only yields the elements of a slice.
 func SliceElem[T any](s []T, backward ...bool) iter.Seq[T] {
-	return PickV(Slice(s, backward...))
+	return PickV2(Slice(s, backward...))
 }
 
 // SliceSource is like the Slice function, but the slice is taken from the input SourceFunc.
@@ -47,7 +47,7 @@ func SliceSource[T any](source SourceFunc[[]T], backward ...bool) iter.Seq2[int,
 // SliceSourceElem is the SourceFunc version of SliceElem function.
 // see comments of SliceSource function for more details.
 func SliceSourceElem[T any](source SourceFunc[[]T], backward ...bool) iter.Seq[T] {
-	return PickV(SliceSource(source, backward...))
+	return PickV2(SliceSource(source, backward...))
 }
 
 // Map returns an iterator that allows you to traverse a map.
@@ -55,14 +55,14 @@ func Map[K comparable, V any](m map[K]V) iter.Seq2[K, V] {
 	return MapSource(func() map[K]V { return m })
 }
 
-// MapVal only yields the values of a map.
+// MapVal yields only values of a map in arbitrary order.
 func MapVal[K comparable, V any](m map[K]V) iter.Seq[V] {
-	return PickV(Map(m))
+	return PickV2(Map(m))
 }
 
-// MapKey only yields the keys of a map.
+// MapKey yields only keys of a map in arbitrary order.
 func MapKey[K comparable, V any](m map[K]V) iter.Seq[K] {
-	return PickK(Map(m))
+	return PickV1(Map(m))
 }
 
 // MapSource is the SourceFunc version of Map function.
@@ -81,24 +81,24 @@ func MapSource[K comparable, V any](source SourceFunc[map[K]V]) iter.Seq2[K, V] 
 // MapSourceVal is the SourceFunc version of MapVal function.
 // see comments of SliceSource function for more details.
 func MapSourceVal[K comparable, V any](source SourceFunc[map[K]V]) iter.Seq[V] {
-	return PickV(MapSource(source))
+	return PickV2(MapSource(source))
 }
 
 // MapSourceKey is the SourceFunc version of MapKey function.
 // see comments of SliceSource function for more details.
 func MapSourceKey[K comparable, V any](source SourceFunc[map[K]V]) iter.Seq[K] {
-	return PickK(MapSource(source))
+	return PickV1(MapSource(source))
 }
 
 // Channel yields the values from a channel, it will stop when the channel is closed.
-func Channel[V any](c <-chan V) iter.Seq[V] {
-	return ChannelSource(func() <-chan V { return c })
+func Channel[T any](c <-chan T) iter.Seq[T] {
+	return ChannelSource(func() <-chan T { return c })
 }
 
 // ChannelSource is the SourceFunc version of Channel function.
 // see comments of SliceSource function for more details.
-func ChannelSource[V any](source SourceFunc[<-chan V]) iter.Seq[V] {
-	return func(yield func(V) bool) {
+func ChannelSource[T any](source SourceFunc[<-chan T]) iter.Seq[T] {
+	return func(yield func(T) bool) {
 		c := source()
 		for v := range c {
 			if !yield(v) {
@@ -109,21 +109,21 @@ func ChannelSource[V any](source SourceFunc[<-chan V]) iter.Seq[V] {
 }
 
 // Empty returns an empty iterator.
-func Empty[V any]() iter.Seq[V] {
-	return func(yield func(V) bool) {
+func Empty[T any]() iter.Seq[T] {
+	return func(yield func(T) bool) {
 		return
 	}
 }
 
 // Empty2 is iter.Seq2 version of Empty
-func Empty2[K any, V any]() iter.Seq2[K, V] {
-	return func(yield func(K, V) bool) {
+func Empty2[T1 any, T2 any]() iter.Seq2[T1, T2] {
+	return func(yield func(T1, T2) bool) {
 		return
 	}
 }
 
 // Count counts the number of elements yielded by the input iterator.
-func Count[V any](seq iter.Seq[V]) int {
+func Count[T any](seq iter.Seq[T]) int {
 	count := 0
 	for _ = range seq {
 		count++
@@ -132,7 +132,7 @@ func Count[V any](seq iter.Seq[V]) int {
 }
 
 // Count2 counts the number of elements yielded by the input iterator.
-func Count2[K any, V any](seq iter.Seq2[K, V]) int {
+func Count2[T1 any, T2 any](seq iter.Seq2[T1, T2]) int {
 	count := 0
 	for _, _ = range seq {
 		count++

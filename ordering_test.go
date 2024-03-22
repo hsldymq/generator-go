@@ -35,7 +35,7 @@ func TestOrder(t *testing.T) {
 	}
 }
 
-func TestOrderK(t *testing.T) {
+func TestOrderV1(t *testing.T) {
 	input := map[string]int{
 		"bob":   20,
 		"eve":   18,
@@ -43,44 +43,44 @@ func TestOrderK(t *testing.T) {
 	}
 
 	// case 1: asc
-	actual1K := []string{}
-	actual1V := []int{}
-	for k, v := range OrderK(Map(input)) {
-		actual1K = append(actual1K, k)
-		actual1V = append(actual1V, v)
+	actual1E1 := []string{}
+	actual1E2 := []int{}
+	for v1, v2 := range OrderV1(Map(input)) {
+		actual1E1 = append(actual1E1, v1)
+		actual1E2 = append(actual1E2, v2)
 	}
-	expect1K := []string{"alice", "bob", "eve"}
-	if !slices.Equal(expect1K, actual1K) {
-		t.Fatal("expect:", expect1K, "actual:", actual1K)
+	expect1E1 := []string{"alice", "bob", "eve"}
+	if !slices.Equal(expect1E1, actual1E1) {
+		t.Fatal("expect:", expect1E1, "actual:", actual1E1)
 	}
-	expect1V := []int{22, 20, 18}
-	if !slices.Equal(expect1V, actual1V) {
-		t.Fatal("expect:", expect1V, "actual:", actual1V)
+	expect1E2 := []int{22, 20, 18}
+	if !slices.Equal(expect1E2, actual1E2) {
+		t.Fatal("expect:", expect1E2, "actual:", actual1E2)
 	}
 
 	// case 2: desc
-	actual2K := []string{}
-	actual2V := []int{}
-	for k, v := range OrderK(Map(input), true) {
-		actual2K = append(actual2K, k)
-		actual2V = append(actual2V, v)
+	actual2E1 := []string{}
+	actual2E2 := []int{}
+	for v1, v2 := range OrderV1(Map(input), true) {
+		actual2E1 = append(actual2E1, v1)
+		actual2E2 = append(actual2E2, v2)
 	}
-	expect2K := []string{"eve", "bob", "alice"}
-	if !slices.Equal(expect2K, actual2K) {
-		t.Fatal("expect:", expect2K, "actual:", actual2K)
+	expect2E1 := []string{"eve", "bob", "alice"}
+	if !slices.Equal(expect2E1, actual2E1) {
+		t.Fatal("expect:", expect2E1, "actual:", actual2E1)
 	}
-	expect2V := []int{18, 20, 22}
-	if !slices.Equal(expect2V, actual2V) {
-		t.Fatal("expect:", expect2V, "actual:", actual2V)
+	expect2E2 := []int{18, 20, 22}
+	if !slices.Equal(expect2E2, actual2E2) {
+		t.Fatal("expect:", expect2E2, "actual:", actual2E2)
 	}
 
 	// won't panic
-	for _, _ = range OrderK(Map(input)) {
+	for _, _ = range OrderV1(Map(input)) {
 		break
 	}
 }
 
-func TestOrderV(t *testing.T) {
+func TestOrderV2(t *testing.T) {
 	input := map[string]int{
 		"bob":   20,
 		"eve":   18,
@@ -88,35 +88,35 @@ func TestOrderV(t *testing.T) {
 	}
 
 	// case 1: asc
-	actual1K := []string{}
-	actual1V := []int{}
-	for k, v := range OrderV(Map(input)) {
-		actual1K = append(actual1K, k)
-		actual1V = append(actual1V, v)
+	actual1E1 := []string{}
+	actual1E2 := []int{}
+	for v1, v2 := range OrderV2(Map(input)) {
+		actual1E1 = append(actual1E1, v1)
+		actual1E2 = append(actual1E2, v2)
 	}
-	expect1K := []string{"eve", "bob", "alice"}
-	if !slices.Equal(expect1K, actual1K) {
-		t.Fatal("expect:", expect1K, "actual:", actual1K)
+	expect1E1 := []string{"eve", "bob", "alice"}
+	if !slices.Equal(expect1E1, actual1E1) {
+		t.Fatal("expect:", expect1E1, "actual:", actual1E1)
 	}
-	expect1V := []int{18, 20, 22}
-	if !slices.Equal(expect1V, actual1V) {
-		t.Fatal("expect:", expect1V, "actual:", actual1V)
+	expect1E2 := []int{18, 20, 22}
+	if !slices.Equal(expect1E2, actual1E2) {
+		t.Fatal("expect:", expect1E2, "actual:", actual1E2)
 	}
 
 	// case 2: desc
-	actual2K := []string{}
-	actual2V := []int{}
-	for k, v := range OrderV(Map(input), true) {
-		actual2K = append(actual2K, k)
-		actual2V = append(actual2V, v)
+	actual2E1 := []string{}
+	actual2E2 := []int{}
+	for v1, v2 := range OrderV2(Map(input), true) {
+		actual2E1 = append(actual2E1, v1)
+		actual2E2 = append(actual2E2, v2)
 	}
-	expect2K := []string{"alice", "bob", "eve"}
-	if !slices.Equal(expect2K, actual2K) {
-		t.Fatal("expect:", expect2K, "actual:", actual2K)
+	expect2E1 := []string{"alice", "bob", "eve"}
+	if !slices.Equal(expect2E1, actual2E1) {
+		t.Fatal("expect:", expect2E1, "actual:", actual2E1)
 	}
-	expect2V := []int{22, 20, 18}
-	if !slices.Equal(expect2V, actual2V) {
-		t.Fatal("expect:", expect2V, "actual:", actual2V)
+	expect2E2 := []int{22, 20, 18}
+	if !slices.Equal(expect2E2, actual2E2) {
+		t.Fatal("expect:", expect2E2, "actual:", actual2E2)
 	}
 }
 
@@ -155,8 +155,8 @@ func TestOrderBy2(t *testing.T) {
 		"alice": 25,
 	}
 	actual := []person{}
-	for k, v := range OrderBy2(Map(input), func(a, b *KV[string, int]) int { return cmp.Compare(a.V, b.V) }) {
-		actual = append(actual, person{name: k, age: v})
+	for v1, v2 := range OrderBy2(Map(input), func(a, b *Tuple[string, int]) int { return cmp.Compare(a.V2, b.V2) }) {
+		actual = append(actual, person{name: v1, age: v2})
 	}
 	expect := []person{
 		{"bob", 20},
@@ -203,8 +203,8 @@ func TestStableOrderBy2(t *testing.T) {
 		{"alice", 25},
 	}
 	actual := []person{}
-	for _, v := range StableOrderBy2(Slice(input), func(a, b *KV[int, person]) int { return cmp.Compare(a.V.age, b.V.age) }) {
-		actual = append(actual, v)
+	for _, v2 := range StableOrderBy2(Slice(input), func(a, b *Tuple[int, person]) int { return cmp.Compare(a.V2.age, b.V2.age) }) {
+		actual = append(actual, v2)
 	}
 	expect := []person{
 		{"bob", 25},

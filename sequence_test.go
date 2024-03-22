@@ -429,11 +429,11 @@ func TestConcat2(t *testing.T) {
 		age  int
 	}
 	p1 := []person{{"john", 25}, {"jane", 20}}
-	i1 := T12(SliceElem(p1), func(p person) (string, int) {
+	i1 := Transform12(SliceElem(p1), func(p person) (string, int) {
 		return p.name, p.age
 	})
 	p2 := []person{{"joe", 35}, {"ann", 30}, {"josh", 15}}
-	i2 := T12(SliceElem(p2), func(p person) (string, int) {
+	i2 := Transform12(SliceElem(p2), func(p person) (string, int) {
 		return p.name, p.age
 	})
 
@@ -487,32 +487,32 @@ func TestReverse(t *testing.T) {
 func TestReverse2(t *testing.T) {
 	input := []int{1, 2, 3, 4, 5}
 
-	actual := make([]KV[int, int], 0, 5)
+	actual := make([]Tuple[int, int], 0, 5)
 	for idx, v := range Reverse2(Slice(input)) {
-		actual = append(actual, KV[int, int]{K: idx, V: v})
+		actual = append(actual, Tuple[int, int]{V1: idx, V2: v})
 	}
-	expect := []KV[int, int]{
-		{K: 4, V: 5},
-		{K: 3, V: 4},
-		{K: 2, V: 3},
-		{K: 1, V: 2},
-		{K: 0, V: 1},
+	expect := []Tuple[int, int]{
+		{V1: 4, V2: 5},
+		{V1: 3, V2: 4},
+		{V1: 2, V2: 3},
+		{V1: 1, V2: 2},
+		{V1: 0, V2: 1},
 	}
 	if !slices.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
 
-	actual = make([]KV[int, int], 0, 3)
+	actual = make([]Tuple[int, int], 0, 3)
 	for idx, v := range Reverse2(Slice(input)) {
 		if v < 3 {
 			break
 		}
-		actual = append(actual, KV[int, int]{K: idx, V: v})
+		actual = append(actual, Tuple[int, int]{V1: idx, V2: v})
 	}
-	expect = []KV[int, int]{
-		{K: 4, V: 5},
-		{K: 3, V: 4},
-		{K: 2, V: 3},
+	expect = []Tuple[int, int]{
+		{V1: 4, V2: 5},
+		{V1: 3, V2: 4},
+		{V1: 2, V2: 3},
 	}
 	if !slices.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))

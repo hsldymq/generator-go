@@ -10,7 +10,7 @@ import (
 
 type GeneratorFunc[T any] func() (T, bool)
 
-type GeneratorFunc2[K, V any] func() (K, V, bool)
+type GeneratorFunc2[T1, T2 any] func() (T1, T2, bool)
 
 type TInt interface {
 	~int | ~int8 | ~int16 | ~int32 | ~int64 |
@@ -145,14 +145,14 @@ func Sequence[T any](generator func() (T, bool)) iter.Seq[T] {
 }
 
 // Sequence2 is the iter.Seq2 version of Sequence function.
-func Sequence2[K, V any](generator func() (K, V, bool)) iter.Seq2[K, V] {
-	return func(yield func(K, V) bool) {
+func Sequence2[T1, T2 any](generator func() (T1, T2, bool)) iter.Seq2[T1, T2] {
+	return func(yield func(T1, T2) bool) {
 		for {
-			k, v, hasMore := generator()
+			v1, v2, hasMore := generator()
 			if !hasMore {
 				return
 			}
-			if !yield(k, v) {
+			if !yield(v1, v2) {
 				return
 			}
 		}
@@ -173,11 +173,11 @@ func Concat[T any](seqs ...iter.Seq[T]) iter.Seq[T] {
 }
 
 // Concat2 returns an iterator that allows you to traverse multiple iterators in sequence.
-func Concat2[K any, V any](seqs ...iter.Seq2[K, V]) iter.Seq2[K, V] {
-	return func(yield func(K, V) bool) {
+func Concat2[T1 any, T2 any](seqs ...iter.Seq2[T1, T2]) iter.Seq2[T1, T2] {
+	return func(yield func(T1, T2) bool) {
 		for _, seq := range seqs {
-			for k, v := range seq {
-				if !yield(k, v) {
+			for v1, v2 := range seq {
+				if !yield(v1, v2) {
 					return
 				}
 			}
@@ -205,20 +205,20 @@ func Reverse[T any](seq iter.Seq[T]) iter.Seq[T] {
 	}
 }
 
-func Reverse2[K, V any](seq iter.Seq2[K, V]) iter.Seq2[K, V] {
-	return func(yield func(K, V) bool) {
-		var buffer []*KV[K, V]
+func Reverse2[T1, T2 any](seq iter.Seq2[T1, T2]) iter.Seq2[T1, T2] {
+	return func(yield func(T1, T2) bool) {
+		var buffer []*Tuple[T1, T2]
 		next, stop := iter.Pull2(seq)
 		defer stop()
 		for {
-			k, v, ok := next()
+			v1, v2, ok := next()
 			if !ok {
 				break
 			}
-			buffer = append(buffer, &KV[K, V]{K: k, V: v})
+			buffer = append(buffer, &Tuple[T1, T2]{V1: v1, V2: v2})
 		}
 		for i := len(buffer) - 1; i >= 0; i-- {
-			if !yield(buffer[i].K, buffer[i].V) {
+			if !yield(buffer[i].V1, buffer[i].V2) {
 				return
 			}
 		}

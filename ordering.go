@@ -3,10 +3,15 @@
 package goiter
 
 import (
-    "cmp"
-    "iter"
-    "slices"
+	"cmp"
+	"iter"
+	"slices"
 )
+
+type Tuple[T1, T2 any] struct {
+	V1 T1
+	V2 T2
+}
 
 // Order sorts the elements of the input iterator and returns a new iterator whose elements are arranged in ascending or descending order.
 // If the second parameter is true, the elements are arranged in descending order.
@@ -30,43 +35,43 @@ func Order[T cmp.Ordered](seq iter.Seq[T], desc ...bool) iter.Seq[T] {
 	return doOrderBy(seq, cmpFunc, slices.SortFunc[[]T, T])
 }
 
-// OrderK sorts the key-values of the input iterator by key and returns a new iterator whose elements are arranged in ascending or descending order.
-// If the second parameter is true, the elements are arranged in descending order by key.
+// OrderV1 sorts the 2-tuples of the input iterator by first element and returns a new iterator whose elements are arranged in ascending or descending order.
+// If the second parameter is true, the tuples are arranged in descending order.
 // For example:
 //
-//	since iter.Map(map[string]int{"bob":2, "eve":3, "alice":1}) yields the key-values in arbitrary order
-//	then OrderK(iter.Map(map[string]int{"bob":2, "eve":3, "alice":1}))       will yield (alice, 1) (bob 2) (eve 3)
-//	and  OrderK(iter.Map(map[string]int{"bob":2, "eve":3, "alice":1}), true) will yield (eve 3) (bob 2) (alice, 1).
-func OrderK[K cmp.Ordered, V any](seq iter.Seq2[K, V], desc ...bool) iter.Seq2[K, V] {
-	var cmpFunc func(a *KV[K, V], b *KV[K, V]) int
+//	since iter.Map(map[string]int{"bob":2, "eve":3, "alice":1}) yields the 2-tuples in arbitrary order
+//	then OrderV1(iter.Map(map[string]int{"bob":2, "eve":3, "alice":1}))       will yield (alice, 1) (bob 2) (eve 3)
+//	and  OrderV1(iter.Map(map[string]int{"bob":2, "eve":3, "alice":1}), true) will yield (eve 3) (bob 2) (alice, 1).
+func OrderV1[T1 cmp.Ordered, T2 any](seq iter.Seq2[T1, T2], desc ...bool) iter.Seq2[T1, T2] {
+	var cmpFunc func(a *Tuple[T1, T2], b *Tuple[T1, T2]) int
 
 	if len(desc) > 0 && desc[0] {
-		cmpFunc = func(a *KV[K, V], b *KV[K, V]) int {
-			return cmp.Compare(b.K, a.K)
+		cmpFunc = func(a *Tuple[T1, T2], b *Tuple[T1, T2]) int {
+			return cmp.Compare(b.V1, a.V1)
 		}
 	} else {
-		cmpFunc = func(a *KV[K, V], b *KV[K, V]) int {
-			return cmp.Compare(a.K, b.K)
+		cmpFunc = func(a *Tuple[T1, T2], b *Tuple[T1, T2]) int {
+			return cmp.Compare(a.V1, b.V1)
 		}
 	}
 
-	return doOrderBy2(seq, cmpFunc, slices.SortFunc[[]*KV[K, V], *KV[K, V]])
+	return doOrderBy2(seq, cmpFunc, slices.SortFunc[[]*Tuple[T1, T2], *Tuple[T1, T2]])
 }
 
-// OrderV is like OrderK, but it sorts by values.
-func OrderV[K any, V cmp.Ordered](seq iter.Seq2[K, V], desc ...bool) iter.Seq2[K, V] {
-	var cmpFunc func(a *KV[K, V], b *KV[K, V]) int
+// OrderV2 is like OrderV1, but it sorts by the second element of the 2-tuples.
+func OrderV2[T1 any, T2 cmp.Ordered](seq iter.Seq2[T1, T2], desc ...bool) iter.Seq2[T1, T2] {
+	var cmpFunc func(a *Tuple[T1, T2], b *Tuple[T1, T2]) int
 	if len(desc) > 0 && desc[0] {
-		cmpFunc = func(a *KV[K, V], b *KV[K, V]) int {
-			return cmp.Compare(b.V, a.V)
+		cmpFunc = func(a *Tuple[T1, T2], b *Tuple[T1, T2]) int {
+			return cmp.Compare(b.V2, a.V2)
 		}
 	} else {
-		cmpFunc = func(a *KV[K, V], b *KV[K, V]) int {
-			return cmp.Compare(a.V, b.V)
+		cmpFunc = func(a *Tuple[T1, T2], b *Tuple[T1, T2]) int {
+			return cmp.Compare(a.V2, b.V2)
 		}
 	}
 
-	return doOrderBy2(seq, cmpFunc, slices.SortFunc[[]*KV[K, V], *KV[K, V]])
+	return doOrderBy2(seq, cmpFunc, slices.SortFunc[[]*Tuple[T1, T2], *Tuple[T1, T2]])
 }
 
 // OrderBy accepts a comparison function and returns a new iterator that yields elements sorted by the comparison function.
@@ -75,8 +80,8 @@ func OrderBy[T any](seq iter.Seq[T], cmp func(T, T) int) iter.Seq[T] {
 }
 
 // OrderBy2 is the iter.seq2 version of OrderBy.
-func OrderBy2[K, V any](seq iter.Seq2[K, V], cmp func(*KV[K, V], *KV[K, V]) int) iter.Seq2[K, V] {
-	return doOrderBy2(seq, cmp, slices.SortFunc[[]*KV[K, V], *KV[K, V]])
+func OrderBy2[T1, T2 any](seq iter.Seq2[T1, T2], cmp func(*Tuple[T1, T2], *Tuple[T1, T2]) int) iter.Seq2[T1, T2] {
+	return doOrderBy2(seq, cmp, slices.SortFunc[[]*Tuple[T1, T2], *Tuple[T1, T2]])
 }
 
 // StableOrderBy is like OrderBy, but it uses a stable sort algorithm.
@@ -85,11 +90,11 @@ func StableOrderBy[T any](seq iter.Seq[T], cmp func(T, T) int) iter.Seq[T] {
 }
 
 // StableOrderBy2 is like OrderBy2, but it uses a stable sort algorithm.
-func StableOrderBy2[K, V any](seq iter.Seq2[K, V], cmp func(*KV[K, V], *KV[K, V]) int) iter.Seq2[K, V] {
-	return doOrderBy2(seq, cmp, slices.SortStableFunc[[]*KV[K, V], *KV[K, V]])
+func StableOrderBy2[T1, T2 any](seq iter.Seq2[T1, T2], cmp func(*Tuple[T1, T2], *Tuple[T1, T2]) int) iter.Seq2[T1, T2] {
+	return doOrderBy2(seq, cmp, slices.SortStableFunc[[]*Tuple[T1, T2], *Tuple[T1, T2]])
 }
 
-type tSortFunc[S ~[]E, E any] func(x S, cmp func(a, b E) int)
+type tSortFunc[S ~[]T, T any] func(x S, cmp func(a, b T) int)
 
 func doOrderBy[T any](seq iter.Seq[T], cmp func(T, T) int, sortFunc tSortFunc[[]T, T]) iter.Seq[T] {
 	return func(yield func(T) bool) {
@@ -107,19 +112,19 @@ func doOrderBy[T any](seq iter.Seq[T], cmp func(T, T) int, sortFunc tSortFunc[[]
 	}
 }
 
-func doOrderBy2[K, V any](seq iter.Seq2[K, V], cmp func(*KV[K, V], *KV[K, V]) int, sortFunc tSortFunc[[]*KV[K, V], *KV[K, V]]) iter.Seq2[K, V] {
-	return func(yield func(K, V) bool) {
-		kvs := make([]*KV[K, V], 0)
-		for k, v := range seq {
-			kvs = append(kvs, &KV[K, V]{
-				K: k,
-				V: v,
+func doOrderBy2[T1, T2 any](seq iter.Seq2[T1, T2], cmp func(*Tuple[T1, T2], *Tuple[T1, T2]) int, sortFunc tSortFunc[[]*Tuple[T1, T2], *Tuple[T1, T2]]) iter.Seq2[T1, T2] {
+	return func(yield func(T1, T2) bool) {
+		tuples := make([]*Tuple[T1, T2], 0)
+		for v1, v2 := range seq {
+			tuples = append(tuples, &Tuple[T1, T2]{
+				V1: v1,
+				V2: v2,
 			})
 		}
 
-		sortFunc(kvs, cmp)
-		for _, each := range kvs {
-			if !yield(each.K, each.V) {
+		sortFunc(tuples, cmp)
+		for _, each := range tuples {
+			if !yield(each.V1, each.V2) {
 				return
 			}
 		}

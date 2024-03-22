@@ -25,8 +25,8 @@ func Filter[T any](seq iter.Seq[T], predicate func(T) bool) iter.Seq[T] {
 }
 
 // Filter2 returns an iterator that only yields the key-values of the input iterator that satisfy the predicate.
-func Filter2[K any, V any](seq iter.Seq2[K, V], predicate func(K, V) bool) iter.Seq2[K, V] {
-	return func(yield func(K, V) bool) {
+func Filter2[T1 any, T2 any](seq iter.Seq2[T1, T2], predicate func(T1, T2) bool) iter.Seq2[T1, T2] {
+	return func(yield func(T1, T2) bool) {
 		next, stop := iter.Pull2(seq)
 		defer stop()
 		for {
@@ -48,8 +48,8 @@ func Filter2[K any, V any](seq iter.Seq2[K, V], predicate func(K, V) bool) iter.
 // For example:
 //
 //	if the input iterator yields 1 2 3 3 2 1, Distinct function will yield 1 2 3.
-func Distinct[V comparable](seq iter.Seq[V]) iter.Seq[V] {
-	return func(yield func(V) bool) {
+func Distinct[T comparable](seq iter.Seq[T]) iter.Seq[T] {
+	return func(yield func(T) bool) {
 		yielded := map[any]bool{}
 
 		next, stop := iter.Pull(seq)
@@ -70,13 +70,14 @@ func Distinct[V comparable](seq iter.Seq[V]) iter.Seq[V] {
 	}
 }
 
-// DistinctK returns an iterator that deduplicate the key-value pairs yielded by the input iterator according to the key
+// DistinctV1 returns an iterator that deduplicate the 2-tuples provided by the input iterator according to the first element.
 // For example:
 //
-//	if the input iterator yields ("john", 20) ("anne", 21) ("john", 22), DistinctK function will yield ("john", 20) ("anne", 21) because ("john", 22) has the same key as ("john", 20).
-func DistinctK[K comparable, V any](seq iter.Seq2[K, V]) iter.Seq2[K, V] {
-	return func(yield func(K, V) bool) {
-		yielded := newDistinctor[K]()
+//	if the input iterator yields ("john", 20) ("anne", 21) ("john", 22)
+//	DistinctV1 function will yield ("john", 20) ("anne", 21) because ("john", 22) has the same key as ("john", 20).
+func DistinctV1[T1 comparable, T2 any](seq iter.Seq2[T1, T2]) iter.Seq2[T1, T2] {
+	return func(yield func(T1, T2) bool) {
+		yielded := newDistinctor[T1]()
 
 		next, stop := iter.Pull2(seq)
 		defer stop()
@@ -95,10 +96,10 @@ func DistinctK[K comparable, V any](seq iter.Seq2[K, V]) iter.Seq2[K, V] {
 	}
 }
 
-// DistinctV is similar to DistinctK, but it deduplicates by the value instead of the key.
-func DistinctV[K any, V comparable](seq iter.Seq2[K, V]) iter.Seq2[K, V] {
-	return func(yield func(K, V) bool) {
-		yielded := newDistinctor[V]()
+// DistinctV2 is similar to DistinctV1, but it deduplicates by the second element of the 2-tuple.
+func DistinctV2[T1 any, T2 comparable](seq iter.Seq2[T1, T2]) iter.Seq2[T1, T2] {
+	return func(yield func(T1, T2) bool) {
+		yielded := newDistinctor[T2]()
 
 		next, stop := iter.Pull2(seq)
 		defer stop()
@@ -118,9 +119,9 @@ func DistinctV[K any, V comparable](seq iter.Seq2[K, V]) iter.Seq2[K, V] {
 }
 
 // DistinctBy accepts a custom function to determine the deduplicate-key.
-func DistinctBy[V any, DK comparable](seq iter.Seq[V], keySelector func(V) DK) iter.Seq[V] {
-	return func(yield func(V) bool) {
-		yielded := newDistinctor[DK]()
+func DistinctBy[T any, K comparable](seq iter.Seq[T], keySelector func(T) K) iter.Seq[T] {
+	return func(yield func(T) bool) {
+		yielded := newDistinctor[K]()
 
 		next, stop := iter.Pull(seq)
 		defer stop()
@@ -140,9 +141,9 @@ func DistinctBy[V any, DK comparable](seq iter.Seq[V], keySelector func(V) DK) i
 }
 
 // DistinctBy2 is an iter.Seq2 version of DistinctBy.
-func DistinctBy2[K any, V any, DK comparable](seq iter.Seq2[K, V], keySelector func(K, V) DK) iter.Seq2[K, V] {
-	return func(yield func(K, V) bool) {
-		yielded := newDistinctor[DK]()
+func DistinctBy2[T1 any, T2 any, K comparable](seq iter.Seq2[T1, T2], keySelector func(T1, T2) K) iter.Seq2[T1, T2] {
+	return func(yield func(T1, T2) bool) {
+		yielded := newDistinctor[K]()
 
 		next, stop := iter.Pull2(seq)
 		defer stop()

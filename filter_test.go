@@ -62,7 +62,7 @@ func TestDistinct(t *testing.T) {
 	}
 }
 
-func TestDistinctK(t *testing.T) {
+func TestDistinctV1(t *testing.T) {
 	type student struct {
 		Name string
 		Age  int
@@ -74,10 +74,10 @@ func TestDistinctK(t *testing.T) {
 	input := []student{
 		{"john", 20},
 		{"jane", 18},
-		{"john", 23}, // repeated name, so DistinctK will ignore this
+		{"john", 23}, // repeated name, so DistinctV1 will ignore this
 	}
 	actual := []student{}
-	for name, age := range DistinctK(T12(SliceElem(input), transFunc)) {
+	for name, age := range DistinctV1(Transform12(SliceElem(input), transFunc)) {
 		actual = append(actual, student{name, age})
 	}
 
@@ -90,12 +90,12 @@ func TestDistinctK(t *testing.T) {
 	}
 
 	//
-	for _, _ = range DistinctK(T12(SliceElem(input), transFunc)) {
+	for _, _ = range DistinctV1(Transform12(SliceElem(input), transFunc)) {
 		break
 	}
 }
 
-func TestDistinctV(t *testing.T) {
+func TestDistinctV2(t *testing.T) {
 	type student struct {
 		Name string
 		Age  int
@@ -107,10 +107,10 @@ func TestDistinctV(t *testing.T) {
 	input := []student{
 		{"john", 20},
 		{"jane", 18},
-		{"alex", 20}, // alex has the same age as john, so DistinctV will ignore this
+		{"alex", 20}, // alex has the same age as john, so DistinctV2 will ignore this
 	}
 	actual := []student{}
-	for name, age := range DistinctV(T12(SliceElem(input), transFunc)) {
+	for name, age := range DistinctV2(Transform12(SliceElem(input), transFunc)) {
 		actual = append(actual, student{name, age})
 	}
 
@@ -123,7 +123,7 @@ func TestDistinctV(t *testing.T) {
 	}
 
 	//
-	for _, _ = range DistinctV(T12(SliceElem(input), transFunc)) {
+	for _, _ = range DistinctV2(Transform12(SliceElem(input), transFunc)) {
 		break
 	}
 }
@@ -173,7 +173,7 @@ func TestDistinctBy2(t *testing.T) {
 	transFunc := func(s student) (int, student) { return s.Age, s }
 	keySelector := func(age int, s student) int { return s.Age }
 	actual := []student{}
-	for _, each := range DistinctBy2(T12(SliceElem(input), transFunc), keySelector) {
+	for _, each := range DistinctBy2(Transform12(SliceElem(input), transFunc), keySelector) {
 		actual = append(actual, each)
 	}
 
@@ -186,7 +186,7 @@ func TestDistinctBy2(t *testing.T) {
 	}
 
 	//
-	for _, _ = range DistinctBy2(T12(SliceElem(input), transFunc), keySelector) {
+	for _, _ = range DistinctBy2(Transform12(SliceElem(input), transFunc), keySelector) {
 		break
 	}
 }

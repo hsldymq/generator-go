@@ -244,34 +244,33 @@ func Demo() {
 * `goiter.Reverse2`
 
 ### transform
-* `goiter.PickK`
-* `goiter.PickV`
-* `goiter.SwapKV`
-* `goiter.CombineKV`
-* `goiter.T1`
-* `goiter.T2`
-* `goiter.T12`
-* `goiter.T21`
+* `goiter.PickV1`
+* `goiter.PickV2`
+* `goiter.Swap`
+* `goiter.Transform`
+* `goiter.Transform2`
+* `goiter.Transform12`
+* `goiter.Transform21`
 * `goiter.Zip`
 * `goiter.ZipAs`
 * `goiter.ToSlice`
 * `goiter.ToMap`
 * `goiter.ToMapBy`
-* `goiter.ToMapByV`
+* `goiter.ToMapBy2`
 
 ### filter
 * `goiter.Filter`
 * `goiter.Filter2`
 * `goiter.Distinct`
-* `goiter.DistinctK`
-* `goiter.DistinctV`
+* `goiter.DistinctV1`
+* `goiter.DistinctV2`
 * `goiter.DistinctBy`
 * `goiter.DistinctBy2`
 
 ### ordering
 * `goiter.Order`
-* `goiter.OrderK`
-* `goiter.OrderV`
+* `goiter.OrderV1`
+* `goiter.OrderV2`
 * `goiter.OrderBy`
 * `goiter.OrderBy2`
 * `goiter.StableOrderBy`
