@@ -44,7 +44,7 @@ func SliceSource[T any](source SourceFunc[[]T], backward ...bool) iter.Seq2[int,
 	}
 }
 
-// SliceSourceElem is the SourceFunc version of SliceElem function.
+// SliceSourceElem is like SliceElem function, it serves similar purposes as SliceSource.
 // see comments of SliceSource function for more details.
 func SliceSourceElem[T any](source SourceFunc[[]T], backward ...bool) iter.Seq[T] {
 	return PickV2(SliceSource(source, backward...))
@@ -65,7 +65,7 @@ func MapKey[K comparable, V any](m map[K]V) iter.Seq[K] {
 	return PickV1(Map(m))
 }
 
-// MapSource is the SourceFunc version of Map function.
+// MapSource is like Map function, it serves similar purposes as SliceSource.
 // see comments of SliceSource function for more details.
 func MapSource[K comparable, V any](source SourceFunc[map[K]V]) iter.Seq2[K, V] {
 	return func(yield func(K, V) bool) {
@@ -78,13 +78,13 @@ func MapSource[K comparable, V any](source SourceFunc[map[K]V]) iter.Seq2[K, V] 
 	}
 }
 
-// MapSourceVal is the SourceFunc version of MapVal function.
+// MapSourceVal is like MapVal function, it serves similar purposes as SliceSource.
 // see comments of SliceSource function for more details.
 func MapSourceVal[K comparable, V any](source SourceFunc[map[K]V]) iter.Seq[V] {
 	return PickV2(MapSource(source))
 }
 
-// MapSourceKey is the SourceFunc version of MapKey function.
+// MapSourceKey is like MapKey function, it serves similar purposes as SliceSource.
 // see comments of SliceSource function for more details.
 func MapSourceKey[K comparable, V any](source SourceFunc[map[K]V]) iter.Seq[K] {
 	return PickV1(MapSource(source))
@@ -95,12 +95,25 @@ func Channel[T any](c <-chan T) iter.Seq[T] {
 	return ChannelSource(func() <-chan T { return c })
 }
 
-// ChannelSource is the SourceFunc version of Channel function.
+// ChannelSource is like Channel function, it serves similar purposes as SliceSource.
 // see comments of SliceSource function for more details.
 func ChannelSource[T any](source SourceFunc[<-chan T]) iter.Seq[T] {
 	return func(yield func(T) bool) {
 		c := source()
 		for v := range c {
+			if !yield(v) {
+				return
+			}
+		}
+	}
+}
+
+// IterSource serves similar purposes as SliceSource.
+// see comments of SliceSource function for more details.
+func IterSource[T any](source SourceFunc[iter.Seq[T]]) iter.Seq[T] {
+	return func(yield func(T) bool) {
+		seq := source()
+		for v := range seq {
 			if !yield(v) {
 				return
 			}

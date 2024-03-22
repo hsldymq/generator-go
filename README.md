@@ -227,6 +227,7 @@ func Demo() {
 * `goiter.MapSourceKey`
 * `goiter.Channel`
 * `goiter.ChannelSource`
+* `goiter.IterSource`
 * `goiter.Empty`
 * `goiter.Empty2`
 * `goiter.Count`
@@ -275,3 +276,9 @@ func Demo() {
 * `goiter.OrderBy2`
 * `goiter.StableOrderBy`
 * `goiter.StableOrderBy2`
+
+### unrepeatable iterator
+# `goiter.Once`
+# `goiter.Once2`
+# `goiter.ContinuableOnce`
+# `goiter.ContinuableOnce2`

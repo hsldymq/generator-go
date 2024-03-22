@@ -4,6 +4,7 @@ package goiter
 
 import (
 	"fmt"
+	"iter"
 	"maps"
 	"slices"
 	"testing"
@@ -154,6 +155,40 @@ func TestChannel(t *testing.T) {
 		actual = append(actual, v)
 	}
 	expect := []int{1, 2}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+}
+
+func TestSeqSource(t *testing.T) {
+	seq := func(yield func(int) bool) {
+		yield(1)
+		yield(2)
+		yield(3)
+	}
+	iterator := IterSource(func() iter.Seq[int] {
+		return seq
+	})
+
+	actual := make([]int, 0, 3)
+	for v := range iterator {
+		actual = append(actual, v)
+	}
+	expect := []int{1, 2, 3}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
+	seq = func(yield func(int) bool) {
+		yield(4)
+		yield(5)
+		yield(6)
+	}
+	actual = make([]int, 0, 3)
+	for v := range iterator {
+		actual = append(actual, v)
+	}
+	expect = []int{4, 5, 6}
 	if !slices.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
