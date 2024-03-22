@@ -280,7 +280,7 @@ func Demo() {
 * `goiter.StableOrderBy2`
 
 ### unrepeatable iterator
-# `goiter.Once`
-# `goiter.Once2`
-# `goiter.ContinuableOnce`
-# `goiter.ContinuableOnce2`
+* `goiter.Once`
+* `goiter.Once2`
+* `goiter.ContinuableOnce`
+* `goiter.ContinuableOnce2`
