@@ -132,6 +132,9 @@ func Transform21[InT1, InT2, Out any](
 }
 
 // Fold is basically Reduce function in functional programming.
+// so you want to sum up 1 to 10, you can do it like this:
+//
+//	sum := goiter.Fold(goiter.Range(0, 11), 0, func(acc, v int) int { return acc + v })
 func Fold[T any, Acc any](seq iter.Seq[T], init Acc, folder func(Acc, T) Acc) Acc {
 	var result = init
 	for v := range seq {
@@ -142,6 +145,12 @@ func Fold[T any, Acc any](seq iter.Seq[T], init Acc, folder func(Acc, T) Acc) Ac
 
 // Zip is like python's zip function, it takes two iterators and returns an iterator of combined structs,
 // where the i-th struct contains the i-th element from each of the argument iterators.
+// when two iterators have different lengths, the resulting iterator will stop when the shorter one stops.
+// for example:
+//
+//	seq1 yields  1   2   3   4   5
+//	seq2 yields "a" "b" "c"
+//	Zip(seq1, seq2) will yield {1, "a"} {2, "b"} {3, "c"}
 func Zip[T1, T2 any](seq1 iter.Seq[T1], seq2 iter.Seq[T2]) iter.Seq[*Combined[T1, T2]] {
 	return ZipAs(seq1, seq2, func(zipped *ZippedE[T1, T2]) *Combined[T1, T2] {
 		return &Combined[T1, T2]{
@@ -152,6 +161,7 @@ func Zip[T1, T2 any](seq1 iter.Seq[T1], seq2 iter.Seq[T2]) iter.Seq[*Combined[T1
 }
 
 // ZipAs is a more general version of Zip.
+// if exhaust parameter is true, the resulting iterator will not stop until both input iterators stop, and ZippedE.OK1 and ZippedE.OK2 will be false when the corresponding iterator stops.
 func ZipAs[InT1, InT2, Out any](seq1 iter.Seq[InT1], seq2 iter.Seq[InT2], transformer func(*ZippedE[InT1, InT2]) Out, exhaust ...bool) iter.Seq[Out] {
 	return func(yield func(Out) bool) {
 		shouldExhaust := false
