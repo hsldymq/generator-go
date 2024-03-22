@@ -85,9 +85,8 @@ func RangeDemo() {
     fmt.Println()
 
     // This will print 5 3 1 -1 -3
-    // When iterating in reverse, you still need to provide a positive step, so you don't need to adjust the sign of the step based on the direction of the iteration.
-    // If you provide a step of 0 or a negative number, RangeStep will not iterate over any values.
-    // This is different from the range function in Python.
+    // When iterating in reverse, you still need to provide a positive step value, so you don't need to adjust the sign of the step based on the direction of the iteration.
+    // If you provide a step of 0 or a negative number, RangeStep will not yield any values, this is different from the range function in Python.
     for v := range goiter.RangeStep(5, -5, 2) {
         fmt.Printf("%d ", v)
     }
