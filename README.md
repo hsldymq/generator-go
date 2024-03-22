@@ -3,9 +3,11 @@
 [![Test](https://github.com/hsldymq/goiter/actions/workflows/test.yml/badge.svg)](https://github.com/hsldymq/goiter/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/hsldymq/goiter/graph/badge.svg?token=1JE9U83U8K)](https://codecov.io/gh/hsldymq/goiter)
 
-Rangefunc is a feature introduced in golang 1.22, which is similar to the Generator in other languages (JavaScript, PHP, etc...), making the for statement have the opportunity to iterate over any data structure.
+Go 1.22 introduced an experimental feature called [Rangefunc](https://go.dev/wiki/RangefuncExperiment), this is similar to the Generator in other languages (JavaScript, PHP, etc...). With this feature you can iterate data over any data structure.
 
-goiter provides some iterator generation functions for some common scenarios under this feature.
+The feature itself is simplistic designed, it does not provide many convenient functions for common use cases, such as sequence generation, data transformation, filtering, ordering, etc... 
+
+So this package do the job, it provides many functions for common scenarios under this feature.
 
 To use this package, you should enable rangefunc experiment feature.
 
