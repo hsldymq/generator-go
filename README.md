@@ -5,7 +5,7 @@
 
 Go 1.22 introduced an experimental feature called [Rangefunc](https://go.dev/wiki/RangefuncExperiment), this is similar to the Generator in other languages (JavaScript, PHP, etc...). With this feature you can iterate data over any data structure.
 
-The feature itself is simplistic designed, it does not provide many convenient functions for common use cases, such as sequence generation, data transformation, filtering, ordering, etc... 
+The feature itself is simplistic designed, it does not provide many convenient functions for common use cases, such as sequence generation, data transformation, filtering, etc... 
 
 So this package do the job, it provides many functions for common scenarios under this feature.
 
