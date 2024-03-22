@@ -160,7 +160,7 @@ func TestChannel(t *testing.T) {
 	}
 }
 
-func TestSeqSource(t *testing.T) {
+func TestIterSource(t *testing.T) {
 	seq := func(yield func(int) bool) {
 		yield(1)
 		yield(2)
@@ -187,8 +187,11 @@ func TestSeqSource(t *testing.T) {
 	actual = make([]int, 0, 3)
 	for v := range iterator {
 		actual = append(actual, v)
+		if v == 5 {
+			break
+		}
 	}
-	expect = []int{4, 5, 6}
+	expect = []int{4, 5}
 	if !slices.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
