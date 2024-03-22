@@ -71,11 +71,11 @@ func T1[In, Out any](
 }
 
 // T2 is similar to T1, but it obtains the key-value pairs from the input iterator and yields new key-value pairs after transformation.
-func T2[InK, InV, OutK, OutV any](
-	seq iter.Seq2[InK, InV],
-	transformer func(InK, InV) (OutK, OutV),
-) iter.Seq2[OutK, OutV] {
-	return func(yield func(OutK, OutV) bool) {
+func T2[InT1, InT2, OutT1, OutT2 any](
+	seq iter.Seq2[InT1, InT2],
+	transformer func(InT1, InT2) (OutT1, OutT2),
+) iter.Seq2[OutT1, OutT2] {
+	return func(yield func(OutT1, OutT2) bool) {
 		next, stop := iter.Pull2(seq)
 		defer stop()
 		for {
@@ -91,11 +91,11 @@ func T2[InK, InV, OutK, OutV any](
 }
 
 // T12 is similar to T1, but it obtains the values from the input iterator and yields new key-value pairs after transformation.
-func T12[In, OutK, OutV any](
+func T12[In, OutT1, OutT2 any](
 	seq iter.Seq[In],
-	transformer func(In) (OutK, OutV),
-) iter.Seq2[OutK, OutV] {
-	return func(yield func(OutK, OutV) bool) {
+	transformer func(In) (OutT1, OutT2),
+) iter.Seq2[OutT1, OutT2] {
+	return func(yield func(OutT1, OutT2) bool) {
 		next, stop := iter.Pull(seq)
 		defer stop()
 		for {
@@ -111,9 +111,9 @@ func T12[In, OutK, OutV any](
 }
 
 // T21 is similar to T2, but it only yields transform values without keys.
-func T21[InK, InV, Out any](
-	seq iter.Seq2[InK, InV],
-	transformer func(InK, InV) Out,
+func T21[InT1, InT2, Out any](
+	seq iter.Seq2[InT1, InT2],
+	transformer func(InT1, InT2) Out,
 ) iter.Seq[Out] {
 	return func(yield func(Out) bool) {
 		next, stop := iter.Pull2(seq)
@@ -139,7 +139,7 @@ func Zip[T1, T2 any](seq1 iter.Seq[T1], seq2 iter.Seq[T2]) iter.Seq[*Zipped[T1, 
 	})
 }
 
-func ZipAs[In1, In2, Out any](seq1 iter.Seq[In1], seq2 iter.Seq[In2], transformer func(*ZippedE[In1, In2]) Out, exhaust ...bool) iter.Seq[Out] {
+func ZipAs[InT1, InT2, Out any](seq1 iter.Seq[InT1], seq2 iter.Seq[InT2], transformer func(*ZippedE[InT1, InT2]) Out, exhaust ...bool) iter.Seq[Out] {
 	return func(yield func(Out) bool) {
 		shouldExhaust := false
 		if len(exhaust) > 0 {
@@ -161,7 +161,7 @@ func ZipAs[In1, In2, Out any](seq1 iter.Seq[In1], seq2 iter.Seq[In2], transforme
 				return
 			}
 
-			out := transformer(&ZippedE[In1, In2]{
+			out := transformer(&ZippedE[InT1, InT2]{
 				V1:  in1,
 				OK1: ok1,
 				V2:  in2,
@@ -174,6 +174,7 @@ func ZipAs[In1, In2, Out any](seq1 iter.Seq[In1], seq2 iter.Seq[In2], transforme
 	}
 }
 
+// ToSlice converts an iterator to a slice.
 func ToSlice[T any](seq iter.Seq[T]) []T {
 	var result []T
 	for each := range seq {
@@ -182,6 +183,7 @@ func ToSlice[T any](seq iter.Seq[T]) []T {
 	return result
 }
 
+// ToMap converts an iterator of key-value pairs to a map.
 func ToMap[K comparable, V any](seq iter.Seq2[K, V]) map[K]V {
 	result := make(map[K]V)
 	for k, v := range seq {
@@ -190,25 +192,27 @@ func ToMap[K comparable, V any](seq iter.Seq2[K, V]) map[K]V {
 	return result
 }
 
-func ToMapBy[InK any, InV any, OutK comparable, OutV any](
-	seq iter.Seq2[InK, InV],
-	transformer func(InK, InV) (OutK, OutV),
+// ToMapBy takes every element from the input iterator, applies the transformer function to it, and then stores the result in a map.
+func ToMapBy[T any, OutK comparable, OutV any](
+	seq iter.Seq[T],
+	transformer func(T) (OutK, OutV),
 ) map[OutK]OutV {
 	result := make(map[OutK]OutV)
-	for k, v := range seq {
-		kk, vv := transformer(k, v)
+	for v := range seq {
+		kk, vv := transformer(v)
 		result[kk] = vv
 	}
 	return result
 }
 
-func ToMapByV[V any, OutK comparable, OutV any](
-	seq iter.Seq[V],
-	transformer func(V) (OutK, OutV),
+// ToMapBy2 is similar to ToMapBy, but it takes 2-tuple from the input iterator.
+func ToMapBy2[InT1 any, InT2 any, OutK comparable, OutV any](
+	seq iter.Seq2[InT1, InT2],
+	transformer func(InT1, InT2) (OutK, OutV),
 ) map[OutK]OutV {
 	result := make(map[OutK]OutV)
-	for v := range seq {
-		kk, vv := transformer(v)
+	for k, v := range seq {
+		kk, vv := transformer(k, v)
 		result[kk] = vv
 	}
 	return result

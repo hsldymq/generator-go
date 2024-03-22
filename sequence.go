@@ -144,6 +144,7 @@ func Sequence[T any](generator func() (T, bool)) iter.Seq[T] {
 	}
 }
 
+// Sequence2 is the iter.Seq2 version of Sequence function.
 func Sequence2[K, V any](generator func() (K, V, bool)) iter.Seq2[K, V] {
 	return func(yield func(K, V) bool) {
 		for {
