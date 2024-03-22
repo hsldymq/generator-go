@@ -180,9 +180,11 @@ func TestIterSource(t *testing.T) {
 	}
 
 	seq = func(yield func(int) bool) {
-		yield(4)
-		yield(5)
-		yield(6)
+		for _, each := range []int{4, 5, 6} {
+			if !yield(each) {
+				break
+			}
+		}
 	}
 	actual = make([]int, 0, 3)
 	for v := range iterator {
