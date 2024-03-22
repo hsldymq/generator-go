@@ -7,9 +7,9 @@ Go 1.22 introduced an experimental feature called [Rangefunc](https://go.dev/wik
 
 The feature itself is simplistic designed, it does not provide many convenient functions for common use cases, such as sequence generation, data transformation, filtering, etc... 
 
-So this package do the job, it provides many functions for common scenarios under this feature.
+So this package do the job.
 
-To use this package, you should enable rangefunc experiment feature.
+To use this package, you must enable rangefunc feature.
 
 # Requirements
 * golang version >= 1.22.0
