@@ -1,7 +1,8 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/hsldymq/goiter.svg)](https://pkg.go.dev/github.com/hsldymq/goiter)
 [![Go Report Card](https://goreportcard.com/badge/github.com/hsldymq/goiter)](https://goreportcard.com/report/github.com/hsldymq/goiter)
-[![Test](https://github.com/hsldymq/goiter/actions/workflows/test.yml/badge.svg)](https://github.com/hsldymq/goiter/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/hsldymq/goiter/graph/badge.svg?token=1JE9U83U8K)](https://codecov.io/gh/hsldymq/goiter)
+![GitHub License](https://img.shields.io/github/license/hsldymq/goiter?color=blue)
+[![Test](https://github.com/hsldymq/goiter/actions/workflows/test.yml/badge.svg)](https://github.com/hsldymq/goiter/actions/workflows/test.yml)
 
 Go 1.22 introduced an experimental feature called [Rangefunc](https://go.dev/wiki/RangefuncExperiment), this is similar to the Generator in other languages (JavaScript, PHP, etc...). With this feature you can iterate data over any data structure.
 
