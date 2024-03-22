@@ -24,20 +24,20 @@ func Filter[T any](seq iter.Seq[T], predicate func(T) bool) iter.Seq[T] {
 	}
 }
 
-// Filter2 returns an iterator that only yields the key-values of the input iterator that satisfy the predicate.
+// Filter2 returns an iterator that only yields the 2-tuples of the input iterator that satisfy the predicate.
 func Filter2[T1 any, T2 any](seq iter.Seq2[T1, T2], predicate func(T1, T2) bool) iter.Seq2[T1, T2] {
 	return func(yield func(T1, T2) bool) {
 		next, stop := iter.Pull2(seq)
 		defer stop()
 		for {
-			k, v, ok := next()
+			v1, v2, ok := next()
 			if !ok {
 				return
 			}
-			if !predicate(k, v) {
+			if !predicate(v1, v2) {
 				continue
 			}
-			if !yield(k, v) {
+			if !yield(v1, v2) {
 				return
 			}
 		}
@@ -82,14 +82,14 @@ func DistinctV1[T1 comparable, T2 any](seq iter.Seq2[T1, T2]) iter.Seq2[T1, T2] 
 		next, stop := iter.Pull2(seq)
 		defer stop()
 		for {
-			k, v, ok := next()
+			v1, v2, ok := next()
 			if !ok {
 				return
 			}
-			if !yielded.mark(k) {
+			if !yielded.mark(v1) {
 				continue
 			}
-			if !yield(k, v) {
+			if !yield(v1, v2) {
 				return
 			}
 		}
@@ -104,14 +104,14 @@ func DistinctV2[T1 any, T2 comparable](seq iter.Seq2[T1, T2]) iter.Seq2[T1, T2] 
 		next, stop := iter.Pull2(seq)
 		defer stop()
 		for {
-			k, v, ok := next()
+			v1, v2, ok := next()
 			if !ok {
 				return
 			}
-			if !yielded.mark(v) {
+			if !yielded.mark(v2) {
 				continue
 			}
-			if !yield(k, v) {
+			if !yield(v1, v2) {
 				return
 			}
 		}
@@ -148,14 +148,14 @@ func DistinctBy2[T1 any, T2 any, K comparable](seq iter.Seq2[T1, T2], keySelecto
 		next, stop := iter.Pull2(seq)
 		defer stop()
 		for {
-			k, v, ok := next()
+			v1, v2, ok := next()
 			if !ok {
 				return
 			}
-			if !yielded.mark(keySelector(k, v)) {
+			if !yielded.mark(keySelector(v1, v2)) {
 				continue
 			}
-			if !yield(k, v) {
+			if !yield(v1, v2) {
 				return
 			}
 		}

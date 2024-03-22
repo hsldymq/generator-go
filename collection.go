@@ -70,8 +70,8 @@ func MapKey[K comparable, V any](m map[K]V) iter.Seq[K] {
 func MapSource[K comparable, V any](source SourceFunc[map[K]V]) iter.Seq2[K, V] {
 	return func(yield func(K, V) bool) {
 		m := source()
-		for k, v := range m {
-			if !yield(k, v) {
+		for key, val := range m {
+			if !yield(key, val) {
 				return
 			}
 		}

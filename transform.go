@@ -109,11 +109,11 @@ func Transform21[InT1, InT2, Out any](
 		next, stop := iter.Pull2(seq)
 		defer stop()
 		for {
-			k, v, ok := next()
+			v1, v2, ok := next()
 			if !ok {
 				return
 			}
-			out := transformer(k, v)
+			out := transformer(v1, v2)
 			if !yield(out) {
 				return
 			}
