@@ -245,7 +245,7 @@ func Demo() {
 * `goiter.Reverse`
 * `goiter.Reverse2`
 
-### transform
+### transformation
 * `goiter.PickV1`
 * `goiter.PickV2`
 * `goiter.Swap`
@@ -262,7 +262,7 @@ func Demo() {
 * `goiter.ToMapBy`
 * `goiter.ToMapBy2`
 
-### filter
+### filtering
 * `goiter.Filter`
 * `goiter.Filter2`
 * `goiter.Distinct`
