@@ -155,7 +155,7 @@ func TestOrderBy2(t *testing.T) {
 		"alice": 25,
 	}
 	actual := []person{}
-	for v1, v2 := range OrderBy2(Map(input), func(a, b *Tuple[string, int]) int { return cmp.Compare(a.V2, b.V2) }) {
+	for v1, v2 := range OrderBy2(Map(input), func(a, b *Combined[string, int]) int { return cmp.Compare(a.V2, b.V2) }) {
 		actual = append(actual, person{name: v1, age: v2})
 	}
 	expect := []person{
@@ -203,7 +203,7 @@ func TestStableOrderBy2(t *testing.T) {
 		{"alice", 25},
 	}
 	actual := []person{}
-	for _, v2 := range StableOrderBy2(Slice(input), func(a, b *Tuple[int, person]) int { return cmp.Compare(a.V2.age, b.V2.age) }) {
+	for _, v2 := range StableOrderBy2(Slice(input), func(a, b *Combined[int, person]) int { return cmp.Compare(a.V2.age, b.V2.age) }) {
 		actual = append(actual, v2)
 	}
 	expect := []person{

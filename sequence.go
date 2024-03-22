@@ -207,7 +207,7 @@ func Reverse[T any](seq iter.Seq[T]) iter.Seq[T] {
 
 func Reverse2[T1, T2 any](seq iter.Seq2[T1, T2]) iter.Seq2[T1, T2] {
 	return func(yield func(T1, T2) bool) {
-		var buffer []*Tuple[T1, T2]
+		var buffer []*Combined[T1, T2]
 		next, stop := iter.Pull2(seq)
 		defer stop()
 		for {
@@ -215,7 +215,7 @@ func Reverse2[T1, T2 any](seq iter.Seq2[T1, T2]) iter.Seq2[T1, T2] {
 			if !ok {
 				break
 			}
-			buffer = append(buffer, &Tuple[T1, T2]{V1: v1, V2: v2})
+			buffer = append(buffer, &Combined[T1, T2]{V1: v1, V2: v2})
 		}
 		for i := len(buffer) - 1; i >= 0; i-- {
 			if !yield(buffer[i].V1, buffer[i].V2) {

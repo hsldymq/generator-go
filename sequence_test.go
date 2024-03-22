@@ -487,11 +487,11 @@ func TestReverse(t *testing.T) {
 func TestReverse2(t *testing.T) {
 	input := []int{1, 2, 3, 4, 5}
 
-	actual := make([]Tuple[int, int], 0, 5)
+	actual := make([]Combined[int, int], 0, 5)
 	for idx, v := range Reverse2(Slice(input)) {
-		actual = append(actual, Tuple[int, int]{V1: idx, V2: v})
+		actual = append(actual, Combined[int, int]{V1: idx, V2: v})
 	}
-	expect := []Tuple[int, int]{
+	expect := []Combined[int, int]{
 		{V1: 4, V2: 5},
 		{V1: 3, V2: 4},
 		{V1: 2, V2: 3},
@@ -502,14 +502,14 @@ func TestReverse2(t *testing.T) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
 
-	actual = make([]Tuple[int, int], 0, 3)
+	actual = make([]Combined[int, int], 0, 3)
 	for idx, v := range Reverse2(Slice(input)) {
 		if v < 3 {
 			break
 		}
-		actual = append(actual, Tuple[int, int]{V1: idx, V2: v})
+		actual = append(actual, Combined[int, int]{V1: idx, V2: v})
 	}
-	expect = []Tuple[int, int]{
+	expect = []Combined[int, int]{
 		{V1: 4, V2: 5},
 		{V1: 3, V2: 4},
 		{V1: 2, V2: 3},

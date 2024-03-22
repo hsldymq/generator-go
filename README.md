@@ -248,10 +248,12 @@ func Demo() {
 * `goiter.PickV1`
 * `goiter.PickV2`
 * `goiter.Swap`
+* `goiter.Combine`
 * `goiter.Transform`
 * `goiter.Transform2`
 * `goiter.Transform12`
 * `goiter.Transform21`
+* `goiter.Fold`
 * `goiter.Zip`
 * `goiter.ZipAs`
 * `goiter.ToSlice`
