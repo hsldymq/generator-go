@@ -143,7 +143,7 @@ func (s *School) Students() iter.Seq[*Student] {
 
 func PrintNamesAges(school *School) {
     // this iterator yields the age and name of each student
-    iterator := goiter.T12(school.Students(), func(student *Student) (string, int) {
+    iterator := goiter.Transform12(school.Students(), func(student *Student) (string, int) {
         return student.Name, student.Age
     })
     
