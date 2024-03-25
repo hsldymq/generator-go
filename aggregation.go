@@ -33,3 +33,25 @@ func Fold[T any, Acc any](seq iter.Seq[T], init Acc, folder func(Acc, T) Acc) Ac
     }
     return result
 }
+
+// Scan is similar to Fold, but unlike Fold, it reduces a complete sequence to a single value,
+// Scan returns an iterator that will yield the folded value of each round.
+func Scan[T any, Acc any](seq iter.Seq[T], init Acc, folder func(Acc, T) Acc) iter.Seq[Acc] {
+    return func(yield func(Acc) bool) {
+        next, stop := iter.Pull(seq)
+        defer stop()
+
+        acc := init
+        for {
+            v, ok := next()
+            if !ok {
+                return
+            }
+
+            acc = folder(acc, v)
+            if !yield(acc) {
+                return
+            }
+        }
+    }
+}
