@@ -3,9 +3,9 @@
 package goiter
 
 import (
-	"cmp"
-	"iter"
-	"slices"
+    "cmp"
+    "iter"
+    "slices"
 )
 
 // Order sorts the elements of the input iterator and returns a new iterator whose elements are arranged in ascending or descending order.
@@ -16,18 +16,18 @@ import (
 //	then Order(iter.SliceElem([]int{2, 3, 1}))       will yield 1 2 3
 //	and  Order(iter.SliceElem([]int{2, 3, 1}), true) will yield 3 2 1.
 func Order[T cmp.Ordered](seq iter.Seq[T], desc ...bool) iter.Seq[T] {
-	var cmpFunc func(a T, b T) int
-	if len(desc) > 0 && desc[0] {
-		cmpFunc = func(a, b T) int {
-			return cmp.Compare(b, a)
-		}
-	} else {
-		cmpFunc = func(a, b T) int {
-			return cmp.Compare(a, b)
-		}
-	}
+    var cmpFunc func(a T, b T) int
+    if len(desc) > 0 && desc[0] {
+        cmpFunc = func(a, b T) int {
+            return cmp.Compare(b, a)
+        }
+    } else {
+        cmpFunc = func(a, b T) int {
+            return cmp.Compare(a, b)
+        }
+    }
 
-	return doOrderBy(seq, cmpFunc, slices.SortFunc[[]T, T])
+    return doOrderBy(seq, cmpFunc, slices.SortFunc[[]T, T])
 }
 
 // OrderV1 sorts the 2-tuples of the input iterator by first element and returns a new iterator whose elements are arranged in ascending or descending order.
@@ -38,90 +38,90 @@ func Order[T cmp.Ordered](seq iter.Seq[T], desc ...bool) iter.Seq[T] {
 //	then OrderV1(iter.Map(map[string]int{"bob":2, "eve":3, "alice":1}))       will yield (alice, 1) (bob 2) (eve 3)
 //	and  OrderV1(iter.Map(map[string]int{"bob":2, "eve":3, "alice":1}), true) will yield (eve 3) (bob 2) (alice, 1).
 func OrderV1[T1 cmp.Ordered, T2 any](seq iter.Seq2[T1, T2], desc ...bool) iter.Seq2[T1, T2] {
-	var cmpFunc func(a *Combined[T1, T2], b *Combined[T1, T2]) int
+    var cmpFunc func(a *Combined[T1, T2], b *Combined[T1, T2]) int
 
-	if len(desc) > 0 && desc[0] {
-		cmpFunc = func(a *Combined[T1, T2], b *Combined[T1, T2]) int {
-			return cmp.Compare(b.V1, a.V1)
-		}
-	} else {
-		cmpFunc = func(a *Combined[T1, T2], b *Combined[T1, T2]) int {
-			return cmp.Compare(a.V1, b.V1)
-		}
-	}
+    if len(desc) > 0 && desc[0] {
+        cmpFunc = func(a *Combined[T1, T2], b *Combined[T1, T2]) int {
+            return cmp.Compare(b.V1, a.V1)
+        }
+    } else {
+        cmpFunc = func(a *Combined[T1, T2], b *Combined[T1, T2]) int {
+            return cmp.Compare(a.V1, b.V1)
+        }
+    }
 
-	return doOrderBy2(seq, cmpFunc, slices.SortFunc[[]*Combined[T1, T2], *Combined[T1, T2]])
+    return doOrderBy2(seq, cmpFunc, slices.SortFunc[[]*Combined[T1, T2], *Combined[T1, T2]])
 }
 
 // OrderV2 is like OrderV1, but it sorts by the second element of the 2-tuples.
 func OrderV2[T1 any, T2 cmp.Ordered](seq iter.Seq2[T1, T2], desc ...bool) iter.Seq2[T1, T2] {
-	var cmpFunc func(a *Combined[T1, T2], b *Combined[T1, T2]) int
-	if len(desc) > 0 && desc[0] {
-		cmpFunc = func(a *Combined[T1, T2], b *Combined[T1, T2]) int {
-			return cmp.Compare(b.V2, a.V2)
-		}
-	} else {
-		cmpFunc = func(a *Combined[T1, T2], b *Combined[T1, T2]) int {
-			return cmp.Compare(a.V2, b.V2)
-		}
-	}
+    var cmpFunc func(a *Combined[T1, T2], b *Combined[T1, T2]) int
+    if len(desc) > 0 && desc[0] {
+        cmpFunc = func(a *Combined[T1, T2], b *Combined[T1, T2]) int {
+            return cmp.Compare(b.V2, a.V2)
+        }
+    } else {
+        cmpFunc = func(a *Combined[T1, T2], b *Combined[T1, T2]) int {
+            return cmp.Compare(a.V2, b.V2)
+        }
+    }
 
-	return doOrderBy2(seq, cmpFunc, slices.SortFunc[[]*Combined[T1, T2], *Combined[T1, T2]])
+    return doOrderBy2(seq, cmpFunc, slices.SortFunc[[]*Combined[T1, T2], *Combined[T1, T2]])
 }
 
 // OrderBy accepts a comparison function and returns a new iterator that yields elements sorted by the comparison function.
 func OrderBy[T any](seq iter.Seq[T], cmp func(T, T) int) iter.Seq[T] {
-	return doOrderBy(seq, cmp, slices.SortFunc[[]T, T])
+    return doOrderBy(seq, cmp, slices.SortFunc[[]T, T])
 }
 
 // OrderBy2 is the iter.seq2 version of OrderBy.
 func OrderBy2[T1, T2 any](seq iter.Seq2[T1, T2], cmp func(*Combined[T1, T2], *Combined[T1, T2]) int) iter.Seq2[T1, T2] {
-	return doOrderBy2(seq, cmp, slices.SortFunc[[]*Combined[T1, T2], *Combined[T1, T2]])
+    return doOrderBy2(seq, cmp, slices.SortFunc[[]*Combined[T1, T2], *Combined[T1, T2]])
 }
 
 // StableOrderBy is like OrderBy, but it uses a stable sort algorithm.
 func StableOrderBy[T any](seq iter.Seq[T], cmp func(T, T) int) iter.Seq[T] {
-	return doOrderBy(seq, cmp, slices.SortStableFunc[[]T, T])
+    return doOrderBy(seq, cmp, slices.SortStableFunc[[]T, T])
 }
 
 // StableOrderBy2 is like OrderBy2, but it uses a stable sort algorithm.
 func StableOrderBy2[T1, T2 any](seq iter.Seq2[T1, T2], cmp func(*Combined[T1, T2], *Combined[T1, T2]) int) iter.Seq2[T1, T2] {
-	return doOrderBy2(seq, cmp, slices.SortStableFunc[[]*Combined[T1, T2], *Combined[T1, T2]])
+    return doOrderBy2(seq, cmp, slices.SortStableFunc[[]*Combined[T1, T2], *Combined[T1, T2]])
 }
 
 type tSortFunc[S ~[]T, T any] func(x S, cmp func(a, b T) int)
 
 func doOrderBy[T any](seq iter.Seq[T], cmp func(T, T) int, sortFunc tSortFunc[[]T, T]) iter.Seq[T] {
-	return func(yield func(T) bool) {
-		s := make([]T, 0)
-		for each := range seq {
-			s = append(s, each)
-		}
+    return func(yield func(T) bool) {
+        s := make([]T, 0)
+        for each := range seq {
+            s = append(s, each)
+        }
 
-		sortFunc(s, cmp)
-		for _, each := range s {
-			if !yield(each) {
-				return
-			}
-		}
-	}
+        sortFunc(s, cmp)
+        for _, each := range s {
+            if !yield(each) {
+                return
+            }
+        }
+    }
 }
 
 func doOrderBy2[T1, T2 any](seq iter.Seq2[T1, T2], cmp func(*Combined[T1, T2], *Combined[T1, T2]) int, sortFunc tSortFunc[[]*Combined[T1, T2], *Combined[T1, T2]]) iter.Seq2[T1, T2] {
-	return func(yield func(T1, T2) bool) {
-		tuples := make([]*Combined[T1, T2], 0)
-		for v1, v2 := range seq {
-			tuples = append(tuples, &Combined[T1, T2]{
-				V1: v1,
-				V2: v2,
-			})
-		}
+    return func(yield func(T1, T2) bool) {
+        tuples := make([]*Combined[T1, T2], 0)
+        for v1, v2 := range seq {
+            tuples = append(tuples, &Combined[T1, T2]{
+                V1: v1,
+                V2: v2,
+            })
+        }
 
-		sortFunc(tuples, cmp)
-		for _, each := range tuples {
-			if !yield(each.V1, each.V2) {
-				return
-			}
-		}
-	}
+        sortFunc(tuples, cmp)
+        for _, each := range tuples {
+            if !yield(each.V1, each.V2) {
+                return
+            }
+        }
+    }
 }
