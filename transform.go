@@ -131,18 +131,6 @@ func Transform21[InT1, InT2, Out any](
     }
 }
 
-// Fold is basically Reduce function in functional programming.
-// so you want to sum up 1 to 10, you can do it like this:
-//
-//	sum := goiter.Fold(goiter.Range(0, 11), 0, func(acc, v int) int { return acc + v })
-func Fold[T any, Acc any](seq iter.Seq[T], init Acc, folder func(Acc, T) Acc) Acc {
-    var result = init
-    for v := range seq {
-        result = folder(result, v)
-    }
-    return result
-}
-
 // Zip is like python's zip function, it takes two iterators and returns an iterator of combined structs,
 // where the i-th struct contains the i-th element from each of the argument iterators.
 // when two iterators have different lengths, the resulting iterator will stop when the shorter one stops.

@@ -134,21 +134,3 @@ func Empty2[T1 any, T2 any]() iter.Seq2[T1, T2] {
 		return
 	}
 }
-
-// Count counts the number of elements yielded by the input iterator.
-func Count[T any](seq iter.Seq[T]) int {
-	count := 0
-	for _ = range seq {
-		count++
-	}
-	return count
-}
-
-// Count2 counts the number of elements yielded by the input iterator.
-func Count2[T1 any, T2 any](seq iter.Seq2[T1, T2]) int {
-	count := 0
-	for _, _ = range seq {
-		count++
-	}
-	return count
-}

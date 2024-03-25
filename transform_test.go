@@ -188,17 +188,6 @@ func TestTransform21(t *testing.T) {
     }
 }
 
-func TestFold(t *testing.T) {
-    foldFunc := func(a int, b int) int {
-        return a + b
-    }
-    actual := Fold(SliceElem([]int{1, 2, 3}), 0, foldFunc)
-    expect := 6
-    if expect != actual {
-        t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
-    }
-}
-
 func TestZip(t *testing.T) {
     // case 1
     seq1 := SliceElem([]string{"Alice", "Bob", "Eve"})

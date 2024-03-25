@@ -220,29 +220,3 @@ func TestEmpty2(t *testing.T) {
         t.Fatal(fmt.Sprintf("expect: 0, actual: %d", i))
     }
 }
-
-func TestCount(t *testing.T) {
-    input := []int{1, 2, 3, 4, 5}
-    seq := Filter(SliceElem(input), func(v int) bool {
-        return v%2 == 0
-    })
-
-    expect := 2
-    actual := Count(seq)
-    if actual != expect {
-        t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
-    }
-}
-
-func TestCount2(t *testing.T) {
-    input := []int{1, 2, 3, 4, 5}
-    seq := Filter2(Slice(input), func(idx int, v int) bool {
-        return idx != 0
-    })
-
-    expect := 4
-    actual := Count2(seq)
-    if actual != expect {
-        t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
-    }
-}
