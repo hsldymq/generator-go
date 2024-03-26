@@ -270,7 +270,7 @@ func Demo() {
 * `goiter.ContinuableOnce`
 * `goiter.ContinuableOnce2`
 
-### data source
+### creating iterator
 * `goiter.Slice`
 * `goiter.SliceElem`
 * `goiter.SliceSource`
@@ -290,7 +290,7 @@ func Demo() {
 * `goiter.Empty`
 * `goiter.Empty2`
 
-### collection
+### converting iterator
 * `goiter.ToSlice`
 * `goiter.ToMap`
 * `goiter.ToMapAs`
