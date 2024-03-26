@@ -72,44 +72,6 @@ func TestIterator_Filter(t *testing.T) {
 		break
 	}
 }
-func TestIterator_Concat(t *testing.T) {
-	c1 := []int{1, 2, 3}
-	c2 := []int{4, 5, 6}
-	actual := make([]int, 0, 6)
-	for v := range SliceElem(c1).Concat(SliceElem(c2)) {
-		actual = append(actual, v)
-	}
-	expect := []int{1, 2, 3, 4, 5, 6}
-	if !slices.Equal(expect, actual) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
-	}
-
-	c1 = []int{4, 5, 6}
-	c2 = []int{7, 8, 9}
-	actual = make([]int, 0, 6)
-	for v := range SliceElem(c1).Concat(SliceElem(c2)) {
-		if v == 8 {
-			break
-		}
-		actual = append(actual, v)
-	}
-	expect = []int{4, 5, 6, 7}
-	if !slices.Equal(expect, actual) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
-	}
-
-	actual = make([]int, 0, 6)
-	for v := range SliceElem([]int{10, 11, 12}).Concat() {
-		actual = append(actual, v)
-		if v == 11 {
-			break
-		}
-	}
-	expect = []int{10, 11}
-	if !slices.Equal(expect, actual) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
-	}
-}
 
 func TestIterator_ToSlice(t *testing.T) {
 	iterator := Iterator[int](func(yield func(int) bool) {

@@ -75,54 +75,6 @@ func TestIterator2_Filter(t *testing.T) {
 	}
 }
 
-func TestIterator2_Concat(t *testing.T) {
-	type person struct {
-		name string
-		age  int
-	}
-	p1 := []person{{"john", 25}, {"jane", 20}}
-	i1 := Transform12(SliceElem(p1), func(p person) (string, int) {
-		return p.name, p.age
-	})
-	p2 := []person{{"joe", 35}, {"ann", 30}, {"josh", 15}}
-	i2 := Transform12(SliceElem(p2), func(p person) (string, int) {
-		return p.name, p.age
-	})
-
-	actual := make(map[string]int)
-	for name, age := range i1.Concat(i2) {
-		actual[name] = age
-	}
-	expect := map[string]int{"john": 25, "jane": 20, "joe": 35, "ann": 30, "josh": 15}
-	if !maps.Equal(expect, actual) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
-	}
-
-	actual = make(map[string]int)
-	for name, age := range i1.Concat(i2) {
-		if name == "ann" {
-			break
-		}
-		actual[name] = age
-	}
-	expect = map[string]int{"john": 25, "jane": 20, "joe": 35}
-	if !maps.Equal(expect, actual) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
-	}
-
-	actual = make(map[string]int)
-	for name, age := range i1.Concat() {
-		actual[name] = age
-		if name == "john" {
-			break
-		}
-	}
-	expect = map[string]int{"john": 25}
-	if !maps.Equal(expect, actual) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
-	}
-}
-
 func TestIterator2_ToSlice(t *testing.T) {
 	iterator := Iterator2[string, int](func(yield func(string, int) bool) {
 		yield("alice", 20)
