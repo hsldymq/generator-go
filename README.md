@@ -41,7 +41,7 @@ type School struct {
 }
 
 // Students returns an iterator that yields each student, instead of exposing the slice of students directly
-func (s *School) Students() iter.Seq[*Student] {
+func (s *School) Students() goiter.Iterator[*Student] {
     return goiter.SliceElem(s.students)
 }
 
@@ -139,7 +139,7 @@ type School struct {
     students []*Student
 }
 
-func (s *School) Students() iter.Seq[*Student] {
+func (s *School) Students() goiter.Iterator[*Student] {
     return goiter.SliceElem(s.students)
 }
 
