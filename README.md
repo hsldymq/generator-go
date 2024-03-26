@@ -215,23 +215,18 @@ func Demo() {
 
 # List of goiter functions
 
-### collection
+### transformation
+* `goiter.PickV1`
+* `goiter.PickV2`
+* `goiter.Swap`
+* `goiter.Transform`
+* `goiter.Transform2`
+* `goiter.Transform12`
+* `goiter.Transform21`
 
-* `goiter.Slice`
-* `goiter.SliceElem`
-* `goiter.SliceSource`
-* `goiter.SliceSourceElem`
-* `goiter.Map`
-* `goiter.MapVal`
-* `goiter.MapKey`
-* `goiter.MapSource`
-* `goiter.MapSourceVal`
-* `goiter.MapSourceKey`
-* `goiter.Channel`
-* `goiter.ChannelSource`
-* `goiter.IterSource`
-* `goiter.Empty`
-* `goiter.Empty2`
+### aggregation
+* `goiter.Fold`
+* `goiter.Scan`
 * `goiter.Count`
 * `goiter.Count2`
 
@@ -241,27 +236,15 @@ func Demo() {
 * `goiter.RangeTime`
 * `goiter.Sequence`
 * `goiter.Sequence2`
-* `goiter.Concat`
-* `goiter.Concat2`
 * `goiter.Reverse`
 * `goiter.Reverse2`
 
-### transformation
-* `goiter.PickV1`
-* `goiter.PickV2`
-* `goiter.Swap`
+### combining
 * `goiter.Combine`
-* `goiter.Transform`
-* `goiter.Transform2`
-* `goiter.Transform12`
-* `goiter.Transform21`
-* `goiter.Fold`
 * `goiter.Zip`
 * `goiter.ZipAs`
-* `goiter.ToSlice`
-* `goiter.ToMap`
-* `goiter.ToMapAs`
-* `goiter.ToMapAs2`
+* `goiter.Concat`
+* `goiter.Concat2`
 
 ### filtering
 * `goiter.Filter`
@@ -286,3 +269,26 @@ func Demo() {
 * `goiter.Once2`
 * `goiter.ContinuableOnce`
 * `goiter.ContinuableOnce2`
+
+### data source
+* `goiter.Slice`
+* `goiter.SliceElem`
+* `goiter.SliceSource`
+* `goiter.SliceSourceElem`
+* `goiter.Map`
+* `goiter.MapVal`
+* `goiter.MapKey`
+* `goiter.MapSource`
+* `goiter.MapSourceVal`
+* `goiter.MapSourceKey`
+* `goiter.Channel`
+* `goiter.ChannelSource`
+* `goiter.IterSource`
+* `goiter.Empty`
+* `goiter.Empty2`
+
+### collection
+* `goiter.ToSlice`
+* `goiter.ToMap`
+* `goiter.ToMapAs`
+* `goiter.ToMapAs2`

@@ -4,25 +4,6 @@ package goiter
 
 import "iter"
 
-func Combiner[T1, T2 any](v1 T1, v2 T2) *Combined[T1, T2] {
-	return &Combined[T1, T2]{
-		V1: v1,
-		V2: v2,
-	}
-}
-
-type Combined[T1, T2 any] struct {
-	V1 T1
-	V2 T2
-}
-
-type ZippedE[T1, T2 any] struct {
-	V1  T1
-	OK1 bool
-	V2  T2
-	OK2 bool
-}
-
 // PickV1 returns an iterator that yields the first element of each 2-tuple provided by the input iterator.
 func PickV1[T1, T2 any](it Iterator2[T1, T2]) Iterator[T1] {
 	return Transform21(it, func(v1 T1, _ T2) T1 {
@@ -42,11 +23,6 @@ func Swap[T1, T2 any](it Iterator2[T1, T2]) Iterator2[T2, T1] {
 	return Transform2(it, func(v1 T1, v2 T2) (T2, T1) {
 		return v2, v1
 	})
-}
-
-// Combine returns an iterator that yields combined values, where each value contains the elements of the 2-Tuple provided by the input iterator.
-func Combine[T1, T2 any](it Iterator2[T1, T2]) Iterator[*Combined[T1, T2]] {
-	return Transform21(it, Combiner[T1, T2])
 }
 
 // Transform returns an iterator, it yields new values by applying the transformer function to each value provided by the input iterator.
@@ -131,102 +107,4 @@ func Transform21[InT1, InT2, Out any](
 			}
 		}
 	}
-}
-
-// Zip is like python's zip function, it takes two iterators and returns an iterator of combined structs,
-// where the i-th struct contains the i-th element from each of the argument iterators.
-// when two iterators have different lengths, the resulting iterator will stop when the shorter one stops.
-// for example:
-//
-//	seq1 yields  1   2   3   4   5
-//	seq2 yields "a" "b" "c"
-//	Zip(seq1, seq2) will yield {1, "a"} {2, "b"} {3, "c"}
-func Zip[T1, T2 any](it1 Iterator[T1], it2 Iterator[T2]) Iterator[*Combined[T1, T2]] {
-	return ZipAs(it1, it2, func(zipped *ZippedE[T1, T2]) *Combined[T1, T2] {
-		return &Combined[T1, T2]{
-			V1: zipped.V1,
-			V2: zipped.V2,
-		}
-	})
-}
-
-// ZipAs is a more general version of Zip.
-// if exhaust parameter is true, the resulting iterator will not stop until both input iterators stop, and ZippedE.OK1 and ZippedE.OK2 will be false when the corresponding iterator stops.
-func ZipAs[InT1, InT2, Out any](it1 Iterator[InT1], it2 Iterator[InT2], transformer func(*ZippedE[InT1, InT2]) Out, exhaust ...bool) Iterator[Out] {
-	return func(yield func(Out) bool) {
-		shouldExhaust := false
-		if len(exhaust) > 0 {
-			shouldExhaust = exhaust[0]
-		}
-
-		p1, stop1 := iter.Pull(it1.Seq())
-		defer stop1()
-		p2, stop2 := iter.Pull(it2.Seq())
-		defer stop2()
-
-		for {
-			in1, ok1 := p1()
-			in2, ok2 := p2()
-			if !ok1 && !ok2 {
-				return
-			}
-			if (!ok1 || !ok2) && !shouldExhaust {
-				return
-			}
-
-			out := transformer(&ZippedE[InT1, InT2]{
-				V1:  in1,
-				OK1: ok1,
-				V2:  in2,
-				OK2: ok2,
-			})
-			if !yield(out) {
-				return
-			}
-		}
-	}
-}
-
-// ToSlice converts an iterator to a slice.
-func ToSlice[T any](it Iterator[T]) []T {
-	var result []T
-	for each := range it {
-		result = append(result, each)
-	}
-	return result
-}
-
-// ToMap converts an iterator that yields 2-tuple to a map, where the first element of the tuple is the key and the second element is the value.
-func ToMap[T1 comparable, T2 any](it Iterator2[T1, T2]) map[T1]T2 {
-	result := make(map[T1]T2)
-	for key, val := range it {
-		result[key] = val
-	}
-	return result
-}
-
-// ToMapAs transform every element provided from the input iterator to a key-value pair, and then returns a map.
-func ToMapAs[T any, OutK comparable, OutV any](
-	it Iterator[T],
-	transformer func(T) (OutK, OutV),
-) map[OutK]OutV {
-	result := make(map[OutK]OutV)
-	for v := range it {
-		key, val := transformer(v)
-		result[key] = val
-	}
-	return result
-}
-
-// ToMapAs2 is similar to ToMapAs, but it takes 2-Tuple from the input iterator.
-func ToMapAs2[InT1 any, InT2 any, OutK comparable, OutV any](
-	it Iterator2[InT1, InT2],
-	transformer func(InT1, InT2) (OutK, OutV),
-) map[OutK]OutV {
-	result := make(map[OutK]OutV)
-	for v1, v2 := range it {
-		key, val := transformer(v1, v2)
-		result[key] = val
-	}
-	return result
 }
