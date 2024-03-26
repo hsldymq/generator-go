@@ -2,6 +2,8 @@
 
 package goiter
 
+import "iter"
+
 // SourceFunc delegates data retrieval from elsewhere.
 type SourceFunc[T any] func() T
 
@@ -129,4 +131,12 @@ func Empty2[T1 any, T2 any]() Iterator2[T1, T2] {
 	return func(yield func(T1, T2) bool) {
 		return
 	}
+}
+
+func Seq[T any](seq iter.Seq[T]) Iterator[T] {
+	return Iterator[T](seq)
+}
+
+func Seq2[T1, T2 any](seq iter.Seq2[T1, T2]) Iterator2[T1, T2] {
+	return Iterator2[T1, T2](seq)
 }
