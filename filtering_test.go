@@ -9,20 +9,6 @@ import (
 	"testing"
 )
 
-func TestToSlice(t *testing.T) {
-	iterator := Iterator[int](func(yield func(int) bool) {
-		yield(1)
-		yield(2)
-		yield(3)
-	})
-
-	actual := iterator.ToSlice()
-	expect := []int{1, 2, 3}
-	if !slices.Equal(expect, actual) {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
-	}
-}
-
 func TestFilter(t *testing.T) {
 	predicate := func(v int) bool {
 		return v%2 == 0
