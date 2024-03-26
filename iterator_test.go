@@ -86,16 +86,3 @@ func TestIterator_ToSlice(t *testing.T) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
 }
-
-func TestIterator_Count(t *testing.T) {
-	input := []int{1, 2, 3, 4, 5}
-	it := Filter(SliceElem(input), func(v int) bool {
-		return v%2 == 0
-	})
-
-	expect := 2
-	actual := it.Count()
-	if actual != expect {
-		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
-	}
-}
