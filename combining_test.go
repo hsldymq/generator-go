@@ -155,7 +155,7 @@ func TestConcat(t *testing.T) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
 
-	for _ = range SliceElem([]int{10, 11, 12}).Concat() {
+	for _ = range SliceElem([]int{10, 11, 12}).Concat(SliceElem(c2)) {
 		break
 	}
 }
@@ -207,7 +207,7 @@ func TestConcat2(t *testing.T) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
 
-	for _, _ = range i1.Concat() {
+	for _, _ = range i1.Concat(i2) {
 		break
 	}
 }
