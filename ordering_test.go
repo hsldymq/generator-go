@@ -3,8 +3,9 @@
 package goiter
 
 import (
-    "slices"
-    "testing"
+	"cmp"
+	"slices"
+	"testing"
 )
 
 func TestOrder(t *testing.T) {
@@ -116,5 +117,101 @@ func TestOrderV2(t *testing.T) {
 	expect2E2 := []int{22, 20, 18}
 	if !slices.Equal(expect2E2, actual2E2) {
 		t.Fatal("expect:", expect2E2, "actual:", actual2E2)
+	}
+}
+
+func TestOrderBy(t *testing.T) {
+	type person struct {
+		name string
+		age  int
+	}
+	input := []person{
+		{"alice", 22},
+		{"bob", 20},
+		{"eve", 21},
+	}
+	actual := []person{}
+	for each := range SliceElem(input).OrderBy(func(a, b person) int { return cmp.Compare(a.age, b.age) }) {
+		actual = append(actual, each)
+	}
+	expect := []person{
+		{"bob", 20},
+		{"eve", 21},
+		{"alice", 22},
+	}
+	if !slices.Equal(expect, actual) {
+		t.Fatal("expect:", expect, "actual:", actual)
+	}
+}
+
+func TestStableOrderBy(t *testing.T) {
+	type person struct {
+		name string
+		age  int
+	}
+	input := []person{
+		{"alice", 22},
+		{"bob", 20},
+		{"eve", 20},
+	}
+	actual := []person{}
+	for each := range SliceElem(input).StableOrderBy(func(a, b person) int { return cmp.Compare(a.age, b.age) }) {
+		actual = append(actual, each)
+	}
+	expect := []person{
+		{"bob", 20},
+		{"eve", 20},
+		{"alice", 22},
+	}
+	if !slices.Equal(expect, actual) {
+		t.Fatal("expect:", expect, "actual:", actual)
+	}
+}
+
+func TestOrderBy2(t *testing.T) {
+	type person struct {
+		name string
+		age  int
+	}
+	input := map[string]int{
+		"bob":   20,
+		"eve":   30,
+		"alice": 25,
+	}
+	actual := []person{}
+	for v1, v2 := range Map(input).OrderBy(func(a, b *Combined[string, int]) int { return cmp.Compare(a.V2, b.V2) }) {
+		actual = append(actual, person{name: v1, age: v2})
+	}
+	expect := []person{
+		{"bob", 20},
+		{"alice", 25},
+		{"eve", 30},
+	}
+	if !slices.Equal(expect, actual) {
+		t.Fatal("expect:", expect, "actual:", actual)
+	}
+}
+
+func TestStableOrderBy2(t *testing.T) {
+	type person struct {
+		name string
+		age  int
+	}
+	input := []person{
+		{"bob", 25},
+		{"eve", 30},
+		{"alice", 25},
+	}
+	actual := []person{}
+	for _, v2 := range Slice(input).StableOrderBy(func(a, b *Combined[int, person]) int { return cmp.Compare(a.V2.age, b.V2.age) }) {
+		actual = append(actual, v2)
+	}
+	expect := []person{
+		{"bob", 25},
+		{"alice", 25},
+		{"eve", 30},
+	}
+	if !slices.Equal(expect, actual) {
+		t.Fatal("expect:", expect, "actual:", actual)
 	}
 }

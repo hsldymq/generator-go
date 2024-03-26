@@ -3,10 +3,62 @@
 package goiter
 
 import (
-    "fmt"
-    "slices"
-    "testing"
+	"fmt"
+	"maps"
+	"slices"
+	"testing"
 )
+
+func TestToSlice(t *testing.T) {
+	iterator := Iterator[int](func(yield func(int) bool) {
+		yield(1)
+		yield(2)
+		yield(3)
+	})
+
+	actual := iterator.ToSlice()
+	expect := []int{1, 2, 3}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+}
+
+func TestFilter(t *testing.T) {
+	predicate := func(v int) bool {
+		return v%2 == 0
+	}
+	actual := []int{}
+	for v := range Range(0, 10).Filter(predicate) {
+		actual = append(actual, v)
+	}
+	expect := []int{0, 2, 4, 6, 8}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
+	for _ = range Range(0, 10).Filter(predicate) {
+		break
+	}
+}
+
+func TestFilter2(t *testing.T) {
+	predicate := func(name string, age int) bool {
+		return name == "john"
+	}
+	input := map[string]int{"john": 20, "jane": 18}
+	actual := map[string]int{}
+	for k, v := range Map(input).Filter(predicate) {
+		actual[k] = v
+	}
+	expect := map[string]int{"john": 20}
+	if !maps.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
+	for _, _ = range Map(input).Filter(predicate) {
+		break
+	}
+}
 
 func TestDistinct(t *testing.T) {
 	actual := []int{}
