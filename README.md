@@ -225,10 +225,10 @@ func Demo() {
 * `goiter.Transform21`
 
 ### aggregation
-* `goiter.Fold`
-* `goiter.Scan`
 * `goiter.Count`
 * `goiter.Count2`
+* `goiter.Fold`
+* `goiter.Scan`
 
 ### sequence
 * `goiter.Range`
@@ -253,16 +253,16 @@ func Demo() {
 * `goiter.DistinctV1`
 * `goiter.DistinctV2`
 * `goiter.DistinctBy`
-* `goiter.DistinctBy2`
+* `goiter.Distinct2By`
 
 ### ordering
 * `goiter.Order`
 * `goiter.OrderV1`
 * `goiter.OrderV2`
 * `goiter.OrderBy`
-* `goiter.OrderBy2`
+* `goiter.Order2By`
 * `goiter.StableOrderBy`
-* `goiter.StableOrderBy2`
+* `goiter.StableOrder2By`
 
 ### unrepeatable iterator
 * `goiter.Once`
@@ -283,7 +283,10 @@ func Demo() {
 * `goiter.MapSourceKey`
 * `goiter.Channel`
 * `goiter.ChannelSource`
-* `goiter.IterSource`
+* `goiter.Seq`
+* `goiter.Seq2`
+* `goiter.SeqSource`
+* `goiter.Seq2Source`
 * `goiter.Empty`
 * `goiter.Empty2`
 
