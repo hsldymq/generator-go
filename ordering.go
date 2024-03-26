@@ -3,8 +3,8 @@
 package goiter
 
 import (
-    "cmp"
-    "slices"
+	"cmp"
+	"slices"
 )
 
 // Order sorts the elements of the input iterator and returns a new iterator whose elements are arranged in ascending or descending order.
@@ -73,8 +73,8 @@ func OrderBy[T any](it Iterator[T], cmp func(T, T) int) Iterator[T] {
 	return doOrderBy(it, cmp, slices.SortFunc[[]T, T])
 }
 
-// OrderBy2 is the Iterator2 version of OrderBy.
-func OrderBy2[T1, T2 any](it Iterator2[T1, T2], cmp func(*Combined[T1, T2], *Combined[T1, T2]) int) Iterator2[T1, T2] {
+// Order2By is the Iterator2 version of OrderBy.
+func Order2By[T1, T2 any](it Iterator2[T1, T2], cmp func(*Combined[T1, T2], *Combined[T1, T2]) int) Iterator2[T1, T2] {
 	return doOrderBy2(it, cmp, slices.SortFunc[[]*Combined[T1, T2], *Combined[T1, T2]])
 }
 
@@ -83,8 +83,8 @@ func StableOrderBy[T any](it Iterator[T], cmp func(T, T) int) Iterator[T] {
 	return doOrderBy(it, cmp, slices.SortStableFunc[[]T, T])
 }
 
-// StableOrderBy2 is like OrderBy2, but it uses a stable sort algorithm.
-func StableOrderBy2[T1, T2 any](it Iterator2[T1, T2], cmp func(*Combined[T1, T2], *Combined[T1, T2]) int) Iterator2[T1, T2] {
+// StableOrder2By is like Order2By, but it uses a stable sort algorithm.
+func StableOrder2By[T1, T2 any](it Iterator2[T1, T2], cmp func(*Combined[T1, T2], *Combined[T1, T2]) int) Iterator2[T1, T2] {
 	return doOrderBy2(it, cmp, slices.SortStableFunc[[]*Combined[T1, T2], *Combined[T1, T2]])
 }
 

@@ -13,11 +13,11 @@ func (it Iterator2[T1, T2]) Seq() iter.Seq2[T1, T2] {
 }
 
 func (it Iterator2[T1, T2]) OrderBy(cmp func(*Combined[T1, T2], *Combined[T1, T2]) int) Iterator2[T1, T2] {
-	return OrderBy2(it, cmp)
+	return Order2By(it, cmp)
 }
 
 func (it Iterator2[T1, T2]) StableOrderBy(cmp func(*Combined[T1, T2], *Combined[T1, T2]) int) Iterator2[T1, T2] {
-	return StableOrderBy2(it, cmp)
+	return StableOrder2By(it, cmp)
 }
 
 func (it Iterator2[T1, T2]) Filter(cmp func(T1, T2) bool) Iterator2[T1, T2] {

@@ -140,8 +140,8 @@ func DistinctBy[T any, K comparable](it Iterator[T], keySelector func(T) K) Iter
 	}
 }
 
-// DistinctBy2 is an Iterator2 version of DistinctBy.
-func DistinctBy2[T1 any, T2 any, K comparable](it Iterator2[T1, T2], keySelector func(T1, T2) K) Iterator2[T1, T2] {
+// Distinct2By is an Iterator2 version of DistinctBy.
+func Distinct2By[T1 any, T2 any, K comparable](it Iterator2[T1, T2], keySelector func(T1, T2) K) Iterator2[T1, T2] {
 	return func(yield func(T1, T2) bool) {
 		yielded := newDistinctor[K]()
 

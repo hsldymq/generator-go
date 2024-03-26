@@ -173,7 +173,7 @@ func TestDistinctBy2(t *testing.T) {
 	transFunc := func(s student) (int, student) { return s.Age, s }
 	keySelector := func(age int, s student) int { return s.Age }
 	actual := []student{}
-	for _, each := range DistinctBy2(Transform12(SliceElem(input), transFunc), keySelector) {
+	for _, each := range Distinct2By(Transform12(SliceElem(input), transFunc), keySelector) {
 		actual = append(actual, each)
 	}
 
@@ -186,7 +186,7 @@ func TestDistinctBy2(t *testing.T) {
 	}
 
 	//
-	for _, _ = range DistinctBy2(Transform12(SliceElem(input), transFunc), keySelector) {
+	for _, _ = range Distinct2By(Transform12(SliceElem(input), transFunc), keySelector) {
 		break
 	}
 }
