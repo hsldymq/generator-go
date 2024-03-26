@@ -24,6 +24,10 @@ func (it Iterator[T]) Filter(predicate func(T) bool) Iterator[T] {
 	return Filter(it, predicate)
 }
 
+func (it Iterator[T]) Take(n int) Iterator[T] {
+	return Take(it, n)
+}
+
 func (it Iterator[T]) Concat(its ...Iterator[T]) Iterator[T] {
 	return Concat(it, its...)
 }
