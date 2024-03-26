@@ -33,9 +33,9 @@ func Combine[T1, T2 any](it Iterator2[T1, T2]) Iterator[*Combined[T1, T2]] {
 // when two iterators have different lengths, the resulting iterator will stop when the shorter one stops.
 // for example:
 //
-//	seq1 yields  1   2   3   4   5
-//	seq2 yields "a" "b" "c"
-//	Zip(seq1, seq2) will yield {1, "a"} {2, "b"} {3, "c"}
+//	it1 yields  1   2   3   4   5
+//	it2 yields "a" "b" "c"
+//	Zip(it1, it2) will yield {1, "a"} {2, "b"} {3, "c"}
 func Zip[T1, T2 any](it1 Iterator[T1], it2 Iterator[T2]) Iterator[*Combined[T1, T2]] {
 	return ZipAs(it1, it2, func(zipped *ZippedE[T1, T2]) *Combined[T1, T2] {
 		return &Combined[T1, T2]{

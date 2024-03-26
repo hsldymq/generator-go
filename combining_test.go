@@ -26,10 +26,10 @@ func TestCombine(t *testing.T) {
 
 func TestZip(t *testing.T) {
 	// case 1
-	seq1 := SliceElem([]string{"Alice", "Bob", "Eve"})
-	seq2 := SliceElem([]int{20, 21, 22, 23}) // seq2 has one more element than seq1
+	iterator1 := SliceElem([]string{"Alice", "Bob", "Eve"})
+	iterator2 := SliceElem([]int{20, 21, 22, 23}) // iterator2 has one more element than iterator1
 	actual := make([]Combined[string, int], 0, 3)
-	for v := range Zip(seq1, seq2) {
+	for v := range Zip(iterator1, iterator2) {
 		actual = append(actual, *v)
 	}
 	expect := []Combined[string, int]{
@@ -42,11 +42,11 @@ func TestZip(t *testing.T) {
 	}
 
 	// case 2
-	seq1 = SliceElem([]string{"Alice", "Bob", "Eve"})
-	seq2 = SliceElem([]int{20, 21, 22, 23})
+	iterator1 = SliceElem([]string{"Alice", "Bob", "Eve"})
+	iterator2 = SliceElem([]int{20, 21, 22, 23})
 	actual = make([]Combined[string, int], 0, 2)
 	i := 0
-	for v := range Zip(seq1, seq2) {
+	for v := range Zip(iterator1, iterator2) {
 		actual = append(actual, *v)
 		i++
 		if i >= 2 {
@@ -82,11 +82,11 @@ func TestZipAs(t *testing.T) {
 	}
 
 	// case 1
-	nameSeq := SliceElem([]string{"Alice", "Bob", "Eve"})
-	ageSeq := SliceElem([]int{20, 21})
-	zipSeq := ZipAs(nameSeq, ageSeq, transformer, true)
+	nameIter := SliceElem([]string{"Alice", "Bob", "Eve"})
+	ageIter := SliceElem([]int{20, 21})
+	zipIter := ZipAs(nameIter, ageIter, transformer, true)
 	actual := make([]person, 0, 3)
-	for each := range zipSeq {
+	for each := range zipIter {
 		actual = append(actual, each)
 	}
 	expect := []person{
@@ -99,11 +99,11 @@ func TestZipAs(t *testing.T) {
 	}
 
 	// case 2
-	nameSeq = SliceElem([]string{"Alice", "Bob", "Eve"})
-	ageSeq = SliceElem([]int{20, 21, 22, 23})
-	zipSeq = ZipAs(nameSeq, ageSeq, transformer, true)
+	nameIter = SliceElem([]string{"Alice", "Bob", "Eve"})
+	ageIter = SliceElem([]int{20, 21, 22, 23})
+	zipIter = ZipAs(nameIter, ageIter, transformer, true)
 	actual = make([]person, 0, 4)
-	for each := range zipSeq {
+	for each := range zipIter {
 		actual = append(actual, each)
 	}
 	expect = []person{

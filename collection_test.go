@@ -24,13 +24,13 @@ func TestToSlice(t *testing.T) {
 }
 
 func TestToMap(t *testing.T) {
-	seq := func(yield func(string, int) bool) {
+	iterator := func(yield func(string, int) bool) {
 		yield("alice", 20)
 		yield("bob", 21)
 		yield("eve", 22)
 	}
 
-	actual := ToMap(seq)
+	actual := ToMap(iterator)
 	expect := map[string]int{
 		"alice": 20,
 		"bob":   21,
@@ -42,13 +42,13 @@ func TestToMap(t *testing.T) {
 }
 
 func TestToMapAs(t *testing.T) {
-	seq := func(yield func(string) bool) {
+	iterator := func(yield func(string) bool) {
 		yield("alice")
 		yield("bob")
 		yield("eve")
 	}
 
-	actual := ToMapAs(seq, func(name string) (string, int) {
+	actual := ToMapAs(iterator, func(name string) (string, int) {
 		return name, len(name)
 	})
 	expect := map[string]int{
@@ -62,13 +62,13 @@ func TestToMapAs(t *testing.T) {
 }
 
 func TestToMap2As(t *testing.T) {
-	seq := func(yield func(string, string) bool) {
+	iterator := func(yield func(string, string) bool) {
 		yield("Alice", "Paris")
 		yield("Bob", "Shanghai")
 		yield("Eve", "Bangkok")
 	}
 
-	actual := ToMap2As(seq, func(name string, city string) (string, string) {
+	actual := ToMap2As(iterator, func(name string, city string) (string, string) {
 		return name + "_" + city, string(name[0]) + "_" + string(city[0])
 	})
 	expect := map[string]string{
