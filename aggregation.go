@@ -6,12 +6,20 @@ import "iter"
 
 // Count counts the number of elements yielded by the input iterator.
 func Count[T any](it Iterator[T]) int {
-	return it.Count()
+	count := 0
+	for _ = range it {
+		count++
+	}
+	return count
 }
 
 // Count2 counts the number of elements yielded by the input iterator.
 func Count2[T1 any, T2 any](it Iterator2[T1, T2]) int {
-	return it.Count()
+	count := 0
+	for _, _ = range it {
+		count++
+	}
+	return count
 }
 
 // Fold is basically Reduce function in functional programming.

@@ -4,6 +4,13 @@ package goiter
 
 import "iter"
 
+func Combiner[T1, T2 any](v1 T1, v2 T2) *Combined[T1, T2] {
+	return &Combined[T1, T2]{
+		V1: v1,
+		V2: v2,
+	}
+}
+
 type Combined[T1, T2 any] struct {
 	V1 T1
 	V2 T2
@@ -39,12 +46,7 @@ func Swap[T1, T2 any](it Iterator2[T1, T2]) Iterator2[T2, T1] {
 
 // Combine returns an iterator that yields combined values, where each value contains the elements of the 2-Tuple provided by the input iterator.
 func Combine[T1, T2 any](it Iterator2[T1, T2]) Iterator[*Combined[T1, T2]] {
-	return Transform21(it, func(v1 T1, v2 T2) *Combined[T1, T2] {
-		return &Combined[T1, T2]{
-			V1: v1,
-			V2: v2,
-		}
-	})
+	return Transform21(it, Combiner[T1, T2])
 }
 
 // Transform returns an iterator, it yields new values by applying the transformer function to each value provided by the input iterator.
@@ -203,8 +205,8 @@ func ToMap[T1 comparable, T2 any](it Iterator2[T1, T2]) map[T1]T2 {
 	return result
 }
 
-// ToMapBy transform every element provided from the input iterator to a key-value pair, and then returns a map.
-func ToMapBy[T any, OutK comparable, OutV any](
+// ToMapAs transform every element provided from the input iterator to a key-value pair, and then returns a map.
+func ToMapAs[T any, OutK comparable, OutV any](
 	it Iterator[T],
 	transformer func(T) (OutK, OutV),
 ) map[OutK]OutV {
@@ -216,8 +218,8 @@ func ToMapBy[T any, OutK comparable, OutV any](
 	return result
 }
 
-// ToMapBy2 is similar to ToMapBy, but it takes 2-Tuple from the input iterator.
-func ToMapBy2[InT1 any, InT2 any, OutK comparable, OutV any](
+// ToMapAs2 is similar to ToMapAs, but it takes 2-Tuple from the input iterator.
+func ToMapAs2[InT1 any, InT2 any, OutK comparable, OutV any](
 	it Iterator2[InT1, InT2],
 	transformer func(InT1, InT2) (OutK, OutV),
 ) map[OutK]OutV {

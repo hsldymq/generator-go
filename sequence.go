@@ -160,10 +160,19 @@ func Sequence2[T1, T2 any](generator func() (T1, T2, bool)) Iterator2[T1, T2] {
 }
 
 // Concat returns an iterator that allows you to traverse multiple iterators in sequence.
-func Concat[T any](seqs ...Iterator[T]) Iterator[T] {
+func Concat[T any](it Iterator[T], its ...Iterator[T]) Iterator[T] {
+	if len(its) == 0 {
+		return it
+	}
+
 	return func(yield func(T) bool) {
-		for _, seq := range seqs {
-			for v := range seq {
+		for v := range it {
+			if !yield(v) {
+				return
+			}
+		}
+		for _, eachIt := range its {
+			for v := range eachIt {
 				if !yield(v) {
 					return
 				}
@@ -173,10 +182,20 @@ func Concat[T any](seqs ...Iterator[T]) Iterator[T] {
 }
 
 // Concat2 returns an iterator that allows you to traverse multiple iterators in sequence.
-func Concat2[T1 any, T2 any](its ...Iterator2[T1, T2]) Iterator2[T1, T2] {
+func Concat2[T1 any, T2 any](it Iterator2[T1, T2], its ...Iterator2[T1, T2]) Iterator2[T1, T2] {
+	if len(its) == 0 {
+		return it
+	}
+
 	return func(yield func(T1, T2) bool) {
-		for _, seq := range its {
-			for v1, v2 := range seq {
+		for v1, v2 := range it {
+			if !yield(v1, v2) {
+				return
+			}
+		}
+
+		for _, eachIt := range its {
+			for v1, v2 := range eachIt {
 				if !yield(v1, v2) {
 					return
 				}

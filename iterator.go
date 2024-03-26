@@ -4,7 +4,6 @@ package goiter
 
 import (
 	"iter"
-	"slices"
 )
 
 type Iterator[T any] iter.Seq[T]
@@ -14,17 +13,25 @@ func (it Iterator[T]) Seq() iter.Seq[T] {
 }
 
 func (it Iterator[T]) OrderBy(cmp func(T, T) int) Iterator[T] {
-	return doOrderBy(it, cmp, slices.SortFunc[[]T, T])
+	return OrderBy(it, cmp)
 }
 
 func (it Iterator[T]) StableOrderBy(cmp func(T, T) int) Iterator[T] {
-	return doOrderBy(it, cmp, slices.SortStableFunc[[]T, T])
+	return StableOrderBy(it, cmp)
+}
+
+func (it Iterator[T]) Filter(predicate func(T) bool) Iterator[T] {
+	return Filter(it, predicate)
+}
+
+func (it Iterator[T]) Concat(its ...Iterator[T]) Iterator[T] {
+	return Concat(it, its...)
 }
 
 func (it Iterator[T]) Count() int {
-	count := 0
-	for _ = range it {
-		count++
-	}
-	return count
+	return Count(it)
+}
+
+func (it Iterator[T]) ToSlice() []T {
+	return ToSlice(it)
 }
