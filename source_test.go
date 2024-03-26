@@ -4,6 +4,7 @@ package goiter
 
 import (
 	"fmt"
+	"iter"
 	"maps"
 	"slices"
 	"testing"
@@ -159,13 +160,29 @@ func TestChannel(t *testing.T) {
 	}
 }
 
-func TestIterSource(t *testing.T) {
+func TestSeq(t *testing.T) {
+	iterator := Seq(func(yield func(int) bool) {
+		yield(1)
+		yield(2)
+		yield(3)
+	})
+	actual := make([]int, 0, 3)
+	for v := range iterator {
+		actual = append(actual, v)
+	}
+	expect := []int{1, 2, 3}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+}
+
+func TestSeqSource(t *testing.T) {
 	itFunc := func(yield func(int) bool) {
 		yield(1)
 		yield(2)
 		yield(3)
 	}
-	iterator := IterSource(func() Iterator[int] {
+	iterator := SeqSource(func() iter.Seq[int] {
 		return itFunc
 	})
 
@@ -193,6 +210,89 @@ func TestIterSource(t *testing.T) {
 		}
 	}
 	expect = []int{4, 5}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+}
+
+func TestSeq2(t *testing.T) {
+	type person struct {
+		Name string
+		Age  int
+	}
+
+	itFunc := func(yield func(string, int) bool) {
+		yield("alice", 20)
+		yield("bob", 21)
+		yield("eve", 22)
+	}
+	iterator := Seq2(itFunc)
+
+	actual := make([]person, 0, 3)
+	for name, age := range iterator {
+		actual = append(actual, person{name, age})
+	}
+	expect := []person{
+		{"alice", 20},
+		{"bob", 21},
+		{"eve", 22},
+	}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+}
+
+func TestSeq2Source(t *testing.T) {
+	type person struct {
+		Name string
+		Age  int
+	}
+
+	itFunc := func(yield func(string, int) bool) {
+		yield("alice", 20)
+		yield("bob", 21)
+		yield("eve", 22)
+	}
+	iterator := Seq2Source(func() iter.Seq2[string, int] {
+		return itFunc
+	})
+
+	actual := make([]person, 0, 3)
+	for name, age := range iterator {
+		actual = append(actual, person{name, age})
+	}
+	expect := []person{
+		{"alice", 20},
+		{"bob", 21},
+		{"eve", 22},
+	}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
+	itFunc = func(yield func(string, int) bool) {
+		people := []person{
+			{"alice", 30},
+			{"bob", 31},
+			{"eve", 32},
+		}
+		for _, each := range people {
+			if !yield(each.Name, each.Age) {
+				break
+			}
+		}
+	}
+	actual = make([]person, 0, 3)
+	for name, age := range iterator {
+		actual = append(actual, person{name, age})
+		if age == 31 {
+			break
+		}
+	}
+	expect = []person{
+		{"alice", 30},
+		{"bob", 31},
+	}
 	if !slices.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}

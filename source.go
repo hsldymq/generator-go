@@ -106,13 +106,36 @@ func ChannelSource[T any](source SourceFunc[<-chan T]) Iterator[T] {
 	}
 }
 
-// IterSource serves similar purposes as SliceSource.
+// Seq returns an iterator that wraps an iter.Seq.
+func Seq[T any](seq iter.Seq[T]) Iterator[T] {
+	return Iterator[T](seq)
+}
+
+// SeqSource serves similar purposes as SliceSource.
 // see comments of SliceSource function for more details.
-func IterSource[T any](source SourceFunc[Iterator[T]]) Iterator[T] {
+func SeqSource[T any](source SourceFunc[iter.Seq[T]]) Iterator[T] {
 	return func(yield func(T) bool) {
 		seq := source()
 		for v := range seq {
 			if !yield(v) {
+				return
+			}
+		}
+	}
+}
+
+// Seq2 returns an iterator that wraps an iter.Seq2.
+func Seq2[T1, T2 any](seq iter.Seq2[T1, T2]) Iterator2[T1, T2] {
+	return Iterator2[T1, T2](seq)
+}
+
+// Seq2Source serves similar purposes as SliceSource.
+// see comments of SliceSource function for more details.
+func Seq2Source[T1, T2 any](source SourceFunc[iter.Seq2[T1, T2]]) Iterator2[T1, T2] {
+	return func(yield func(T1, T2) bool) {
+		seq := source()
+		for v1, v2 := range seq {
+			if !yield(v1, v2) {
 				return
 			}
 		}
@@ -131,12 +154,4 @@ func Empty2[T1 any, T2 any]() Iterator2[T1, T2] {
 	return func(yield func(T1, T2) bool) {
 		return
 	}
-}
-
-func Seq[T any](seq iter.Seq[T]) Iterator[T] {
-	return Iterator[T](seq)
-}
-
-func Seq2[T1, T2 any](seq iter.Seq2[T1, T2]) Iterator2[T1, T2] {
-	return Iterator2[T1, T2](seq)
 }
