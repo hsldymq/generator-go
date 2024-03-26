@@ -33,8 +33,8 @@ func ToMapAs[T any, OutK comparable, OutV any](
 	return result
 }
 
-// ToMapAs2 is similar to ToMapAs, but it takes 2-Tuple from the input iterator.
-func ToMapAs2[InT1 any, InT2 any, OutK comparable, OutV any](
+// ToMap2As is similar to ToMapAs, but it takes 2-Tuple from the input iterator.
+func ToMap2As[InT1 any, InT2 any, OutK comparable, OutV any](
 	it Iterator2[InT1, InT2],
 	transformer func(InT1, InT2) (OutK, OutV),
 ) map[OutK]OutV {

@@ -41,7 +41,7 @@ func TestToMap(t *testing.T) {
 	}
 }
 
-func TestToMapBy(t *testing.T) {
+func TestToMapAs(t *testing.T) {
 	seq := func(yield func(string) bool) {
 		yield("alice")
 		yield("bob")
@@ -61,14 +61,14 @@ func TestToMapBy(t *testing.T) {
 	}
 }
 
-func TestToMapBy2(t *testing.T) {
+func TestToMap2As(t *testing.T) {
 	seq := func(yield func(string, string) bool) {
 		yield("Alice", "Paris")
 		yield("Bob", "Shanghai")
 		yield("Eve", "Bangkok")
 	}
 
-	actual := ToMapAs2(seq, func(name string, city string) (string, string) {
+	actual := ToMap2As(seq, func(name string, city string) (string, string) {
 		return name + "_" + city, string(name[0]) + "_" + string(city[0])
 	})
 	expect := map[string]string{

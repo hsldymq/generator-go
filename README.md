@@ -294,4 +294,4 @@ func Demo() {
 * `goiter.ToSlice`
 * `goiter.ToMap`
 * `goiter.ToMapAs`
-* `goiter.ToMapAs2`
+* `goiter.ToMap2As`
