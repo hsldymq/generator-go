@@ -260,8 +260,8 @@ func Demo() {
 * `goiter.ZipAs`
 * `goiter.ToSlice`
 * `goiter.ToMap`
-* `goiter.ToMapBy`
-* `goiter.ToMapBy2`
+* `goiter.ToMapAs`
+* `goiter.ToMapAs2`
 
 ### filtering
 * `goiter.Filter`
