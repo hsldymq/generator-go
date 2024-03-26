@@ -28,6 +28,10 @@ func (it Iterator[T]) Concat(its ...Iterator[T]) Iterator[T] {
 	return Concat(it, its...)
 }
 
+func (it Iterator[T]) Reverse() Iterator[T] {
+	return Reverse(it)
+}
+
 func (it Iterator[T]) Count() int {
 	return Count(it)
 }

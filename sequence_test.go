@@ -3,11 +3,11 @@
 package goiter
 
 import (
-    "fmt"
-    "math"
-    "slices"
-    "testing"
-    "time"
+	"fmt"
+	"math"
+	"slices"
+	"testing"
+	"time"
 )
 
 func TestRangeStep(t *testing.T) {
@@ -399,7 +399,7 @@ func TestReverse(t *testing.T) {
 	input := []int{1, 2, 3, 4, 5}
 
 	actual := make([]int, 0, 5)
-	for v := range Reverse(SliceElem(input)) {
+	for v := range SliceElem(input).Reverse() {
 		actual = append(actual, v)
 	}
 	expect := []int{5, 4, 3, 2, 1}
@@ -408,7 +408,7 @@ func TestReverse(t *testing.T) {
 	}
 
 	actual = make([]int, 0, 3)
-	for v := range Reverse(SliceElem(input)) {
+	for v := range SliceElem(input).Reverse() {
 		if v < 3 {
 			break
 		}
@@ -424,7 +424,7 @@ func TestReverse2(t *testing.T) {
 	input := []int{1, 2, 3, 4, 5}
 
 	actual := make([]Combined[int, int], 0, 5)
-	for idx, v := range Reverse2(Slice(input)) {
+	for idx, v := range Slice(input).Reverse() {
 		actual = append(actual, Combined[int, int]{V1: idx, V2: v})
 	}
 	expect := []Combined[int, int]{
@@ -439,7 +439,7 @@ func TestReverse2(t *testing.T) {
 	}
 
 	actual = make([]Combined[int, int], 0, 3)
-	for idx, v := range Reverse2(Slice(input)) {
+	for idx, v := range Slice(input).Reverse() {
 		if v < 3 {
 			break
 		}
