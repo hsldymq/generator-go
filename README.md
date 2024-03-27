@@ -283,10 +283,8 @@ func Demo() {
 * `goiter.MapSourceKey`
 * `goiter.Channel`
 * `goiter.ChannelSource`
-* `goiter.Seq`
-* `goiter.Seq2`
-* `goiter.SeqSource`
-* `goiter.Seq2Source`
+* `goiter.IterSource`
+* `goiter.Iter2Source`
 * `goiter.Empty`
 * `goiter.Empty2`
 

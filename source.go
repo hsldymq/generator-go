@@ -2,8 +2,6 @@
 
 package goiter
 
-import "iter"
-
 // SourceFunc delegates data retrieval from elsewhere.
 type SourceFunc[T any] func() T
 
@@ -106,14 +104,9 @@ func ChannelSource[T any](source SourceFunc[<-chan T]) Iterator[T] {
 	}
 }
 
-// Seq returns an iterator that wraps an iter.Seq.
-func Seq[T any](seq iter.Seq[T]) Iterator[T] {
-	return Iterator[T](seq)
-}
-
-// SeqSource serves similar purposes as SliceSource.
+// IterSource serves similar purposes as SliceSource, the difference is that the SourceFunc returns an iterator.
 // see comments of SliceSource function for more details.
-func SeqSource[T any](source SourceFunc[iter.Seq[T]]) Iterator[T] {
+func IterSource[TIter SeqX[T], T any](source SourceFunc[TIter]) Iterator[T] {
 	return func(yield func(T) bool) {
 		seq := source()
 		for v := range seq {
@@ -124,14 +117,9 @@ func SeqSource[T any](source SourceFunc[iter.Seq[T]]) Iterator[T] {
 	}
 }
 
-// Seq2 returns an iterator that wraps an iter.Seq2.
-func Seq2[T1, T2 any](seq iter.Seq2[T1, T2]) Iterator2[T1, T2] {
-	return Iterator2[T1, T2](seq)
-}
-
-// Seq2Source serves similar purposes as SliceSource.
+// Iter2Source serves similar purposes as SliceSource.
 // see comments of SliceSource function for more details.
-func Seq2Source[T1, T2 any](source SourceFunc[iter.Seq2[T1, T2]]) Iterator2[T1, T2] {
+func Iter2Source[TIter Seq2X[T1, T2], T1, T2 any](source SourceFunc[TIter]) Iterator2[T1, T2] {
 	return func(yield func(T1, T2) bool) {
 		seq := source()
 		for v1, v2 := range seq {
