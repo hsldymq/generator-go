@@ -5,9 +5,9 @@ package goiter
 import "iter"
 
 // Filter returns an iterator that only yields the values of the input iterator that satisfy the predicate.
-func Filter[T any](it Iterator[T], predicate func(T) bool) Iterator[T] {
+func Filter[TIter SeqX[T], T any](iterator TIter, predicate func(T) bool) Iterator[T] {
 	return func(yield func(T) bool) {
-		next, stop := iter.Pull(it.Seq())
+		next, stop := iter.Pull(iter.Seq[T](iterator))
 		defer stop()
 		for {
 			v, ok := next()
@@ -25,9 +25,9 @@ func Filter[T any](it Iterator[T], predicate func(T) bool) Iterator[T] {
 }
 
 // Filter2 returns an iterator that only yields the 2-tuples of the input iterator that satisfy the predicate.
-func Filter2[T1 any, T2 any](it Iterator2[T1, T2], predicate func(T1, T2) bool) Iterator2[T1, T2] {
+func Filter2[TIter Seq2X[T1, T2], T1 any, T2 any](iterator TIter, predicate func(T1, T2) bool) Iterator2[T1, T2] {
 	return func(yield func(T1, T2) bool) {
-		next, stop := iter.Pull2(it.Seq())
+		next, stop := iter.Pull2(iter.Seq2[T1, T2](iterator))
 		defer stop()
 		for {
 			v1, v2, ok := next()
@@ -44,13 +44,13 @@ func Filter2[T1 any, T2 any](it Iterator2[T1, T2], predicate func(T1, T2) bool) 
 	}
 }
 
-func Take[T any](it Iterator[T], n int) Iterator[T] {
+func Take[TIter SeqX[T], T any](iterator TIter, n int) Iterator[T] {
 	if n <= 0 {
 		return Empty[T]()
 	}
 
 	return func(yield func(T) bool) {
-		next, stop := iter.Pull(it.Seq())
+		next, stop := iter.Pull(iter.Seq[T](iterator))
 		defer stop()
 		count := 0
 		for {
@@ -69,13 +69,13 @@ func Take[T any](it Iterator[T], n int) Iterator[T] {
 	}
 }
 
-func Take2[T1, T2 any](it Iterator2[T1, T2], n int) Iterator2[T1, T2] {
+func Take2[TIter Seq2X[T1, T2], T1, T2 any](iterator TIter, n int) Iterator2[T1, T2] {
 	if n <= 0 {
 		return Empty2[T1, T2]()
 	}
 
 	return func(yield func(T1, T2) bool) {
-		next, stop := iter.Pull2(it.Seq())
+		next, stop := iter.Pull2(iter.Seq2[T1, T2](iterator))
 		defer stop()
 		count := 0
 		for {
@@ -94,13 +94,13 @@ func Take2[T1, T2 any](it Iterator2[T1, T2], n int) Iterator2[T1, T2] {
 	}
 }
 
-func Skip[T any](it Iterator[T], n int) Iterator[T] {
+func Skip[TIter SeqX[T], T any](iterator TIter, n int) Iterator[T] {
 	if n <= 0 {
-		return it
+		return Iterator[T](iterator)
 	}
 
 	return func(yield func(T) bool) {
-		next, stop := iter.Pull(it.Seq())
+		next, stop := iter.Pull(iter.Seq[T](iterator))
 		defer stop()
 		count := 0
 		for {
@@ -119,13 +119,13 @@ func Skip[T any](it Iterator[T], n int) Iterator[T] {
 	}
 }
 
-func Skip2[T1, T2 any](it Iterator2[T1, T2], n int) Iterator2[T1, T2] {
+func Skip2[TIter Seq2X[T1, T2], T1, T2 any](iterator TIter, n int) Iterator2[T1, T2] {
 	if n <= 0 {
-		return it
+		return Iterator2[T1, T2](iterator)
 	}
 
 	return func(yield func(T1, T2) bool) {
-		next, stop := iter.Pull2(it.Seq())
+		next, stop := iter.Pull2(iter.Seq2[T1, T2](iterator))
 		defer stop()
 		count := 0
 		for {
@@ -148,11 +148,11 @@ func Skip2[T1, T2 any](it Iterator2[T1, T2], n int) Iterator2[T1, T2] {
 // For example:
 //
 //	if the input iterator yields 1 2 3 3 2 1, Distinct function will yield 1 2 3.
-func Distinct[T comparable](it Iterator[T]) Iterator[T] {
+func Distinct[TIter SeqX[T], T comparable](iterator TIter) Iterator[T] {
 	return func(yield func(T) bool) {
 		yielded := map[any]bool{}
 
-		next, stop := iter.Pull(it.Seq())
+		next, stop := iter.Pull(iter.Seq[T](iterator))
 		defer stop()
 		for {
 			v, ok := next()
@@ -175,11 +175,11 @@ func Distinct[T comparable](it Iterator[T]) Iterator[T] {
 //
 //	if the input iterator yields ("john", 20) ("anne", 21) ("john", 22)
 //	DistinctV1 function will yield ("john", 20) ("anne", 21) because ("john", 22) has the same key as ("john", 20).
-func DistinctV1[T1 comparable, T2 any](it Iterator2[T1, T2]) Iterator2[T1, T2] {
+func DistinctV1[TIter Seq2X[T1, T2], T1 comparable, T2 any](iterator TIter) Iterator2[T1, T2] {
 	return func(yield func(T1, T2) bool) {
 		yielded := newDistinctor[T1]()
 
-		next, stop := iter.Pull2(it.Seq())
+		next, stop := iter.Pull2(iter.Seq2[T1, T2](iterator))
 		defer stop()
 		for {
 			v1, v2, ok := next()
@@ -197,11 +197,11 @@ func DistinctV1[T1 comparable, T2 any](it Iterator2[T1, T2]) Iterator2[T1, T2] {
 }
 
 // DistinctV2 is similar to DistinctV1, but it deduplicates by the second element of the 2-tuple.
-func DistinctV2[T1 any, T2 comparable](it Iterator2[T1, T2]) Iterator2[T1, T2] {
+func DistinctV2[TIter Seq2X[T1, T2], T1 any, T2 comparable](iterator TIter) Iterator2[T1, T2] {
 	return func(yield func(T1, T2) bool) {
 		yielded := newDistinctor[T2]()
 
-		next, stop := iter.Pull2(it.Seq())
+		next, stop := iter.Pull2(iter.Seq2[T1, T2](iterator))
 		defer stop()
 		for {
 			v1, v2, ok := next()
@@ -219,11 +219,11 @@ func DistinctV2[T1 any, T2 comparable](it Iterator2[T1, T2]) Iterator2[T1, T2] {
 }
 
 // DistinctBy accepts a custom function to determine the deduplicate-key.
-func DistinctBy[T any, K comparable](it Iterator[T], keySelector func(T) K) Iterator[T] {
+func DistinctBy[TIter SeqX[T], T any, K comparable](iterator TIter, keySelector func(T) K) Iterator[T] {
 	return func(yield func(T) bool) {
 		yielded := newDistinctor[K]()
 
-		next, stop := iter.Pull(it.Seq())
+		next, stop := iter.Pull(iter.Seq[T](iterator))
 		defer stop()
 		for {
 			v, ok := next()
@@ -241,11 +241,11 @@ func DistinctBy[T any, K comparable](it Iterator[T], keySelector func(T) K) Iter
 }
 
 // Distinct2By is an Iterator2 version of DistinctBy.
-func Distinct2By[T1 any, T2 any, K comparable](it Iterator2[T1, T2], keySelector func(T1, T2) K) Iterator2[T1, T2] {
+func Distinct2By[TIter Seq2X[T1, T2], T1 any, T2 any, K comparable](iterator TIter, keySelector func(T1, T2) K) Iterator2[T1, T2] {
 	return func(yield func(T1, T2) bool) {
 		yielded := newDistinctor[K]()
 
-		next, stop := iter.Pull2(it.Seq())
+		next, stop := iter.Pull2(iter.Seq2[T1, T2](iterator))
 		defer stop()
 		for {
 			v1, v2, ok := next()
