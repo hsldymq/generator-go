@@ -170,6 +170,8 @@ func Skip2[TIter Seq2X[T1, T2], T1, T2 any](
 // For example:
 //
 //	if the input iterator yields 1 2 3 3 2 1, Distinct function will yield 1 2 3.
+//
+// be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func Distinct[TIter SeqX[T], T comparable](iterator TIter) Iterator[T] {
 	return func(yield func(T) bool) {
 		yielded := map[any]bool{}
@@ -197,6 +199,8 @@ func Distinct[TIter SeqX[T], T comparable](iterator TIter) Iterator[T] {
 //
 //	if the input iterator yields ("john", 20) ("anne", 21) ("john", 22)
 //	DistinctV1 function will yield ("john", 20) ("anne", 21) because ("john", 22) has the same key as ("john", 20).
+//
+// be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func DistinctV1[TIter Seq2X[T1, T2], T1 comparable, T2 any](iterator TIter) Iterator2[T1, T2] {
 	return func(yield func(T1, T2) bool) {
 		yielded := newDistinctor[T1]()
@@ -219,6 +223,7 @@ func DistinctV1[TIter Seq2X[T1, T2], T1 comparable, T2 any](iterator TIter) Iter
 }
 
 // DistinctV2 is similar to DistinctV1, but it deduplicates by the second element of the 2-tuple.
+// be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func DistinctV2[TIter Seq2X[T1, T2], T1 any, T2 comparable](iterator TIter) Iterator2[T1, T2] {
 	return func(yield func(T1, T2) bool) {
 		yielded := newDistinctor[T2]()
@@ -241,6 +246,7 @@ func DistinctV2[TIter Seq2X[T1, T2], T1 any, T2 comparable](iterator TIter) Iter
 }
 
 // DistinctBy accepts a custom function to determine the deduplicate-key.
+// be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func DistinctBy[TIter SeqX[T], T any, K comparable](
 	iterator TIter,
 	keySelector func(T) K,
@@ -266,6 +272,7 @@ func DistinctBy[TIter SeqX[T], T any, K comparable](
 }
 
 // Distinct2By is an Iterator2 version of DistinctBy.
+// be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func Distinct2By[TIter Seq2X[T1, T2], T1 any, T2 any, K comparable](
 	iterator TIter,
 	keySelector func(T1, T2) K,

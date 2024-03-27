@@ -14,6 +14,8 @@ import (
 //	since iter.SliceElem([]int{2, 3, 1})) yields 2 3 1
 //	then Order(iter.SliceElem([]int{2, 3, 1}))       will yield 1 2 3
 //	and  Order(iter.SliceElem([]int{2, 3, 1}), true) will yield 3 2 1.
+//
+// be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func Order[TIter SeqX[T], T cmp.Ordered](
 	iterator TIter,
 	desc ...bool,
@@ -39,6 +41,8 @@ func Order[TIter SeqX[T], T cmp.Ordered](
 //	since iter.Map(map[string]int{"bob":2, "eve":3, "alice":1}) yields the 2-tuples in arbitrary order
 //	then OrderV1(iter.Map(map[string]int{"bob":2, "eve":3, "alice":1}))       will yield (alice, 1) (bob 2) (eve 3)
 //	and  OrderV1(iter.Map(map[string]int{"bob":2, "eve":3, "alice":1}), true) will yield (eve 3) (bob 2) (alice, 1).
+//
+// be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func OrderV1[TIter Seq2X[T1, T2], T1 cmp.Ordered, T2 any](
 	iterator TIter,
 	desc ...bool,
@@ -59,6 +63,7 @@ func OrderV1[TIter Seq2X[T1, T2], T1 cmp.Ordered, T2 any](
 }
 
 // OrderV2 is like OrderV1, but it sorts by the second element of the 2-tuples.
+// be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func OrderV2[TIter Seq2X[T1, T2], T1 any, T2 cmp.Ordered](
 	iterator TIter,
 	desc ...bool,
@@ -78,6 +83,7 @@ func OrderV2[TIter Seq2X[T1, T2], T1 any, T2 cmp.Ordered](
 }
 
 // OrderBy accepts a comparison function and returns a new iterator that yields elements sorted by the comparison function.
+// be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func OrderBy[TIter SeqX[T], T any](
 	iterator TIter,
 	cmp func(T, T) int,
@@ -86,6 +92,7 @@ func OrderBy[TIter SeqX[T], T any](
 }
 
 // Order2By is the Iterator2 version of OrderBy.
+// be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func Order2By[TIter Seq2X[T1, T2], T1, T2 any](
 	iterator TIter,
 	cmp func(*Combined[T1, T2], *Combined[T1, T2]) int,
@@ -94,6 +101,7 @@ func Order2By[TIter Seq2X[T1, T2], T1, T2 any](
 }
 
 // StableOrderBy is like OrderBy, but it uses a stable sort algorithm.
+// be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func StableOrderBy[TIter SeqX[T], T any](
 	iterator TIter,
 	cmp func(T, T) int,
@@ -102,6 +110,7 @@ func StableOrderBy[TIter SeqX[T], T any](
 }
 
 // StableOrder2By is like Order2By, but it uses a stable sort algorithm.
+// be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func StableOrder2By[TIter Seq2X[T1, T2], T1, T2 any](
 	iterator TIter,
 	cmp func(*Combined[T1, T2], *Combined[T1, T2]) int,

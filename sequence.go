@@ -159,6 +159,8 @@ func Sequence2[T1, T2 any](generator func() (T1, T2, bool)) Iterator2[T1, T2] {
 	}
 }
 
+// Reverse returns an iterator that yields the values of the input iterator in reverse order.
+// be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func Reverse[TIter SeqX[T], T any](iterator TIter) Iterator[T] {
 	return func(yield func(T) bool) {
 		var buffer []T
@@ -179,6 +181,8 @@ func Reverse[TIter SeqX[T], T any](iterator TIter) Iterator[T] {
 	}
 }
 
+// Reverse2 is the Iterator2 version of Reverse function.
+// be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func Reverse2[TIter Seq2X[T1, T2], T1, T2 any](iterator TIter) Iterator2[T1, T2] {
 	return func(yield func(T1, T2) bool) {
 		var buffer []*Combined[T1, T2]
