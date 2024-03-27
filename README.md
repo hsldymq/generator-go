@@ -10,10 +10,6 @@ The feature itself is simplistic designed, it does not provide many convenient f
 
 So this package do the job.
 
-If you are familiar with ReactiveX, you may find that some functions are similar to the operators of ReactiveX.
-
-Actually, many functions in goiter are inspired by ReactiveX. The difference is that ReactiveX is based on the push model, while those functions in goiter are based on the pull model.
-
 To use this package, you must enable rangefunc feature.
 
 # Requirements
