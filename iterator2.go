@@ -28,6 +28,10 @@ func (it Iterator2[T1, T2]) Take(n int) Iterator2[T1, T2] {
 	return Take2(it, n)
 }
 
+func (it Iterator2[T1, T2]) Skip(n int) Iterator2[T1, T2] {
+	return Skip2(it, n)
+}
+
 func (it Iterator2[T1, T2]) Concat(its ...Iterator2[T1, T2]) Iterator2[T1, T2] {
 	return Concat2(it, its...)
 }

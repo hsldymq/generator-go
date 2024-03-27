@@ -28,6 +28,10 @@ func (it Iterator[T]) Take(n int) Iterator[T] {
 	return Take(it, n)
 }
 
+func (it Iterator[T]) Skip(n int) Iterator[T] {
+	return Skip(it, n)
+}
+
 func (it Iterator[T]) Concat(its ...Iterator[T]) Iterator[T] {
 	return Concat(it, its...)
 }
