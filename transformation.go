@@ -5,33 +5,33 @@ package goiter
 import "iter"
 
 // PickV1 returns an iterator that yields the first element of each 2-tuple provided by the input iterator.
-func PickV1[T1, T2 any](it Iterator2[T1, T2]) Iterator[T1] {
-	return Transform21(it, func(v1 T1, _ T2) T1 {
+func PickV1[TIter Seq2X[T1, T2], T1, T2 any](iterator TIter) Iterator[T1] {
+	return Transform21(iterator, func(v1 T1, _ T2) T1 {
 		return v1
 	})
 }
 
 // PickV2 returns an iterator that yields the second element of each 2-tuple provided by the input iterator.
-func PickV2[T1, T2 any](it Iterator2[T1, T2]) Iterator[T2] {
-	return Transform21(it, func(_ T1, v2 T2) T2 {
+func PickV2[TIter Seq2X[T1, T2], T1, T2 any](iterator TIter) Iterator[T2] {
+	return Transform21(iterator, func(_ T1, v2 T2) T2 {
 		return v2
 	})
 }
 
 // Swap returns an iterator that yields new 2-tuples by swapping the positions of the elements within each 2-Tuple provided by the input iterator.
-func Swap[T1, T2 any](it Iterator2[T1, T2]) Iterator2[T2, T1] {
-	return Transform2(it, func(v1 T1, v2 T2) (T2, T1) {
+func Swap[TIter Seq2X[T1, T2], T1, T2 any](iterator TIter) Iterator2[T2, T1] {
+	return Transform2(iterator, func(v1 T1, v2 T2) (T2, T1) {
 		return v2, v1
 	})
 }
 
 // Transform returns an iterator, it yields new values by applying the transformer function to each value provided by the input iterator.
-func Transform[In, Out any](
-	it Iterator[In],
-	transformer func(In) Out,
-) Iterator[Out] {
-	return func(yield func(Out) bool) {
-		next, stop := iter.Pull(it.Seq())
+func Transform[TIter SeqX[T], TOut, T any](
+	iterator TIter,
+	transformer func(T) TOut,
+) Iterator[TOut] {
+	return func(yield func(TOut) bool) {
+		next, stop := iter.Pull(iter.Seq[T](iterator))
 		defer stop()
 		for {
 			v, ok := next()
@@ -47,12 +47,12 @@ func Transform[In, Out any](
 }
 
 // Transform2 is the Iterator2 version of Transform function.
-func Transform2[InT1, InT2, OutT1, OutT2 any](
-	it Iterator2[InT1, InT2],
-	transformer func(InT1, InT2) (OutT1, OutT2),
-) Iterator2[OutT1, OutT2] {
-	return func(yield func(OutT1, OutT2) bool) {
-		next, stop := iter.Pull2(it.Seq())
+func Transform2[TIter Seq2X[T1, T2], TOut1, TOut2, T1, T2 any](
+	iterator TIter,
+	transformer func(T1, T2) (TOut1, TOut2),
+) Iterator2[TOut1, TOut2] {
+	return func(yield func(TOut1, TOut2) bool) {
+		next, stop := iter.Pull2(iter.Seq2[T1, T2](iterator))
 		defer stop()
 		for {
 			v1, v2, ok := next()
@@ -68,12 +68,12 @@ func Transform2[InT1, InT2, OutT1, OutT2 any](
 }
 
 // Transform12 is similar to Transform, but it yields 2-tuple values after transformation instead of single-values.
-func Transform12[In, OutT1, OutT2 any](
-	it Iterator[In],
-	transformer func(In) (OutT1, OutT2),
+func Transform12[TIter SeqX[T], OutT1, OutT2, T any](
+	iterator TIter,
+	transformer func(T) (OutT1, OutT2),
 ) Iterator2[OutT1, OutT2] {
 	return func(yield func(OutT1, OutT2) bool) {
-		next, stop := iter.Pull(it.Seq())
+		next, stop := iter.Pull(iter.Seq[T](iterator))
 		defer stop()
 		for {
 			v, ok := next()
@@ -89,12 +89,12 @@ func Transform12[In, OutT1, OutT2 any](
 }
 
 // Transform21 is similar to Transform2, but it only yields transform single-values instead of 2-tuple values
-func Transform21[InT1, InT2, Out any](
-	it Iterator2[InT1, InT2],
-	transformer func(InT1, InT2) Out,
-) Iterator[Out] {
-	return func(yield func(Out) bool) {
-		next, stop := iter.Pull2(it.Seq())
+func Transform21[TIter Seq2X[T1, T2], TOut, T1, T2 any](
+	iterator TIter,
+	transformer func(T1, T2) TOut,
+) Iterator[TOut] {
+	return func(yield func(TOut) bool) {
+		next, stop := iter.Pull2(iter.Seq2[T1, T2](iterator))
 		defer stop()
 		for {
 			v1, v2, ok := next()

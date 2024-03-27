@@ -159,10 +159,10 @@ func Sequence2[T1, T2 any](generator func() (T1, T2, bool)) Iterator2[T1, T2] {
 	}
 }
 
-func Reverse[T any](it Iterator[T]) Iterator[T] {
+func Reverse[TIter SeqX[T], T any](iterator TIter) Iterator[T] {
 	return func(yield func(T) bool) {
 		var buffer []T
-		next, stop := iter.Pull(it.Seq())
+		next, stop := iter.Pull(iter.Seq[T](iterator))
 		defer stop()
 		for {
 			v, ok := next()
@@ -179,10 +179,10 @@ func Reverse[T any](it Iterator[T]) Iterator[T] {
 	}
 }
 
-func Reverse2[T1, T2 any](it Iterator2[T1, T2]) Iterator2[T1, T2] {
+func Reverse2[TIter Seq2X[T1, T2], T1, T2 any](iterator TIter) Iterator2[T1, T2] {
 	return func(yield func(T1, T2) bool) {
 		var buffer []*Combined[T1, T2]
-		next, stop := iter.Pull2(it.Seq())
+		next, stop := iter.Pull2(iter.Seq2[T1, T2](iterator))
 		defer stop()
 		for {
 			v1, v2, ok := next()

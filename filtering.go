@@ -5,7 +5,10 @@ package goiter
 import "iter"
 
 // Filter returns an iterator that only yields the values of the input iterator that satisfy the predicate.
-func Filter[TIter SeqX[T], T any](iterator TIter, predicate func(T) bool) Iterator[T] {
+func Filter[TIter SeqX[T], T any](
+	iterator TIter,
+	predicate func(T) bool,
+) Iterator[T] {
 	return func(yield func(T) bool) {
 		next, stop := iter.Pull(iter.Seq[T](iterator))
 		defer stop()
@@ -25,7 +28,10 @@ func Filter[TIter SeqX[T], T any](iterator TIter, predicate func(T) bool) Iterat
 }
 
 // Filter2 returns an iterator that only yields the 2-tuples of the input iterator that satisfy the predicate.
-func Filter2[TIter Seq2X[T1, T2], T1 any, T2 any](iterator TIter, predicate func(T1, T2) bool) Iterator2[T1, T2] {
+func Filter2[TIter Seq2X[T1, T2], T1 any, T2 any](
+	iterator TIter,
+	predicate func(T1, T2) bool,
+) Iterator2[T1, T2] {
 	return func(yield func(T1, T2) bool) {
 		next, stop := iter.Pull2(iter.Seq2[T1, T2](iterator))
 		defer stop()
@@ -44,7 +50,10 @@ func Filter2[TIter Seq2X[T1, T2], T1 any, T2 any](iterator TIter, predicate func
 	}
 }
 
-func Take[TIter SeqX[T], T any](iterator TIter, n int) Iterator[T] {
+func Take[TIter SeqX[T], T any](
+	iterator TIter,
+	n int,
+) Iterator[T] {
 	if n <= 0 {
 		return Empty[T]()
 	}
@@ -69,7 +78,10 @@ func Take[TIter SeqX[T], T any](iterator TIter, n int) Iterator[T] {
 	}
 }
 
-func Take2[TIter Seq2X[T1, T2], T1, T2 any](iterator TIter, n int) Iterator2[T1, T2] {
+func Take2[TIter Seq2X[T1, T2], T1, T2 any](
+	iterator TIter,
+	n int,
+) Iterator2[T1, T2] {
 	if n <= 0 {
 		return Empty2[T1, T2]()
 	}
@@ -94,7 +106,10 @@ func Take2[TIter Seq2X[T1, T2], T1, T2 any](iterator TIter, n int) Iterator2[T1,
 	}
 }
 
-func Skip[TIter SeqX[T], T any](iterator TIter, n int) Iterator[T] {
+func Skip[TIter SeqX[T], T any](
+	iterator TIter,
+	n int,
+) Iterator[T] {
 	if n <= 0 {
 		return Iterator[T](iterator)
 	}
@@ -119,7 +134,10 @@ func Skip[TIter SeqX[T], T any](iterator TIter, n int) Iterator[T] {
 	}
 }
 
-func Skip2[TIter Seq2X[T1, T2], T1, T2 any](iterator TIter, n int) Iterator2[T1, T2] {
+func Skip2[TIter Seq2X[T1, T2], T1, T2 any](
+	iterator TIter,
+	n int,
+) Iterator2[T1, T2] {
 	if n <= 0 {
 		return Iterator2[T1, T2](iterator)
 	}
@@ -219,7 +237,10 @@ func DistinctV2[TIter Seq2X[T1, T2], T1 any, T2 comparable](iterator TIter) Iter
 }
 
 // DistinctBy accepts a custom function to determine the deduplicate-key.
-func DistinctBy[TIter SeqX[T], T any, K comparable](iterator TIter, keySelector func(T) K) Iterator[T] {
+func DistinctBy[TIter SeqX[T], T any, K comparable](
+	iterator TIter,
+	keySelector func(T) K,
+) Iterator[T] {
 	return func(yield func(T) bool) {
 		yielded := newDistinctor[K]()
 
@@ -241,7 +262,10 @@ func DistinctBy[TIter SeqX[T], T any, K comparable](iterator TIter, keySelector 
 }
 
 // Distinct2By is an Iterator2 version of DistinctBy.
-func Distinct2By[TIter Seq2X[T1, T2], T1 any, T2 any, K comparable](iterator TIter, keySelector func(T1, T2) K) Iterator2[T1, T2] {
+func Distinct2By[TIter Seq2X[T1, T2], T1 any, T2 any, K comparable](
+	iterator TIter,
+	keySelector func(T1, T2) K,
+) Iterator2[T1, T2] {
 	return func(yield func(T1, T2) bool) {
 		yielded := newDistinctor[K]()
 
