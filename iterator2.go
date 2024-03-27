@@ -6,6 +6,10 @@ import (
 	"iter"
 )
 
+type Seq2X[T1, T2 any] interface {
+	~func(yield func(T1, T2) bool)
+}
+
 type Iterator2[T1, T2 any] iter.Seq2[T1, T2]
 
 func (it Iterator2[T1, T2]) Seq() iter.Seq2[T1, T2] {
