@@ -16,7 +16,7 @@ type Combined[T1, T2 any] struct {
 	V2 T2
 }
 
-type ZippedE[T1, T2 any] struct {
+type ZippedX[T1, T2 any] struct {
 	V1  T1
 	OK1 bool
 	V2  T2
@@ -40,7 +40,7 @@ func Zip[TIter1 SeqX[T1], TIter2 SeqX[T2], T1, T2 any](
 	iterator1 TIter1,
 	iterator2 TIter2,
 ) Iterator[*Combined[T1, T2]] {
-	return ZipAs(iterator1, iterator2, func(zipped *ZippedE[T1, T2]) *Combined[T1, T2] {
+	return ZipAs(iterator1, iterator2, func(zipped *ZippedX[T1, T2]) *Combined[T1, T2] {
 		return &Combined[T1, T2]{
 			V1: zipped.V1,
 			V2: zipped.V2,
@@ -49,11 +49,11 @@ func Zip[TIter1 SeqX[T1], TIter2 SeqX[T2], T1, T2 any](
 }
 
 // ZipAs is a more general version of Zip.
-// if exhaust parameter is true, the resulting iterator will not stop until both input iterators stop, and ZippedE.OK1 and ZippedE.OK2 will be false when the corresponding iterator stops.
+// if exhaust parameter is true, the resulting iterator will not stop until both input iterators stop, and ZippedX.OK1 and ZippedX.OK2 will be false when the corresponding iterator stops.
 func ZipAs[TIter1 SeqX[T1], TIter2 SeqX[T2], TOut, T1, T2 any](
 	iterator1 TIter1,
 	iterator2 TIter2,
-	transformer func(*ZippedE[T1, T2]) TOut,
+	transformer func(*ZippedX[T1, T2]) TOut,
 	exhaust ...bool,
 ) Iterator[TOut] {
 	return func(yield func(TOut) bool) {
@@ -77,7 +77,7 @@ func ZipAs[TIter1 SeqX[T1], TIter2 SeqX[T2], TOut, T1, T2 any](
 				return
 			}
 
-			out := transformer(&ZippedE[T1, T2]{
+			out := transformer(&ZippedX[T1, T2]{
 				V1:  in1,
 				OK1: ok1,
 				V2:  in2,

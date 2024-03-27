@@ -67,7 +67,7 @@ func TestZipAs(t *testing.T) {
 		Name string
 		Age  int
 	}
-	transformer := func(zipped *ZippedE[string, int]) person {
+	transformer := func(zipped *ZippedX[string, int]) person {
 		p := person{
 			Name: zipped.V1,
 			Age:  zipped.V2,
