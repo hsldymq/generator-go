@@ -59,15 +59,25 @@ func TestTake(t *testing.T) {
 	}
 
 	actual = []int{}
-	for v := range SliceElem(input).Take(4) {
+	for v := range SliceElem(input).Take(6) {
 		actual = append(actual, v)
-		if v == 3 {
-			break
-		}
 	}
-	expect = []int{1, 2, 3}
+	expect = []int{1, 2, 3, 4, 5}
 	if !slices.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
+	actual = []int{}
+	for v := range SliceElem(input).Take(-1) {
+		actual = append(actual, v)
+	}
+	expect = []int{}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
+	for _ = range SliceElem(input).Take(3) {
+		break
 	}
 }
 
@@ -99,6 +109,34 @@ func TestTake2(t *testing.T) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
 	}
 
+	actual = []person{}
+	for name, age := range Transform12(SliceElem(input), toNameAge).Take(6) {
+		actual = append(actual, person{
+			Name: name,
+			Age:  age,
+		})
+	}
+	expect = []person{
+		{"alice", 20},
+		{"bob", 21},
+		{"eve", 22},
+	}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
+	actual = []person{}
+	for name, age := range Transform12(SliceElem(input), toNameAge).Take(0) {
+		actual = append(actual, person{
+			Name: name,
+			Age:  age,
+		})
+	}
+	expect = []person{}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
 	for _, _ = range Transform12(SliceElem(input), toNameAge).Take(2) {
 		break
 	}
@@ -117,15 +155,16 @@ func TestSkip(t *testing.T) {
 	}
 
 	actual = []int{}
-	for v := range SliceElem(input).Skip(1) {
+	for v := range SliceElem(input).Skip(0) {
 		actual = append(actual, v)
-		if v == 4 {
-			break
-		}
 	}
-	expect = []int{2, 3, 4}
+	expect = []int{1, 2, 3, 4, 5}
 	if !slices.Equal(expect, actual) {
 		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
+	for _ = range SliceElem(input).Skip(1) {
+		break
 	}
 }
 
@@ -150,6 +189,22 @@ func TestSkip2(t *testing.T) {
 		})
 	}
 	expect := []person{
+		{"bob", 21},
+		{"eve", 22},
+	}
+	if !slices.Equal(expect, actual) {
+		t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+	}
+
+	actual = []person{}
+	for name, age := range Transform12(SliceElem(input), toNameAge).Skip(0) {
+		actual = append(actual, person{
+			Name: name,
+			Age:  age,
+		})
+	}
+	expect = []person{
+		{"alice", 20},
 		{"bob", 21},
 		{"eve", 22},
 	}
