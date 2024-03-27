@@ -50,6 +50,7 @@ func Filter2[TIter Seq2X[T1, T2], T1 any, T2 any](
 	}
 }
 
+// Take returns an iterator that yields the first n values of the input iterator.
 func Take[TIter SeqX[T], T any](
 	iterator TIter,
 	n int,
@@ -78,6 +79,7 @@ func Take[TIter SeqX[T], T any](
 	}
 }
 
+// Take2 is the Iterator2 version of Take function.
 func Take2[TIter Seq2X[T1, T2], T1, T2 any](
 	iterator TIter,
 	n int,
@@ -106,6 +108,7 @@ func Take2[TIter Seq2X[T1, T2], T1, T2 any](
 	}
 }
 
+// Skip returns an iterator that suppress the first n values of the input iterator and yields the rest.
 func Skip[TIter SeqX[T], T any](
 	iterator TIter,
 	n int,
@@ -134,6 +137,7 @@ func Skip[TIter SeqX[T], T any](
 	}
 }
 
+// Skip2 is the Iterator2 version of Skip function.
 func Skip2[TIter Seq2X[T1, T2], T1, T2 any](
 	iterator TIter,
 	n int,
