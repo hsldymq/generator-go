@@ -94,6 +94,56 @@ func Take2[T1, T2 any](it Iterator2[T1, T2], n int) Iterator2[T1, T2] {
 	}
 }
 
+func Skip[T any](it Iterator[T], n int) Iterator[T] {
+	if n <= 0 {
+		return it
+	}
+
+	return func(yield func(T) bool) {
+		next, stop := iter.Pull(it.Seq())
+		defer stop()
+		count := 0
+		for {
+			v, ok := next()
+			if !ok {
+				return
+			}
+			count++
+			if count <= n {
+				continue
+			}
+			if !yield(v) {
+				return
+			}
+		}
+	}
+}
+
+func Skip2[T1, T2 any](it Iterator2[T1, T2], n int) Iterator2[T1, T2] {
+	if n <= 0 {
+		return it
+	}
+
+	return func(yield func(T1, T2) bool) {
+		next, stop := iter.Pull2(it.Seq())
+		defer stop()
+		count := 0
+		for {
+			v1, v2, ok := next()
+			if !ok {
+				return
+			}
+			count++
+			if count <= n {
+				continue
+			}
+			if !yield(v1, v2) {
+				return
+			}
+		}
+	}
+}
+
 // Distinct returns an iterator that only yields the distinct values of the input iterator.
 // For example:
 //
