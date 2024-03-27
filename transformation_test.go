@@ -11,7 +11,7 @@ import (
 
 func TestPick1(t *testing.T) {
 	actual := make([]int, 0, 3)
-	for idx := range PickV1(Slice([]int{7, 8, 9})) {
+	for idx := range PickV1(Slice([]int{7, 8, 9})).Seq() {
 		actual = append(actual, idx)
 	}
 
@@ -36,7 +36,7 @@ func TestPick2(t *testing.T) {
 func TestSwap(t *testing.T) {
 	input := map[string]int{"1": 1, "2": 2}
 	actual := make(map[int]string)
-	for val, key := range Swap(Map(input)) {
+	for val, key := range Swap(Map(input)).Seq() {
 		actual[val] = key
 	}
 	expect := map[int]string{1: "1", 2: "2"}
