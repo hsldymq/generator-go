@@ -6,12 +6,12 @@ package goiter
 type SourceFunc[T any] func() T
 
 // Slice returns an iterator that allows you to traverse a slice in a forward or reverse direction.
-func Slice[T any](s []T, backward ...bool) Iterator2[int, T] {
-	return SliceSource(func() []T { return s }, backward...)
+func Slice[S ~[]T, T any](s S, backward ...bool) Iterator2[int, T] {
+	return SliceSource(func() S { return s }, backward...)
 }
 
 // SliceElem only yields the elements of a slice.
-func SliceElem[T any](s []T, backward ...bool) Iterator[T] {
+func SliceElem[S ~[]T, T any](s S, backward ...bool) Iterator[T] {
 	return PickV2(Slice(s, backward...))
 }
 
@@ -21,7 +21,7 @@ func SliceElem[T any](s []T, backward ...bool) Iterator[T] {
 // However, there might come a time when the structure replaces the original slice with a new one.
 // When the already exposed iterator is traversed again, we hope it traverses the new slice instead of the old one.
 // Therefore, by providing a SourceFunc, the moment of obtaining the slice is delayed until the iterator is traversed.
-func SliceSource[T any](source SourceFunc[[]T], backward ...bool) Iterator2[int, T] {
+func SliceSource[S ~[]T, T any](source SourceFunc[S], backward ...bool) Iterator2[int, T] {
 	return func(yield func(int, T) bool) {
 		s := source()
 		if len(backward) == 0 || !backward[0] {
@@ -42,7 +42,7 @@ func SliceSource[T any](source SourceFunc[[]T], backward ...bool) Iterator2[int,
 
 // SliceSourceElem is like SliceElem function, it serves similar purposes as SliceSource.
 // see comments of SliceSource function for more details.
-func SliceSourceElem[T any](source SourceFunc[[]T], backward ...bool) Iterator[T] {
+func SliceSourceElem[S ~[]T, T any](source SourceFunc[S], backward ...bool) Iterator[T] {
 	return PickV2(SliceSource(source, backward...))
 }
 
