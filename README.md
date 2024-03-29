@@ -169,7 +169,7 @@ import (
 
 func FilterDemo() {
     input := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-    iterator := goiter.Filter(goiter.SliceElem(input), func(v int) bool {
+    iterator := goiter.SliceElem(input).Filter(func(v int) bool {
         return v % 2 == 0
     }) 
     // this will print 2 4 6 8 10
