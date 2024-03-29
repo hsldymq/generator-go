@@ -120,6 +120,10 @@ func TestZipAs(t *testing.T) {
     if !slices.Equal(expect, actual) {
         t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
     }
+
+    for _ = range zipIter {
+        break
+    }
 }
 
 func TestConcat(t *testing.T) {
