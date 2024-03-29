@@ -51,6 +51,7 @@ func Filter2[TIter Seq2X[T1, T2], T1 any, T2 any](
 }
 
 // OfType returns an iterator that only yields the values of the input iterator that are of the specified type.
+// this is useful when you have an iterator that yields any values, and you want to filter them by their type.
 func OfType[U any, TIter SeqX[T], T any](
     iterator TIter,
 ) Iterator[U] {
