@@ -130,6 +130,8 @@ func Take2[TIter Seq2X[T1, T2], T1, T2 any](
     }
 }
 
+// TakeLast returns an iterator that yields the last n values of the input iterator.
+// if the input iterator has less than n values, it will yield all the values.
 func TakeLast[TIter SeqX[T], T any](
     iterator TIter,
     n int,
@@ -179,6 +181,7 @@ func TakeLast[TIter SeqX[T], T any](
     }
 }
 
+// TakeLast2 is the Iterator2 version of TakeLast function.
 func TakeLast2[TIter Seq2X[T1, T2], T1, T2 any](
     iterator TIter,
     n int,
@@ -286,6 +289,8 @@ func Skip2[TIter Seq2X[T1, T2], T1, T2 any](
     }
 }
 
+// SkipLast returns an iterator that suppress the last n values of the input iterator and yields the rest.
+// if the input iterator has less than n values, it will yield nothing.
 func SkipLast[TIter SeqX[T], T any](
     iterator TIter,
     n int,
@@ -326,6 +331,7 @@ func SkipLast[TIter SeqX[T], T any](
     }
 }
 
+// SkipLast2 is the Iterator2 version of SkipLast function.
 func SkipLast2[TIter Seq2X[T1, T2], T1, T2 any](
     iterator TIter,
     n int,
