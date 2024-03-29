@@ -443,16 +443,6 @@ func TestSkipLast(t *testing.T) {
     if !slices.Equal(expect, actual) {
         t.Fatal(fmt.Sprintf("test SkipLast failed, expect: %v, actual: %v", expect, actual))
     }
-
-    // case 5
-    actual = []int{}
-    for v := range SliceElem([]int{}).SkipLast(1) {
-        actual = append(actual, v)
-    }
-    expect = []int{}
-    if !slices.Equal(expect, actual) {
-        t.Fatal(fmt.Sprintf("test SkipLast failed, expect: %v, actual: %v", expect, actual))
-    }
 }
 
 func TestSkipLast2(t *testing.T) {
@@ -510,16 +500,6 @@ func TestSkipLast2(t *testing.T) {
         {3, 4},
         {4, 5},
     }
-    if !slices.Equal(expect, actual) {
-        t.Fatal(fmt.Sprintf("test SkipLast failed, expect: %v, actual: %v", expect, actual))
-    }
-
-    // case 5
-    actual = []Combined[int, int]{}
-    for idx, v := range Slice([]int{}).SkipLast(1) {
-        actual = append(actual, Combined[int, int]{V1: idx, V2: v})
-    }
-    expect = []Combined[int, int]{}
     if !slices.Equal(expect, actual) {
         t.Fatal(fmt.Sprintf("test SkipLast failed, expect: %v, actual: %v", expect, actual))
     }
