@@ -32,8 +32,16 @@ func (it Iterator2[T1, T2]) Take(n int) Iterator2[T1, T2] {
     return Take2(it, n)
 }
 
+func (it Iterator2[T1, T2]) TakeLast(n int) Iterator2[T1, T2] {
+    return TakeLast2(it, n)
+}
+
 func (it Iterator2[T1, T2]) Skip(n int) Iterator2[T1, T2] {
     return Skip2(it, n)
+}
+
+func (it Iterator2[T1, T2]) SkipLast(n int) Iterator2[T1, T2] {
+    return SkipLast2(it, n)
 }
 
 func (it Iterator2[T1, T2]) Combine() Iterator[*Combined[T1, T2]] {

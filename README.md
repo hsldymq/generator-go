@@ -250,6 +250,15 @@ func Demo() {
 ### filtering
 * `goiter.Filter`
 * `goiter.Filter2`
+* `goiter.OfType`
+* `goiter.Take`
+* `goiter.Take2`
+* `goiter.TakeLast`
+* `goiter.TakeLast2`
+* `goiter.Skip`
+* `goiter.Skip2`
+* `goiter.SkipLast`
+* `goiter.SkipLast2`
 * `goiter.Distinct`
 * `goiter.DistinctV1`
 * `goiter.DistinctV2`

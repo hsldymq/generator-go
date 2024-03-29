@@ -196,6 +196,93 @@ func TestTake2(t *testing.T) {
     }
 }
 
+func TestTakeLast(t *testing.T) {
+    input := []int{1, 2, 3, 4, 5}
+
+    // case 1
+    actual := []int{}
+    for v := range SliceElem(input).TakeLast(3) {
+        actual = append(actual, v)
+    }
+    expect := []int{3, 4, 5}
+    if !slices.Equal(expect, actual) {
+        t.Fatal(fmt.Sprintf("test TakeLast failed, expect: %v, actual: %v", expect, actual))
+    }
+
+    // case 2
+    actual = []int{}
+    for v := range SliceElem(input).TakeLast(7) {
+        actual = append(actual, v)
+    }
+    expect = []int{1, 2, 3, 4, 5}
+    if !slices.Equal(expect, actual) {
+        t.Fatal(fmt.Sprintf("test TakeLast failed, expect: %v, actual: %v", expect, actual))
+    }
+
+    // case 3
+    actual = []int{}
+    for v := range SliceElem(input).TakeLast(3) {
+        actual = append(actual, v)
+        if v == 4 {
+            break
+        }
+    }
+    expect = []int{3, 4}
+    if !slices.Equal(expect, actual) {
+        t.Fatal(fmt.Sprintf("test TakeLast failed, expect: %v, actual: %v", expect, actual))
+    }
+}
+
+func TestTakeLast2(t *testing.T) {
+    input := []int{1, 2, 3, 4, 5}
+
+    // case 1
+    actual := []Combined[int, int]{}
+    for idx, v := range Slice(input).TakeLast(3) {
+        actual = append(actual, Combined[int, int]{V1: idx, V2: v})
+    }
+    expect := []Combined[int, int]{
+        {2, 3},
+        {3, 4},
+        {4, 5},
+    }
+    if !slices.Equal(expect, actual) {
+        t.Fatal(fmt.Sprintf("test TakeLast2 failed, expect: %v, actual: %v", expect, actual))
+    }
+
+    // case 2
+    actual = []Combined[int, int]{}
+    for idx, v := range Slice(input).TakeLast(7) {
+        actual = append(actual, Combined[int, int]{V1: idx, V2: v})
+    }
+    expect = []Combined[int, int]{
+        {0, 1},
+        {1, 2},
+        {2, 3},
+        {3, 4},
+        {4, 5},
+    }
+    if !slices.Equal(expect, actual) {
+        t.Fatal(fmt.Sprintf("test TakeLast2 failed, expect: %v, actual: %v", expect, actual))
+    }
+
+    // case 3
+    actual = []Combined[int, int]{}
+    for idx, v := range Slice(input).TakeLast(3) {
+        actual = append(actual, Combined[int, int]{V1: idx, V2: v})
+        if v == 4 {
+            break
+        }
+    }
+    expect = []Combined[int, int]{
+        {2, 3},
+        {3, 4},
+    }
+    if !slices.Equal(expect, actual) {
+        t.Fatal(fmt.Sprintf("test TakeLast2 failed, expect: %v, actual: %v", expect, actual))
+    }
+}
+
 func TestSkip(t *testing.T) {
     input := []int{1, 2, 3, 4, 5}
 
@@ -268,6 +355,87 @@ func TestSkip2(t *testing.T) {
 
     for _, _ = range Transform12(SliceElem(input), toNameAge).Skip(1) {
         break
+    }
+}
+
+func TestSkipLast(t *testing.T) {
+    input := []int{1, 2, 3, 4, 5}
+
+    // case 1
+    actual := []int{}
+    for v := range SliceElem(input).SkipLast(3) {
+        actual = append(actual, v)
+    }
+    expect := []int{1, 2}
+    if !slices.Equal(expect, actual) {
+        t.Fatal(fmt.Sprintf("test SkipLast failed, expect: %v, actual: %v", expect, actual))
+    }
+
+    // case 2
+    actual = []int{}
+    for v := range SliceElem(input).SkipLast(7) {
+        actual = append(actual, v)
+    }
+    expect = []int{}
+    if !slices.Equal(expect, actual) {
+        t.Fatal(fmt.Sprintf("test SkipLast failed, expect: %v, actual: %v", expect, actual))
+    }
+
+    // case 3
+    actual = []int{}
+    for v := range SliceElem(input).SkipLast(2) {
+        actual = append(actual, v)
+        if v == 3 {
+            break
+        }
+    }
+    expect = []int{1, 2, 3}
+    if !slices.Equal(expect, actual) {
+        t.Fatal(fmt.Sprintf("test SkipLast failed, expect: %v, actual: %v", expect, actual))
+    }
+}
+
+func TestSkipLast2(t *testing.T) {
+    input := []int{1, 2, 3, 4, 5}
+
+    // case 1
+    actual := []Combined[int, int]{}
+    for idx, v := range Slice(input).SkipLast(3) {
+        actual = append(actual, Combined[int, int]{V1: idx, V2: v})
+    }
+    expect := []Combined[int, int]{
+        {0, 1},
+        {1, 2},
+    }
+    if !slices.Equal(expect, actual) {
+        t.Fatal(fmt.Sprintf("test SkipLast2 failed, expect: %v, actual: %v", expect, actual))
+    }
+
+    // case 2
+    actual = []Combined[int, int]{}
+    for idx, v := range Slice(input).SkipLast(7) {
+        actual = append(actual, Combined[int, int]{V1: idx, V2: v})
+    }
+    expect = []Combined[int, int]{}
+    if !slices.Equal(expect, actual) {
+        t.Fatal(fmt.Sprintf("test SkipLast2 failed, expect: %v, actual: %v", expect, actual))
+    }
+
+    // case 3
+    actual = []Combined[int, int]{}
+    for idx, v := range Slice(input).SkipLast(2) {
+        actual = append(actual, Combined[int, int]{V1: idx, V2: v})
+        if v == 3 {
+            break
+        }
+    }
+    expect = []Combined[int, int]{
+        {0, 1},
+        {1, 2},
+        {2, 3},
+    }
+    if !slices.Equal(expect, actual) {
+        t.Fatal(fmt.Sprintf("test SkipLast2 failed, expect: %v, actual: %v", expect, actual))
     }
 }
 

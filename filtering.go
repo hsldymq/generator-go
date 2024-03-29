@@ -130,6 +130,104 @@ func Take2[TIter Seq2X[T1, T2], T1, T2 any](
     }
 }
 
+func TakeLast[TIter SeqX[T], T any](
+    iterator TIter,
+    n int,
+) Iterator[T] {
+    if n <= 0 {
+        return Empty[T]()
+    }
+
+    return func(yield func(T) bool) {
+        idxHead := -1
+        idxTail := -1
+        buffer := make([]T, n)
+
+        next, stop := iter.Pull(iter.Seq[T](iterator))
+        defer stop()
+        for {
+            v, ok := next()
+            if !ok {
+                break
+            }
+            if idxHead == -1 {
+                buffer[0] = v
+                idxHead = 0
+                idxTail = 0
+            } else if (idxHead+n-1)%n == idxTail {
+                idxTail = idxHead
+                idxHead = (idxHead + 1) % n
+                buffer[idxTail] = v
+            } else {
+                idxTail = (idxTail + 1) % n
+                buffer[idxTail] = v
+            }
+        }
+        if idxHead < 0 {
+            return
+        }
+        for i := 0; i < n; i++ {
+            idx := (idxHead + i) % n
+            v := buffer[idx]
+            if !yield(v) {
+                return
+            }
+            if idx == idxTail {
+                return
+            }
+        }
+    }
+}
+
+func TakeLast2[TIter Seq2X[T1, T2], T1, T2 any](
+    iterator TIter,
+    n int,
+) Iterator2[T1, T2] {
+    if n <= 0 {
+        return Empty2[T1, T2]()
+    }
+
+    return func(yield func(T1, T2) bool) {
+        idxHead := -1
+        idxTail := -1
+        buffer := make([]*Combined[T1, T2], n)
+
+        next, stop := iter.Pull2(iter.Seq2[T1, T2](iterator))
+        defer stop()
+        for {
+            v1, v2, ok := next()
+            if !ok {
+                break
+            }
+            if idxHead == -1 {
+                buffer[0] = &Combined[T1, T2]{V1: v1, V2: v2}
+                idxHead = 0
+                idxTail = 0
+            } else if (idxHead+n-1)%n == idxTail {
+                idxTail = idxHead
+                idxHead = (idxHead + 1) % n
+                buffer[idxTail] = &Combined[T1, T2]{V1: v1, V2: v2}
+            } else {
+                idxTail = (idxTail + 1) % n
+                buffer[idxTail] = &Combined[T1, T2]{V1: v1, V2: v2}
+            }
+        }
+        if idxHead < 0 {
+            return
+        }
+        for i := 0; i < n; i++ {
+            idx := (idxHead + i) % n
+            v := buffer[idx]
+            if !yield(v.V1, v.V2) {
+                return
+            }
+            if idx == idxTail {
+                return
+            }
+        }
+    }
+}
+
 // Skip returns an iterator that suppress the first n values of the input iterator and yields the rest.
 func Skip[TIter SeqX[T], T any](
     iterator TIter,
@@ -183,6 +281,86 @@ func Skip2[TIter Seq2X[T1, T2], T1, T2 any](
             }
             if !yield(v1, v2) {
                 return
+            }
+        }
+    }
+}
+
+func SkipLast[TIter SeqX[T], T any](
+    iterator TIter,
+    n int,
+) Iterator[T] {
+    if n <= 0 {
+        return Iterator[T](iterator)
+    }
+
+    return func(yield func(T) bool) {
+        idxHead := -1
+        idxTail := -1
+        buffer := make([]T, n)
+
+        next, stop := iter.Pull(iter.Seq[T](iterator))
+        defer stop()
+        for {
+            v, ok := next()
+            if !ok {
+                break
+            }
+            if idxHead == -1 {
+                buffer[0] = v
+                idxHead = 0
+                idxTail = 0
+            } else if (idxHead+n-1)%n == idxTail {
+                yieldVal := buffer[idxHead]
+                idxTail = idxHead
+                idxHead = (idxHead + 1) % n
+                buffer[idxTail] = v
+                if !yield(yieldVal) {
+                    return
+                }
+            } else {
+                idxTail = (idxTail + 1) % n
+                buffer[idxTail] = v
+            }
+        }
+    }
+}
+
+func SkipLast2[TIter Seq2X[T1, T2], T1, T2 any](
+    iterator TIter,
+    n int,
+) Iterator2[T1, T2] {
+    if n <= 0 {
+        return Iterator2[T1, T2](iterator)
+    }
+
+    return func(yield func(T1, T2) bool) {
+        idxHead := -1
+        idxTail := -1
+        buffer := make([]*Combined[T1, T2], n)
+
+        next, stop := iter.Pull2(iter.Seq2[T1, T2](iterator))
+        defer stop()
+        for {
+            v1, v2, ok := next()
+            if !ok {
+                break
+            }
+            if idxHead == -1 {
+                buffer[0] = &Combined[T1, T2]{V1: v1, V2: v2}
+                idxHead = 0
+                idxTail = 0
+            } else if (idxHead+n-1)%n == idxTail {
+                yieldVal := buffer[idxHead]
+                idxTail = idxHead
+                idxHead = (idxHead + 1) % n
+                buffer[idxTail] = &Combined[T1, T2]{V1: v1, V2: v2}
+                if !yield(yieldVal.V1, yieldVal.V2) {
+                    return
+                }
+            } else {
+                idxTail = (idxTail + 1) % n
+                buffer[idxTail] = &Combined[T1, T2]{V1: v1, V2: v2}
             }
         }
     }
