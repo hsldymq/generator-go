@@ -113,12 +113,12 @@ func RangeTime(from time.Time, to time.Time, interval time.Duration) Iterator[ti
 
 // Counter returns an iterator that yields a sequence of integers incrementing by 1.
 // param startFrom is optional, if provided, the sequence will start from the given value, otherwise it will start from 1.
-func Counter[T TInt](startFrom ...T) Iterator[T] {
-    var next T = 1
+func Counter(startFrom ...int) Iterator[int] {
+    var next = 1
     if len(startFrom) > 0 {
         next = startFrom[0]
     }
-    return Sequence(func() (T, bool) {
+    return Sequence(func() (int, bool) {
         v := next
         next++
         return v, true
