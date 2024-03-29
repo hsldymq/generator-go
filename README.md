@@ -227,7 +227,7 @@ func Demo() {
 ### aggregation
 * `goiter.Count`
 * `goiter.Count2`
-* `goiter.Fold`
+* `goiter.Reduce`
 * `goiter.Scan`
 
 ### sequence
