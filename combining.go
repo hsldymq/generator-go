@@ -28,8 +28,8 @@ func Combine[TIter Seq2X[T1, T2], T1, T2 any](iterator TIter) Iterator[*Combined
     return Transform21(iterator, Combiner[T1, T2])
 }
 
-// Zip is like python's zip function, it takes two iterators and returns an iterator of combined structs,
-// where the i-th struct contains the i-th element from each of the argument iterators.
+// Zip is like python's zip function, it takes two iterators and returns an iterator that yields 2-tuples,
+// where the first element of the 2-tuple is from the first iterator, and the second element is from the second iterator
 // when two iterators have different lengths, the resulting iterator will stop when the shorter one stops.
 // for example:
 //
