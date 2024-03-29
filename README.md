@@ -234,6 +234,7 @@ func Demo() {
 * `goiter.Range`
 * `goiter.RangeStep`
 * `goiter.RangeTime`
+* `goiter.Counter`
 * `goiter.Sequence`
 * `goiter.Sequence2`
 * `goiter.Reverse`
