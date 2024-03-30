@@ -60,9 +60,9 @@ func FinishOnceDemo() {
     fmt.Println()
 
     // you can also iterate over it concurrently.
-    data2 := goiter.Range(int32(1), int32(10000)).ToSlice() // this will generate a slice of 1 to 10000
+    intSeqIterator := goiter.Range(int32(1), int32(10000)) // create an iterator yields 1 to 10000
     // iterator created by FinishOnce function allows you to iterate over it concurrently, and it will guarantee that all elements are yielded exactly once.
-    iteratorConcurr := goiter.FinishOnce(goiter.SliceElem(data2))
+    iteratorConcurr := goiter.FinishOnce(intSeqIterator)
     // here we try to sum all elements concurrently.
     sum := int32(0)
     g := &sync.WaitGroup{}
