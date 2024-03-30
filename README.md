@@ -277,8 +277,8 @@ func Demo() {
 ### unrepeatable iterator
 * `goiter.Once`
 * `goiter.Once2`
-* `goiter.ContinuableOnce`
-* `goiter.ContinuableOnce2`
+* `goiter.FinishOnce`
+* `goiter.FinishOnce2`
 
 ### creating iterator
 * `goiter.Slice`
