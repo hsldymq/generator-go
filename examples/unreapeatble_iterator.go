@@ -3,6 +3,8 @@ package examples
 import (
     "fmt"
     "github.com/hsldymq/goiter"
+    "sync"
+    "sync/atomic"
 )
 
 func OnceDemo() {
@@ -29,11 +31,11 @@ func OnceDemo() {
     fmt.Println()
 }
 
-func ContinuableOnceDemo() {
+func FinishOnceDemo() {
     data := []int{1, 2, 3, 4, 5, 6}
 
-    // this is an example for ContinuableOnce function.
-    iterator := goiter.ContinuableOnce(goiter.SliceElem(data))
+    // this is an example for FinishOnce function.
+    iterator := goiter.FinishOnce(goiter.SliceElem(data))
 
     // break the loop midway will not make the iterator unusable until all elements have been yielded.
     for v := range iterator {
@@ -56,4 +58,34 @@ func ContinuableOnceDemo() {
         fmt.Printf("%d ", v)
     }
     fmt.Println()
+
+    // you can also iterate over it concurrently.
+    data2 := goiter.Range(int32(1), int32(10001)).ToSlice() // this will generate a slice of 1 to 10000
+    // iterator created by FinishOnce function allows you to iterate over it concurrently, and it will guarantee that all elements are yielded exactly once.
+    iteratorConcurr := goiter.FinishOnce(goiter.SliceElem(data2))
+    // here we try to sum all elements concurrently.
+    sum := int32(0)
+    g := &sync.WaitGroup{}
+    g.Add(3)
+    go func() {
+        for v := range iteratorConcurr {
+            atomic.AddInt32(&sum, v)
+        }
+        g.Done()
+    }()
+    go func() {
+        for v := range iteratorConcurr {
+            atomic.AddInt32(&sum, v)
+        }
+        g.Done()
+    }()
+    go func() {
+        for v := range iteratorConcurr {
+            atomic.AddInt32(&sum, v)
+        }
+        g.Done()
+    }()
+    g.Wait()
+    // so this should print the sum of 1 to 10000, which is 50005000
+    fmt.Println(sum)
 }
