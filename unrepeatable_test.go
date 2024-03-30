@@ -249,7 +249,7 @@ func TestFinishOnce2(t *testing.T) {
     }
 
     // case 3: concurrent
-    input = Range(1, 10001).ToSlice()
+    input = Range(1, 10000).ToSlice()
     iterator = FinishOnce2(Slice(input))
     g := &sync.WaitGroup{}
     g.Add(3)

@@ -14,7 +14,7 @@ func TestFilter(t *testing.T) {
         return v%2 == 0
     }
     actual := []int{}
-    for v := range Range(0, 10).Filter(predicate) {
+    for v := range Range(0, 8).Filter(predicate) {
         actual = append(actual, v)
     }
     expect := []int{0, 2, 4, 6, 8}
@@ -22,7 +22,7 @@ func TestFilter(t *testing.T) {
         t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
     }
 
-    for _ = range Range(0, 10).Filter(predicate) {
+    for _ = range Range(0, 8).Filter(predicate) {
         break
     }
 }

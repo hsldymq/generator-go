@@ -16,7 +16,7 @@ func TestRangeStep(t *testing.T) {
     for each := range Range(0, 3) {
         actual = append(actual, each)
     }
-    expect := []int{0, 1, 2}
+    expect := []int{0, 1, 2, 3}
     if !slices.Equal(expect, actual) {
         t.Fatalf("test RangeStep failed, expect %d, got %v", expect, actual)
     }
@@ -25,7 +25,7 @@ func TestRangeStep(t *testing.T) {
     for each := range RangeStep(0, 8, 2) {
         actual = append(actual, each)
     }
-    expect = []int{0, 2, 4, 6}
+    expect = []int{0, 2, 4, 6, 8}
     if !slices.Equal(expect, actual) {
         t.Fatalf("test RangeStep failed, expect %d, got %v", expect, actual)
     }
@@ -54,7 +54,7 @@ func TestRangeStep(t *testing.T) {
     }
 
     actualUint8 = make([]uint8, 0)
-    for each := range RangeStep(uint8(0), uint8(251), 50) {
+    for each := range RangeStep(uint8(0), uint8(250), 50) {
         actualUint8 = append(actualUint8, each)
     }
     expectUint8 = []uint8{0, 50, 100, 150, 200, 250}
@@ -66,7 +66,7 @@ func TestRangeStep(t *testing.T) {
     for each := range Range(3, -2) {
         actual = append(actual, each)
     }
-    expect = []int{3, 2, 1, 0, -1}
+    expect = []int{3, 2, 1, 0, -1, -2}
     if !slices.Equal(expect, actual) {
         t.Fatalf("test RangeStep failed, expect %d, got %v", expect, actual)
     }
@@ -75,7 +75,7 @@ func TestRangeStep(t *testing.T) {
     for each := range RangeStep(8, -4, 2) {
         actual = append(actual, each)
     }
-    expect = []int{8, 6, 4, 2, 0, -2}
+    expect = []int{8, 6, 4, 2, 0, -2, -4}
     if !slices.Equal(expect, actual) {
         t.Fatalf("test RangeStep failed, expect %d, got %v", expect, actual)
     }
@@ -90,7 +90,7 @@ func TestRangeStep(t *testing.T) {
     }
 
     actualUint8 = make([]uint8, 0)
-    for each := range RangeStep(uint8(255), uint8(0), 50) {
+    for each := range RangeStep(uint8(255), uint8(5), 50) {
         actualUint8 = append(actualUint8, each)
     }
     expectUint8 = []uint8{255, 205, 155, 105, 55, 5}
@@ -416,67 +416,67 @@ func TestReverse2(t *testing.T) {
 }
 
 func TestIntMax(t *testing.T) {
-    if intMax(uint(0)) != uint(math.MaxUint) {
-        t.Fatalf("test uint expect %d, got %v", uint(math.MaxUint), intMax(uint(0)))
+    if tMax(uint(0)) != uint(math.MaxUint) {
+        t.Fatalf("test uint expect %d, got %v", uint(math.MaxUint), tMax(uint(0)))
     }
-    if intMax(uint8(0)) != uint8(math.MaxUint8) {
-        t.Fatalf("test uint8 expect %d, got %d", uint8(math.MaxUint8), intMax(uint8(0)))
+    if tMax(uint8(0)) != uint8(math.MaxUint8) {
+        t.Fatalf("test uint8 expect %d, got %d", uint8(math.MaxUint8), tMax(uint8(0)))
     }
-    if intMax(uint16(0)) != uint16(math.MaxUint16) {
-        t.Fatalf("test uint16 expect %d, got %d", uint16(math.MaxUint16), intMax(uint16(0)))
+    if tMax(uint16(0)) != uint16(math.MaxUint16) {
+        t.Fatalf("test uint16 expect %d, got %d", uint16(math.MaxUint16), tMax(uint16(0)))
     }
-    if intMax(uint32(0)) != uint32(math.MaxUint32) {
-        t.Fatalf("test uint32 expect %d, got %d", uint32(math.MaxUint32), intMax(uint32(0)))
+    if tMax(uint32(0)) != uint32(math.MaxUint32) {
+        t.Fatalf("test uint32 expect %d, got %d", uint32(math.MaxUint32), tMax(uint32(0)))
     }
-    if intMax(uint64(0)) != uint64(math.MaxUint64) {
-        t.Fatalf("test uint64 expect %d, got %d", uint64(math.MaxUint64), intMax(uint64(0)))
+    if tMax(uint64(0)) != uint64(math.MaxUint64) {
+        t.Fatalf("test uint64 expect %d, got %d", uint64(math.MaxUint64), tMax(uint64(0)))
     }
-    if intMax(int(0)) != math.MaxInt {
-        t.Fatalf("test int expect %d, got %d", math.MaxInt, intMax(int(0)))
+    if tMax(int(0)) != math.MaxInt {
+        t.Fatalf("test int expect %d, got %d", math.MaxInt, tMax(int(0)))
     }
-    if intMax(int8(0)) != int8(math.MaxInt8) {
-        t.Fatalf("test int8 expect %d, got %d", int8(math.MaxInt8), intMax(int8(0)))
+    if tMax(int8(0)) != int8(math.MaxInt8) {
+        t.Fatalf("test int8 expect %d, got %d", int8(math.MaxInt8), tMax(int8(0)))
     }
-    if intMax(int16(0)) != int16(math.MaxInt16) {
-        t.Fatalf("test int16 expect %d, got %d", int16(math.MaxInt16), intMax(int16(0)))
+    if tMax(int16(0)) != int16(math.MaxInt16) {
+        t.Fatalf("test int16 expect %d, got %d", int16(math.MaxInt16), tMax(int16(0)))
     }
-    if intMax(int32(0)) != int32(math.MaxInt32) {
-        t.Fatalf("test int32 expect %d, got %d", int32(math.MaxInt32), intMax(int32(0)))
+    if tMax(int32(0)) != int32(math.MaxInt32) {
+        t.Fatalf("test int32 expect %d, got %d", int32(math.MaxInt32), tMax(int32(0)))
     }
-    if intMax(int64(0)) != int64(math.MaxInt64) {
-        t.Fatalf("test int64 expect %d, got %d", int64(math.MaxInt64), intMax(int64(0)))
+    if tMax(int64(0)) != int64(math.MaxInt64) {
+        t.Fatalf("test int64 expect %d, got %d", int64(math.MaxInt64), tMax(int64(0)))
     }
 }
 
 func TestIntMin(t *testing.T) {
-    if intMin(uint(0)) != 0 {
-        t.Fatalf("test uint expect %d, got %v", 0, intMin(uint(0)))
+    if tMin(uint(0)) != 0 {
+        t.Fatalf("test uint expect %d, got %v", 0, tMin(uint(0)))
     }
-    if intMin(uint8(0)) != 0 {
-        t.Fatalf("test uint8 expect %d, got %d", 0, intMin(uint8(0)))
+    if tMin(uint8(0)) != 0 {
+        t.Fatalf("test uint8 expect %d, got %d", 0, tMin(uint8(0)))
     }
-    if intMin(uint16(0)) != 0 {
-        t.Fatalf("test uint16 expect %d, got %d", 0, intMin(uint16(0)))
+    if tMin(uint16(0)) != 0 {
+        t.Fatalf("test uint16 expect %d, got %d", 0, tMin(uint16(0)))
     }
-    if intMin(uint32(0)) != 0 {
-        t.Fatalf("test uint32 expect %d, got %d", 0, intMin(uint32(0)))
+    if tMin(uint32(0)) != 0 {
+        t.Fatalf("test uint32 expect %d, got %d", 0, tMin(uint32(0)))
     }
-    if intMin(uint64(0)) != 0 {
-        t.Fatalf("test uint64 expect %d, got %d", 0, intMin(uint64(0)))
+    if tMin(uint64(0)) != 0 {
+        t.Fatalf("test uint64 expect %d, got %d", 0, tMin(uint64(0)))
     }
-    if intMin(int(0)) != math.MinInt {
-        t.Fatalf("test int expect %d, got %d", math.MinInt, intMin(int(0)))
+    if tMin(int(0)) != math.MinInt {
+        t.Fatalf("test int expect %d, got %d", math.MinInt, tMin(int(0)))
     }
-    if intMin(int8(0)) != int8(math.MinInt8) {
-        t.Fatalf("test int8 expect %d, got %d", int8(math.MinInt8), intMin(int8(0)))
+    if tMin(int8(0)) != int8(math.MinInt8) {
+        t.Fatalf("test int8 expect %d, got %d", int8(math.MinInt8), tMin(int8(0)))
     }
-    if intMin(int16(0)) != int16(math.MinInt16) {
-        t.Fatalf("test int16 expect %d, got %d", int16(math.MinInt16), intMin(int16(0)))
+    if tMin(int16(0)) != int16(math.MinInt16) {
+        t.Fatalf("test int16 expect %d, got %d", int16(math.MinInt16), tMin(int16(0)))
     }
-    if intMin(int32(0)) != int32(math.MinInt32) {
-        t.Fatalf("test int32 expect %d, got %d", int32(math.MinInt32), intMin(int32(0)))
+    if tMin(int32(0)) != int32(math.MinInt32) {
+        t.Fatalf("test int32 expect %d, got %d", int32(math.MinInt32), tMin(int32(0)))
     }
-    if intMin(int64(0)) != int64(math.MinInt64) {
-        t.Fatalf("test int64 expect %d, got %d", int64(math.MinInt64), intMin(int64(0)))
+    if tMin(int64(0)) != int64(math.MinInt64) {
+        t.Fatalf("test int64 expect %d, got %d", int64(math.MinInt64), tMin(int64(0)))
     }
 }
