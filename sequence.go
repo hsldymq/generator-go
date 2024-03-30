@@ -17,16 +17,23 @@ type TInt interface {
     ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64
 }
 
-func Range[T TInt](start, stop T) Iterator[T] {
-    return RangeStep(start, stop, 1)
+// Range returns an iterator that yields a sequence of integers forward or backward from start to end, incrementing/decrementing by 1.
+// to be specific, the second parameter "end" is inclusive.
+// for example:
+//
+//  goiter.Range(1, 5) // will yield 1, 2, 3, 4, 5
+//  goiter.Range(3, -3) // will yield 3, 2, 1, 0, -1, -2, -3
+func Range[T TInt](start, end T) Iterator[T] {
+    return RangeStep(start, end, 1)
 }
 
 // RangeStep extends the ability to Range function, allowing iteration from any integer and stepping forward or backward in any step.
 // It is similar to Python's range function, but with some differences:
-//  1. stepSize does not accept negative numbers. Whether iterating forward or backward, stepSize must be positive.
+//  1. the second parameter "end" is inclusive, rather than exclusive in Python's range function.
+//  2. stepSize does not accept negative numbers. Whether iterating forward or backward, stepSize must be positive.
 //     so you don't need to consider adjusting the sign of step according to the direction of iteration, you can consider it as the absolute value of the step parameter of Python range function.
-//  2. Providing a value less than or equal to 0 for stepSize will not return an error, it simply doesn't yield any values.
-func RangeStep[T TInt, S TInt](start, stop T, stepSize S) Iterator[T] {
+//  3. Providing a value less than or equal to 0 for stepSize will not return an error, it simply doesn't yield any values.
+func RangeStep[T TInt, S TInt](start, end T, stepSize S) Iterator[T] {
     if stepSize <= 0 {
         // 0 will lead to infinite loops
         return Empty[T]()
@@ -34,7 +41,7 @@ func RangeStep[T TInt, S TInt](start, stop T, stepSize S) Iterator[T] {
 
     step := uint64(stepSize)
     inc := true
-    if start > stop {
+    if start > end {
         inc = false
     }
 
@@ -53,13 +60,15 @@ func RangeStep[T TInt, S TInt](start, stop T, stepSize S) Iterator[T] {
 
             if inc {
                 next := curr + T(step)
-                if next >= stop || next < start || next <= curr {
+                if next > end || next < start || next <= curr {
+                    // both next < start and next <= curr means overflow
                     return
                 }
                 curr = next
             } else {
                 next := curr - T(step)
-                if next <= stop || next > start || next >= curr {
+                if next < end || next > start || next >= curr {
+                    // both next > start and next >= curr means overflow
                     return
                 }
                 curr = next
@@ -218,8 +227,8 @@ func Reverse2[TIter Seq2X[T1, T2], T1, T2 any](iterator TIter) Iterator2[T1, T2]
 }
 
 func willOverflow[T TInt](v T, step uint64, inc bool) bool {
-    tMax := int64(intMax(v))
-    tMin := int64(intMin(v))
+    tMax := int64(tMax(v))
+    tMin := int64(tMin(v))
 
     if tMax != math.MaxInt64 && step >= uint64(tMax-tMin+1) {
         return true
@@ -234,7 +243,7 @@ func willOverflow[T TInt](v T, step uint64, inc bool) bool {
     return false
 }
 
-func intMin[T TInt](v T) T {
+func tMin[T TInt](v T) T {
     ones := ^T(0)
     if ones < 0 {
         return ^(ones ^ (1 << (countBits(ones) - 1)))
@@ -242,7 +251,7 @@ func intMin[T TInt](v T) T {
     return 0
 }
 
-func intMax[T TInt](v T) T {
+func tMax[T TInt](v T) T {
     ones := ^T(0)
     if ones < 0 {
         return ones ^ (1 << (countBits(ones) - 1))
