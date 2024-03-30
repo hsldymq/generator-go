@@ -24,7 +24,7 @@ func Range[T TInt](start, stop T) Iterator[T] {
 // RangeStep extends the ability to Range function, allowing iteration from any integer and stepping forward or backward in any step.
 // It is similar to Python's range function, but with some differences:
 //  1. stepSize does not accept negative numbers. Whether iterating forward or backward, stepSize must be positive.
-//     so you don't need to consider adjusting the sign of step according to the direction of iteration, It is the absolute value of the step parameter of Python range function.
+//     so you don't need to consider adjusting the sign of step according to the direction of iteration, you can consider it as the absolute value of the step parameter of Python range function.
 //  2. Providing a value less than or equal to 0 for stepSize will not return an error, it simply doesn't yield any values.
 func RangeStep[T TInt, S TInt](start, stop T, stepSize S) Iterator[T] {
     if stepSize <= 0 {
