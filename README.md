@@ -66,26 +66,26 @@ import (
 
 // goiter.Range and goiter.RangeStep provide similar functionality to the Python's range function
 func RangeDemo() {
-    // This will print 0 1 2 3 4 5 6 7 8 9
-    // It is equivalent to Python `range(0, 10)` or Golang `for v := range 10`
-    for v := range goiter.Range(0, 10) {
+    // This will print 0 1 2 3 4 5
+    // It is equivalent to Python `range(0, 5)` or Golang `for v := range 6`
+    for v := range goiter.Range(0, 5) {
         fmt.Printf("%d ", v)
     }
     fmt.Println()
 
-    // This will print 5 4 3 2 1 0 -1 -2 -3 -4
-    for v := range goiter.Range(5, -5) {
+    // This will print 3 2 1 0 -1 -2 -3
+    for v := range goiter.Range(3, -3) {
         fmt.Printf("%d ", v)
     }
     fmt.Println()
 
-    // This will print 0 2 4 6 8
+    // This will print 0 2 4 6 8 10
     for v := range goiter.RangeStep(0, 10, 2) {
         fmt.Printf("%d ", v)
     }
     fmt.Println()
 
-    // This will print 5 3 1 -1 -3
+    // This will print 5 3 1 -1 -3 -5
     // When iterating in reverse, you still need to provide a positive step value, so you don't need to adjust the sign of the step based on the direction of the iteration.
     // If you provide a step of 0 or a negative number, RangeStep will not yield any values, this is different from the range function in Python.
     for v := range goiter.RangeStep(5, -5, 2) {
