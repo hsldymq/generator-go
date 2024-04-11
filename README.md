@@ -109,8 +109,8 @@ func SequenceDemo() {
         }
     }
 
-    // this will print first 5 Fibonacci numbers: 1 1 2 3 5
-    for v := range goiter.Sequence(genFib(5)) {
+    // this will print first 5 Fibonacci numbers: 1 1 2 3 5 8 13 21 34 55
+    for v := range goiter.Sequence(genFib(10)) {
         fmt.Printf("%d ", v)
     }
 }
