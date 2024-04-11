@@ -4,6 +4,7 @@ package goiter
 
 import (
     "iter"
+    "sync/atomic"
 )
 
 type SeqX[T any] interface {
@@ -62,4 +63,35 @@ func (it Iterator[T]) ToSlice() []T {
 
 func (it Iterator[T]) Through(f func(T) T) Iterator[T] {
     return Transform(it, f)
+}
+
+func (it Iterator[T]) Cache() Iterator[T] {
+    var cached []T
+    var cacheFlag int32
+    return func(yield func(T) bool) {
+        if cached != nil {
+            for _, v := range cached {
+                if !yield(v) {
+                    return
+                }
+            }
+        } else {
+            cTemp := make([]T, 0)
+            next, stop := iter.Pull(iter.Seq[T](it))
+            defer stop()
+            for {
+                v, ok := next()
+                if !ok {
+                    break
+                }
+                if !yield(v) {
+                    return
+                }
+                cTemp = append(cTemp, v)
+            }
+            if atomic.CompareAndSwapInt32(&cacheFlag, 0, 1) {
+                cached = cTemp
+            }
+        }
+    }
 }
