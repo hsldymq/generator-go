@@ -59,3 +59,7 @@ func (it Iterator2[T1, T2]) Reverse() Iterator2[T1, T2] {
 func (it Iterator2[T1, T2]) Count() int {
     return Count2(it)
 }
+
+func (it Iterator2[T1, T2]) Through(f func(T1, T2) (T1, T2)) Iterator2[T1, T2] {
+    return Transform2(it, f)
+}

@@ -59,3 +59,7 @@ func (it Iterator[T]) Count() int {
 func (it Iterator[T]) ToSlice() []T {
     return ToSlice(it)
 }
+
+func (it Iterator[T]) Through(f func(T) T) Iterator[T] {
+    return Transform(it, f)
+}
