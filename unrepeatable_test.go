@@ -178,7 +178,10 @@ func TestFinishOnce(t *testing.T) {
     }
 
     // case 3
-    input = Range(1, 10000).ToSlice()
+    input = []int{}
+    for v := range Range(1, 10000) {
+        input = append(input, v)
+    }
     iterator = FinishOnce(SliceElem(input))
     g := &sync.WaitGroup{}
     g.Add(3)
@@ -249,7 +252,10 @@ func TestFinishOnce2(t *testing.T) {
     }
 
     // case 3: concurrent
-    input = Range(1, 10000).ToSlice()
+    input = []int{}
+    for v := range Range(1, 10000) {
+        input = append(input, v)
+    }
     iterator = FinishOnce2(Slice(input))
     g := &sync.WaitGroup{}
     g.Add(3)

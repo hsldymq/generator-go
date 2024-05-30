@@ -17,6 +17,20 @@ func (it Iterator2[T1, T2]) Seq() iter.Seq2[T1, T2] {
     return iter.Seq2[T1, T2](it)
 }
 
+// V1 returns an iterator that yields the first value of each pair.
+// So if the original iterator yields values from a slice, the new iterator yields the indexes of the slice,
+// if the original iterator yields values from a map, the new iterator yields the keys of the map.
+func (it Iterator2[T1, T2]) V1() Iterator[T1] {
+    return PickV1(it)
+}
+
+// V2 returns an iterator that yields the second value of each pair.
+// So if the original iterator yields values from a slice, the new iterator yields the values of the slice,
+// if the original iterator yields values from a map, the new iterator yields the values of the map.
+func (it Iterator2[T1, T2]) V2() Iterator[T2] {
+    return PickV2(it)
+}
+
 func (it Iterator2[T1, T2]) OrderBy(cmp func(*Combined[T1, T2], *Combined[T1, T2]) int) Iterator2[T1, T2] {
     return Order2By(it, cmp)
 }
@@ -43,10 +57,6 @@ func (it Iterator2[T1, T2]) Skip(n int) Iterator2[T1, T2] {
 
 func (it Iterator2[T1, T2]) SkipLast(n int) Iterator2[T1, T2] {
     return SkipLast2(it, n)
-}
-
-func (it Iterator2[T1, T2]) Combine() Iterator[*Combined[T1, T2]] {
-    return Combine(it)
 }
 
 func (it Iterator2[T1, T2]) Concat(its ...Iterator2[T1, T2]) Iterator2[T1, T2] {

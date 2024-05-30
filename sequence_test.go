@@ -240,7 +240,7 @@ func TestRangeTime(t *testing.T) {
 
 func TestCounter(t *testing.T) {
     actual := make([]int, 0)
-    for v := range Counter() {
+    for v := range Counter(1) {
         actual = append(actual, v)
         if v == 5 {
             break

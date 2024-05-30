@@ -11,7 +11,7 @@ import (
 
 func TestCombine(t *testing.T) {
     actual := make([]Combined[int, string], 0, 3)
-    for v := range Slice([]string{"1", "2", "3"}).Combine() {
+    for v := range Combine(Slice([]string{"1", "2", "3"})) {
         actual = append(actual, *v)
     }
     expect := []Combined[int, string]{

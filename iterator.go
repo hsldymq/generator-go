@@ -17,6 +17,10 @@ func (it Iterator[T]) Seq() iter.Seq[T] {
     return iter.Seq[T](it)
 }
 
+func (it Iterator[T]) WithCounter(startFrom int) Iterator2[int, T] {
+    return Zip(Counter(startFrom), it)
+}
+
 func (it Iterator[T]) OrderBy(cmp func(T, T) int) Iterator[T] {
     return OrderBy(it, cmp)
 }
@@ -55,10 +59,6 @@ func (it Iterator[T]) Reverse() Iterator[T] {
 
 func (it Iterator[T]) Count() int {
     return Count(it)
-}
-
-func (it Iterator[T]) ToSlice() []T {
-    return ToSlice(it)
 }
 
 func (it Iterator[T]) Through(f func(T) T) Iterator[T] {

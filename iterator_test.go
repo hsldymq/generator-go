@@ -8,6 +8,25 @@ import (
     "testing"
 )
 
+func TestIterator_WithCounter(t *testing.T) {
+    type rt struct {
+        c int
+        v string
+    }
+    actual := make([]rt, 0, 3)
+    for c, v := range SliceElem([]string{"a", "b", "c"}).WithCounter(1) {
+        actual = append(actual, rt{c, v})
+    }
+    expect := []rt{
+        {1, "a"},
+        {2, "b"},
+        {3, "c"},
+    }
+    if !slices.Equal(expect, actual) {
+        t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+    }
+}
+
 func TestIterator_Cache(t *testing.T) {
     count := 0
 
