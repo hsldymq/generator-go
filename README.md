@@ -109,7 +109,7 @@ func SequenceDemo() {
         }
     }
 
-    // this will print first 5 Fibonacci numbers: 1 1 2 3 5 8 13 21 34 55
+    // this will print first 10 Fibonacci numbers: 1 1 2 3 5 8 13 21 34 55
     for v := range goiter.Sequence(genFib(10)) {
         fmt.Printf("%d ", v)
     }
@@ -297,9 +297,3 @@ func Demo() {
 * `goiter.Iter2Source`
 * `goiter.Empty`
 * `goiter.Empty2`
-
-### converting iterator
-* `goiter.ToSlice`
-* `goiter.ToMap`
-* `goiter.ToMapAs`
-* `goiter.ToMap2As`
