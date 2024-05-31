@@ -67,7 +67,7 @@ import (
 // goiter.Range and goiter.RangeStep provide similar functionality to the Python's range function
 func RangeDemo() {
     // This will print 0 1 2 3 4 5
-    // It is equivalent to Python `range(0, 5)` or Golang `for v := range 6`
+    // It is equivalent to Python `range(0, 6)` or Golang `for v := range 6`
     for v := range goiter.Range(0, 5) {
         fmt.Printf("%d ", v)
     }
