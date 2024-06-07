@@ -270,9 +270,9 @@ For example, `goiter.Filter` is for iter.Seq and `goiter.Filter2` is for iter.Se
 
 ### ordering
 * `goiter.Order`
-* `goiter.OrderV1`
-* `goiter.OrderV2`
 * `goiter.OrderBy`
+* `goiter.Order2V1`
+* `goiter.Order2V2`
 * `goiter.Order2By`
 * `goiter.StableOrderBy`
 * `goiter.StableOrder2By`
