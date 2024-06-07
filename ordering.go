@@ -40,7 +40,7 @@ func Order[TIter SeqX[T], T cmp.Ordered](
 //
 //	since iter.Map(map[string]int{"bob":3, "eve":2, "alice":1}) yields the 2-tuples in arbitrary order
 //	then Order2V1(iter.Map(map[string]int{"bob":3, "eve":2, "alice":1}))       will yield (alice, 1) (bob 3) (eve 2)
-//	and  Order2V1(iter.Map(map[string]int{"bob":2, "eve":3, "alice":1}), true) will yield (eve 2) (bob 3) (alice, 1).
+//	and  Order2V1(iter.Map(map[string]int{"bob":3, "eve":2, "alice":1}), true) will yield (eve 2) (bob 3) (alice, 1).
 //
 // be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func Order2V1[TIter Seq2X[T1, T2], T1 cmp.Ordered, T2 any](
