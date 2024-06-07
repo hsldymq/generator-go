@@ -214,6 +214,9 @@ func Demo() {
 ```
 
 # List of goiter functions
+Some functions listed below have two versions, one is for single value iterator, the other is for two values iterator.
+
+For example, `goiter.Filter` is for iter.Seq and `goiter.Filter2` is for iter.Seq2. 
 
 ### transformation
 * `goiter.PickV1`
@@ -297,3 +300,22 @@ func Demo() {
 * `goiter.Iter2Source`
 * `goiter.Empty`
 * `goiter.Empty2`
+
+# Iterator & Iterator2 Types
+Many functions listed above return an iter.Seq-like function, it has a type `goiter.Iterator[T]`(or `goiter.Iterator2[T1, T2]` for `iter.Seq2`).
+
+This two types have its own methods, you can use them to chain multiple operations together, for example:
+```go
+// instead of:
+input := []int{1, 2, 3, 4, 5, 6}
+iterator := goiter.SliceElem(input)
+iterator = iterator.Filter(func(v int) bool {
+    return v % 2 == 0
+})
+
+// you can also write like this:
+input := []int{1, 2, 3, 4, 5, 6}
+iterator := goiter.SliceElem(input).Filter(func(v int) bool {
+    return v % 2 == 0
+})
+```
