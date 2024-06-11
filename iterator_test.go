@@ -14,7 +14,7 @@ func TestIterator_WithCounter(t *testing.T) {
         v string
     }
     actual := make([]rt, 0, 3)
-    for c, v := range SliceElem([]string{"a", "b", "c"}).WithCounter(1) {
+    for c, v := range SliceElems([]string{"a", "b", "c"}).WithCounter(1) {
         actual = append(actual, rt{c, v})
     }
     expect := []rt{
@@ -30,7 +30,7 @@ func TestIterator_WithCounter(t *testing.T) {
 func TestIterator_Cache(t *testing.T) {
     count := 0
 
-    iterator := SliceElem([]int{1, 2, 3, 4, 5, 6}).
+    iterator := SliceElems([]int{1, 2, 3, 4, 5, 6}).
         Filter(func(v int) bool {
             count++
             return v%2 == 0
@@ -55,7 +55,7 @@ func TestIterator_Cache(t *testing.T) {
         t.Fatal(fmt.Sprintf("expect: %d, actual: %d", 6, count))
     }
 
-    iterator = SliceElem([]int{1, 2, 3, 4, 5, 6}).
+    iterator = SliceElems([]int{1, 2, 3, 4, 5, 6}).
         Filter(func(v int) bool {
             count++
             return v%2 == 0

@@ -22,7 +22,7 @@ func TestFilter(t *testing.T) {
         t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
     }
 
-    for _ = range Range(0, 8).Filter(predicate) {
+    for _ = range MapKeys(map[int]string{1: "a"}).Filter(predicate) {
         break
     }
 }
@@ -66,7 +66,7 @@ func TestOfType(t *testing.T) {
 
     // case 1
     actual := []Combined[string, string]{}
-    for each := range OfType[Combined[string, string]](SliceElem(input)) {
+    for each := range OfType[Combined[string, string]](SliceElems(input)) {
         actual = append(actual, each)
     }
     expect := []Combined[string, string]{
@@ -78,7 +78,7 @@ func TestOfType(t *testing.T) {
 
     // case 2
     actual2 := []*Combined[int, int]{}
-    for each := range OfType[*Combined[int, int]](SliceElem(input)) {
+    for each := range OfType[*Combined[int, int]](SliceElems(input)) {
         actual2 = append(actual2, each)
     }
     expect2 := []*Combined[int, int]{cp1, cp2, nil}
@@ -88,7 +88,7 @@ func TestOfType(t *testing.T) {
 
     // case 3
     actual3 := []string{}
-    for each := range OfType[string](SliceElem(input)) {
+    for each := range OfType[string](SliceElems(input)) {
         actual3 = append(actual3, each)
         if each == "world" {
             break
@@ -104,7 +104,7 @@ func TestTake(t *testing.T) {
     input := []int{1, 2, 3, 4, 5}
 
     actual := []int{}
-    for v := range SliceElem(input).Take(2) {
+    for v := range SliceElems(input).Take(2) {
         actual = append(actual, v)
     }
     expect := []int{1, 2}
@@ -113,7 +113,7 @@ func TestTake(t *testing.T) {
     }
 
     actual = []int{}
-    for v := range SliceElem(input).Take(6) {
+    for v := range SliceElems(input).Take(6) {
         actual = append(actual, v)
     }
     expect = []int{1, 2, 3, 4, 5}
@@ -122,7 +122,7 @@ func TestTake(t *testing.T) {
     }
 
     actual = []int{}
-    for v := range SliceElem(input).Take(-1) {
+    for v := range SliceElems(input).Take(-1) {
         actual = append(actual, v)
     }
     expect = []int{}
@@ -130,7 +130,7 @@ func TestTake(t *testing.T) {
         t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
     }
 
-    for _ = range SliceElem(input).Take(3) {
+    for _ = range SliceElems(input).Take(3) {
         break
     }
 }
@@ -149,7 +149,7 @@ func TestTake2(t *testing.T) {
     toNameAge := func(p person) (string, int) { return p.Name, p.Age }
 
     actual := []person{}
-    for name, age := range Transform12(SliceElem(input), toNameAge).Take(2) {
+    for name, age := range Transform12(SliceElems(input), toNameAge).Take(2) {
         actual = append(actual, person{
             Name: name,
             Age:  age,
@@ -164,7 +164,7 @@ func TestTake2(t *testing.T) {
     }
 
     actual = []person{}
-    for name, age := range Transform12(SliceElem(input), toNameAge).Take(6) {
+    for name, age := range Transform12(SliceElems(input), toNameAge).Take(6) {
         actual = append(actual, person{
             Name: name,
             Age:  age,
@@ -180,7 +180,7 @@ func TestTake2(t *testing.T) {
     }
 
     actual = []person{}
-    for name, age := range Transform12(SliceElem(input), toNameAge).Take(0) {
+    for name, age := range Transform12(SliceElems(input), toNameAge).Take(0) {
         actual = append(actual, person{
             Name: name,
             Age:  age,
@@ -191,7 +191,7 @@ func TestTake2(t *testing.T) {
         t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
     }
 
-    for _, _ = range Transform12(SliceElem(input), toNameAge).Take(2) {
+    for _, _ = range Transform12(SliceElems(input), toNameAge).Take(2) {
         break
     }
 }
@@ -201,7 +201,7 @@ func TestTakeLast(t *testing.T) {
 
     // case 1
     actual := []int{}
-    for v := range SliceElem(input).TakeLast(3) {
+    for v := range SliceElems(input).TakeLast(3) {
         actual = append(actual, v)
     }
     expect := []int{3, 4, 5}
@@ -211,7 +211,7 @@ func TestTakeLast(t *testing.T) {
 
     // case 2
     actual = []int{}
-    for v := range SliceElem(input).TakeLast(7) {
+    for v := range SliceElems(input).TakeLast(7) {
         actual = append(actual, v)
     }
     expect = []int{1, 2, 3, 4, 5}
@@ -221,7 +221,7 @@ func TestTakeLast(t *testing.T) {
 
     // case 3
     actual = []int{}
-    for v := range SliceElem(input).TakeLast(3) {
+    for v := range SliceElems(input).TakeLast(3) {
         actual = append(actual, v)
         if v == 4 {
             break
@@ -234,7 +234,7 @@ func TestTakeLast(t *testing.T) {
 
     // case 4
     actual = []int{}
-    for v := range SliceElem(input).TakeLast(0) {
+    for v := range SliceElems(input).TakeLast(0) {
         actual = append(actual, v)
     }
     expect = []int{}
@@ -244,7 +244,7 @@ func TestTakeLast(t *testing.T) {
 
     // case 5
     actual = []int{}
-    for v := range SliceElem([]int{}).TakeLast(1) {
+    for v := range SliceElems([]int{}).TakeLast(1) {
         actual = append(actual, v)
     }
     expect = []int{}
@@ -327,7 +327,7 @@ func TestSkip(t *testing.T) {
     input := []int{1, 2, 3, 4, 5}
 
     actual := []int{}
-    for v := range SliceElem(input).Skip(2) {
+    for v := range SliceElems(input).Skip(2) {
         actual = append(actual, v)
     }
     expect := []int{3, 4, 5}
@@ -336,7 +336,7 @@ func TestSkip(t *testing.T) {
     }
 
     actual = []int{}
-    for v := range SliceElem(input).Skip(0) {
+    for v := range SliceElems(input).Skip(0) {
         actual = append(actual, v)
     }
     expect = []int{1, 2, 3, 4, 5}
@@ -344,7 +344,7 @@ func TestSkip(t *testing.T) {
         t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
     }
 
-    for _ = range SliceElem(input).Skip(1) {
+    for _ = range SliceElems(input).Skip(1) {
         break
     }
 }
@@ -363,7 +363,7 @@ func TestSkip2(t *testing.T) {
     toNameAge := func(p person) (string, int) { return p.Name, p.Age }
 
     actual := []person{}
-    for name, age := range Transform12(SliceElem(input), toNameAge).Skip(1) {
+    for name, age := range Transform12(SliceElems(input), toNameAge).Skip(1) {
         actual = append(actual, person{
             Name: name,
             Age:  age,
@@ -378,7 +378,7 @@ func TestSkip2(t *testing.T) {
     }
 
     actual = []person{}
-    for name, age := range Transform12(SliceElem(input), toNameAge).Skip(0) {
+    for name, age := range Transform12(SliceElems(input), toNameAge).Skip(0) {
         actual = append(actual, person{
             Name: name,
             Age:  age,
@@ -393,7 +393,7 @@ func TestSkip2(t *testing.T) {
         t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
     }
 
-    for _, _ = range Transform12(SliceElem(input), toNameAge).Skip(1) {
+    for _, _ = range Transform12(SliceElems(input), toNameAge).Skip(1) {
         break
     }
 }
@@ -403,7 +403,7 @@ func TestSkipLast(t *testing.T) {
 
     // case 1
     actual := []int{}
-    for v := range SliceElem(input).SkipLast(3) {
+    for v := range SliceElems(input).SkipLast(3) {
         actual = append(actual, v)
     }
     expect := []int{1, 2}
@@ -413,7 +413,7 @@ func TestSkipLast(t *testing.T) {
 
     // case 2
     actual = []int{}
-    for v := range SliceElem(input).SkipLast(7) {
+    for v := range SliceElems(input).SkipLast(7) {
         actual = append(actual, v)
     }
     expect = []int{}
@@ -423,7 +423,7 @@ func TestSkipLast(t *testing.T) {
 
     // case 3
     actual = []int{}
-    for v := range SliceElem(input).SkipLast(2) {
+    for v := range SliceElems(input).SkipLast(2) {
         actual = append(actual, v)
         if v == 3 {
             break
@@ -436,7 +436,7 @@ func TestSkipLast(t *testing.T) {
 
     // case 4
     actual = []int{}
-    for v := range SliceElem(input).SkipLast(0) {
+    for v := range SliceElems(input).SkipLast(0) {
         actual = append(actual, v)
     }
     expect = []int{1, 2, 3, 4, 5}
@@ -507,7 +507,7 @@ func TestSkipLast2(t *testing.T) {
 
 func TestDistinct(t *testing.T) {
     actual := []int{}
-    for each := range Distinct(SliceElem([]int{1, 2, 3, 4, 4, 3, 2, 1})) {
+    for each := range Distinct(SliceElems([]int{1, 2, 3, 4, 4, 3, 2, 1})) {
         actual = append(actual, each)
     }
     expect := []int{1, 2, 3, 4}
@@ -516,7 +516,7 @@ func TestDistinct(t *testing.T) {
     }
 
     //
-    for _ = range Distinct(SliceElem([]int{1, 2, 3, 4, 4, 3, 2, 1})) {
+    for _ = range Distinct(SliceElems([]int{1, 2, 3, 4, 4, 3, 2, 1})) {
         break
     }
 }
@@ -536,7 +536,7 @@ func TestDistinctV1(t *testing.T) {
         {"john", 23}, // repeated name, so DistinctV1 will ignore this
     }
     actual := []student{}
-    for name, age := range DistinctV1(Transform12(SliceElem(input), transFunc)) {
+    for name, age := range DistinctV1(Transform12(SliceElems(input), transFunc)) {
         actual = append(actual, student{name, age})
     }
 
@@ -549,7 +549,7 @@ func TestDistinctV1(t *testing.T) {
     }
 
     //
-    for _, _ = range DistinctV1(Transform12(SliceElem(input), transFunc)) {
+    for _, _ = range DistinctV1(Transform12(SliceElems(input), transFunc)) {
         break
     }
 }
@@ -569,7 +569,7 @@ func TestDistinctV2(t *testing.T) {
         {"alex", 20}, // alex has the same age as john, so DistinctV2 will ignore this
     }
     actual := []student{}
-    for name, age := range DistinctV2(Transform12(SliceElem(input), transFunc)) {
+    for name, age := range DistinctV2(Transform12(SliceElems(input), transFunc)) {
         actual = append(actual, student{name, age})
     }
 
@@ -582,7 +582,7 @@ func TestDistinctV2(t *testing.T) {
     }
 
     //
-    for _, _ = range DistinctV2(Transform12(SliceElem(input), transFunc)) {
+    for _, _ = range DistinctV2(Transform12(SliceElems(input), transFunc)) {
         break
     }
 }
@@ -600,7 +600,7 @@ func TestDistinctBy(t *testing.T) {
     }
     transFunc := func(s student) string { return s.Name }
     actual := []student{}
-    for each := range DistinctBy(SliceElem(input), transFunc) {
+    for each := range DistinctBy(SliceElems(input), transFunc) {
         actual = append(actual, each)
     }
 
@@ -613,7 +613,7 @@ func TestDistinctBy(t *testing.T) {
     }
 
     //
-    for _ = range DistinctBy(SliceElem(input), transFunc) {
+    for _ = range DistinctBy(SliceElems(input), transFunc) {
         break
     }
 }
@@ -632,7 +632,7 @@ func TestDistinctBy2(t *testing.T) {
     transFunc := func(s student) (int, student) { return s.Age, s }
     keySelector := func(age int, s student) int { return s.Age }
     actual := []student{}
-    for _, each := range Distinct2By(Transform12(SliceElem(input), transFunc), keySelector) {
+    for _, each := range Distinct2By(Transform12(SliceElems(input), transFunc), keySelector) {
         actual = append(actual, each)
     }
 
@@ -645,7 +645,7 @@ func TestDistinctBy2(t *testing.T) {
     }
 
     //
-    for _, _ = range Distinct2By(Transform12(SliceElem(input), transFunc), keySelector) {
+    for _, _ = range Distinct2By(Transform12(SliceElems(input), transFunc), keySelector) {
         break
     }
 }

@@ -11,9 +11,9 @@ import (
 // If the second parameter is true, the elements are arranged in descending order.
 // For example:
 //
-//	since iter.SliceElem([]int{2, 3, 1})) yields 2 3 1
-//	then Order(iter.SliceElem([]int{2, 3, 1}))       will yield 1 2 3
-//	and  Order(iter.SliceElem([]int{2, 3, 1}), true) will yield 3 2 1.
+//	since iter.SliceElems([]int{2, 3, 1})) yields 2 3 1
+//	then Order(iter.SliceElems([]int{2, 3, 1}))       will yield 1 2 3
+//	and  Order(iter.SliceElems([]int{2, 3, 1}), true) will yield 3 2 1.
 //
 // be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func Order[TIter SeqX[T], T cmp.Ordered](

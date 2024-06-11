@@ -12,7 +12,7 @@ func TestReduce(t *testing.T) {
     foldFunc := func(a int, b int) int {
         return a + b
     }
-    actual := Reduce(SliceElem([]int{1, 2, 3}), 0, foldFunc)
+    actual := Reduce(SliceElems([]int{1, 2, 3}), 0, foldFunc)
     expect := 6
     if expect != actual {
         t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
@@ -24,7 +24,7 @@ func TestScan(t *testing.T) {
         return a + b
     }
     actual := []int{}
-    for each := range Scan(SliceElem([]int{1, 2, 3, 4, 5}), 0, foldFunc) {
+    for each := range Scan(SliceElems([]int{1, 2, 3, 4, 5}), 0, foldFunc) {
         actual = append(actual, each)
     }
     expect := []int{1, 3, 6, 10, 15}
@@ -42,7 +42,7 @@ func TestScan(t *testing.T) {
         return acc
     }
     actual = []int{}
-    for each := range Scan(SliceElem([]int{100, 200, 300, 400, 500}), st{}, accFunc) {
+    for each := range Scan(SliceElems([]int{100, 200, 300, 400, 500}), st{}, accFunc) {
         actual = append(actual, each.Sum/each.Count)
         if each.Sum == 600 {
             break
@@ -56,7 +56,7 @@ func TestScan(t *testing.T) {
 
 func TestCount(t *testing.T) {
     input := []int{1, 2, 3, 4, 5}
-    it := Filter(SliceElem(input), func(v int) bool {
+    it := Filter(SliceElems(input), func(v int) bool {
         return v%2 == 0
     })
 

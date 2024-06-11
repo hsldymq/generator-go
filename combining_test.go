@@ -26,8 +26,8 @@ func TestCombine(t *testing.T) {
 
 func TestZip(t *testing.T) {
     // case 1
-    iterator1 := SliceElem([]string{"Alice", "Bob", "Eve"})
-    iterator2 := SliceElem([]int{20, 21, 22, 23}) // iterator2 has one more element than iterator1
+    iterator1 := SliceElems([]string{"Alice", "Bob", "Eve"})
+    iterator2 := SliceElems([]int{20, 21, 22, 23}) // iterator2 has one more element than iterator1
     actual := make([]Combined[string, int], 0, 3)
     for v1, v2 := range Zip(iterator1, iterator2) {
         actual = append(actual, Combined[string, int]{
@@ -45,8 +45,8 @@ func TestZip(t *testing.T) {
     }
 
     // case 2
-    iterator1 = SliceElem([]string{"Alice", "Bob", "Eve"})
-    iterator2 = SliceElem([]int{20, 21, 22, 23})
+    iterator1 = SliceElems([]string{"Alice", "Bob", "Eve"})
+    iterator2 = SliceElems([]int{20, 21, 22, 23})
     actual = make([]Combined[string, int], 0, 2)
     i := 0
     for v1, v2 := range Zip(iterator1, iterator2) {
@@ -88,8 +88,8 @@ func TestZipAs(t *testing.T) {
     }
 
     // case 1
-    nameIter := SliceElem([]string{"Alice", "Bob", "Eve"})
-    ageIter := SliceElem([]int{20, 21})
+    nameIter := SliceElems([]string{"Alice", "Bob", "Eve"})
+    ageIter := SliceElems([]int{20, 21})
     zipIter := ZipAs(nameIter, ageIter, transformer, false)
     actual := make([]person, 0, 3)
     for each := range zipIter {
@@ -104,8 +104,8 @@ func TestZipAs(t *testing.T) {
     }
 
     // case 2
-    nameIter = SliceElem([]string{"Alice", "Bob", "Eve"})
-    ageIter = SliceElem([]int{20, 21, 22, 23})
+    nameIter = SliceElems([]string{"Alice", "Bob", "Eve"})
+    ageIter = SliceElems([]int{20, 21, 22, 23})
     zipIter = ZipAs(nameIter, ageIter, transformer, true)
     actual = make([]person, 0, 4)
     for each := range zipIter {
@@ -130,7 +130,7 @@ func TestConcat(t *testing.T) {
     c1 := []int{1, 2, 3}
     c2 := []int{4, 5, 6}
     actual := make([]int, 0, 6)
-    for v := range SliceElem(c1).Concat(SliceElem(c2)) {
+    for v := range SliceElems(c1).Concat(SliceElems(c2)) {
         actual = append(actual, v)
     }
     expect := []int{1, 2, 3, 4, 5, 6}
@@ -141,7 +141,7 @@ func TestConcat(t *testing.T) {
     c1 = []int{4, 5, 6}
     c2 = []int{7, 8, 9}
     actual = make([]int, 0, 6)
-    for v := range SliceElem(c1).Concat(SliceElem(c2)) {
+    for v := range SliceElems(c1).Concat(SliceElems(c2)) {
         if v == 8 {
             break
         }
@@ -153,7 +153,7 @@ func TestConcat(t *testing.T) {
     }
 
     actual = make([]int, 0, 6)
-    for v := range SliceElem([]int{10, 11, 12}).Concat() {
+    for v := range SliceElems([]int{10, 11, 12}).Concat() {
         actual = append(actual, v)
         if v == 11 {
             break
@@ -164,7 +164,7 @@ func TestConcat(t *testing.T) {
         t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
     }
 
-    for _ = range SliceElem([]int{10, 11, 12}).Concat(SliceElem(c2)) {
+    for _ = range SliceElems([]int{10, 11, 12}).Concat(SliceElems(c2)) {
         break
     }
 }
@@ -175,11 +175,11 @@ func TestConcat2(t *testing.T) {
         age  int
     }
     p1 := []person{{"john", 25}, {"jane", 20}}
-    i1 := Transform12(SliceElem(p1), func(p person) (string, int) {
+    i1 := Transform12(SliceElems(p1), func(p person) (string, int) {
         return p.name, p.age
     })
     p2 := []person{{"joe", 35}, {"ann", 30}, {"josh", 15}}
-    i2 := Transform12(SliceElem(p2), func(p person) (string, int) {
+    i2 := Transform12(SliceElems(p2), func(p person) (string, int) {
         return p.name, p.age
     })
 

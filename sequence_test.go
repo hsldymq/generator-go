@@ -359,7 +359,7 @@ func TestReverse(t *testing.T) {
     input := []int{1, 2, 3, 4, 5}
 
     actual := make([]int, 0, 5)
-    for v := range SliceElem(input).Reverse() {
+    for v := range SliceElems(input).Reverse() {
         actual = append(actual, v)
     }
     expect := []int{5, 4, 3, 2, 1}
@@ -368,7 +368,7 @@ func TestReverse(t *testing.T) {
     }
 
     actual = make([]int, 0, 3)
-    for v := range SliceElem(input).Reverse() {
+    for v := range SliceElems(input).Reverse() {
         if v < 3 {
             break
         }

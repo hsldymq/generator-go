@@ -15,7 +15,7 @@ func TestOnce(t *testing.T) {
 
     // case 1
     actual := make([]int, 0, 3)
-    iterator := Once(SliceElem(input))
+    iterator := Once(SliceElems(input))
     for v := range iterator {
         actual = append(actual, v)
         if v == 3 {
@@ -31,7 +31,7 @@ func TestOnce(t *testing.T) {
     }
 
     // case 2
-    iterator = Once(SliceElem(input))
+    iterator = Once(SliceElems(input))
     actual = make([]int, 0)
     for v := range iterator {
         actual = append(actual, v)
@@ -45,7 +45,7 @@ func TestOnce(t *testing.T) {
     }
 
     // case 3
-    iterator = Once(SliceElem(input))
+    iterator = Once(SliceElems(input))
     actual = make([]int, 0)
     actual2 := make([]int, 0)
     g := &sync.WaitGroup{}
@@ -145,7 +145,7 @@ func TestFinishOnce(t *testing.T) {
 
     // case 1
     actual := make([]int, 0)
-    iterator := FinishOnce(SliceElem(input))
+    iterator := FinishOnce(SliceElems(input))
     for v := range iterator {
         actual = append(actual, v)
         if v == 3 {
@@ -164,7 +164,7 @@ func TestFinishOnce(t *testing.T) {
     }
 
     // case 2
-    iterator = FinishOnce(SliceElem(input))
+    iterator = FinishOnce(SliceElems(input))
     actual = make([]int, 0)
     for v := range iterator {
         actual = append(actual, v)
@@ -182,7 +182,7 @@ func TestFinishOnce(t *testing.T) {
     for v := range Range(1, 10000) {
         input = append(input, v)
     }
-    iterator = FinishOnce(SliceElem(input))
+    iterator = FinishOnce(SliceElems(input))
     g := &sync.WaitGroup{}
     g.Add(3)
     actual1 := make([]int, 0)

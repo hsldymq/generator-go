@@ -111,7 +111,7 @@ func (it Iterator2[T1, T2]) Cache() Iterator2[T1, T2] {
         }
     }
     dynIter = originalIter
-    sIter := Iter2Source(func() iter.Seq2[T1, T2] {
+    sIter := Seq2Source(func() iter.Seq2[T1, T2] {
         return dynIter
     })
 

@@ -51,7 +51,7 @@ func TestTransform(t *testing.T) {
     }
 
     actual := make([]string, 0, 3)
-    for v := range Transform(SliceElem([]int{1, 2, 3}), transformFunc) {
+    for v := range Transform(SliceElems([]int{1, 2, 3}), transformFunc) {
         actual = append(actual, v)
     }
     expect := []string{"1", "2", "3"}
@@ -61,7 +61,7 @@ func TestTransform(t *testing.T) {
 
     transformFunc2 := func(v int) int { return v * 2 }
     actual2 := make([]int, 0, 3)
-    for v := range SliceElem([]int{1, 2, 3}).Through(transformFunc2) {
+    for v := range SliceElems([]int{1, 2, 3}).Through(transformFunc2) {
         actual2 = append(actual2, v)
     }
     expect2 := []int{2, 4, 6}
@@ -71,7 +71,7 @@ func TestTransform(t *testing.T) {
 
     actual = make([]string, 0, 2)
     i := 0
-    for v := range Transform(SliceElem([]int{1, 2, 3}), transformFunc) {
+    for v := range Transform(SliceElems([]int{1, 2, 3}), transformFunc) {
         actual = append(actual, v)
         i++
         if i >= 2 {
@@ -142,7 +142,7 @@ func TestTransform12(t *testing.T) {
 
     actualV1 := make([]int, 0, 3)
     actualV2 := make([]string, 0, 3)
-    for v1, v2 := range Transform12(SliceElem([]int{1, 2, 3}), transformFunc) {
+    for v1, v2 := range Transform12(SliceElems([]int{1, 2, 3}), transformFunc) {
         actualV1 = append(actualV1, v1)
         actualV2 = append(actualV2, v2)
     }
@@ -157,7 +157,7 @@ func TestTransform12(t *testing.T) {
 
     actualV1 = make([]int, 0, 3)
     i := 0
-    for v1, _ := range Transform12(SliceElem([]int{1, 2, 3}), transformFunc) {
+    for v1, _ := range Transform12(SliceElems([]int{1, 2, 3}), transformFunc) {
         actualV1 = append(actualV1, v1)
         i++
         if i >= 2 {

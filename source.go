@@ -10,9 +10,9 @@ func Slice[S ~[]T, T any](s S, backward ...bool) Iterator2[int, T] {
     return SliceSource(func() S { return s }, backward...)
 }
 
-// SliceElem only yields the elements of a slice.
-func SliceElem[S ~[]T, T any](s S, backward ...bool) Iterator[T] {
-    return Slice(s, backward...).V2()
+// SliceElems only yields the elements of a slice.
+func SliceElems[S ~[]T, T any](s S, backward ...bool) Iterator[T] {
+    return SliceSourceElems(func() S { return s }, backward...)
 }
 
 // SliceSource is like the Slice function, but the slice is taken from the input SourceFunc.
@@ -40,10 +40,25 @@ func SliceSource[S ~[]T, T any](source SourceFunc[S], backward ...bool) Iterator
     }
 }
 
-// SliceSourceElem is like SliceElem function, it serves similar purposes as SliceSource.
+// SliceSourceElems is like SliceElems function, it serves similar purposes as SliceSource.
 // see comments of SliceSource function for more details.
-func SliceSourceElem[S ~[]T, T any](source SourceFunc[S], backward ...bool) Iterator[T] {
-    return SliceSource(source, backward...).V2()
+func SliceSourceElems[S ~[]T, T any](source SourceFunc[S], backward ...bool) Iterator[T] {
+    return func(yield func(T) bool) {
+        s := source()
+        if len(backward) == 0 || !backward[0] {
+            for _, elem := range s {
+                if !yield(elem) {
+                    return
+                }
+            }
+        } else {
+            for i := len(s) - 1; i >= 0; i-- {
+                if !yield(s[i]) {
+                    return
+                }
+            }
+        }
+    }
 }
 
 // Map returns an iterator that allows you to traverse a map.
@@ -51,14 +66,14 @@ func Map[K comparable, V any](m map[K]V) Iterator2[K, V] {
     return MapSource(func() map[K]V { return m })
 }
 
-// MapKey yields only keys of a map in arbitrary order.
-func MapKey[K comparable, V any](m map[K]V) Iterator[K] {
-    return Map(m).V1()
+// MapKeys yields only keys of a map in arbitrary order.
+func MapKeys[K comparable, V any](m map[K]V) Iterator[K] {
+    return MapSourceKeys(func() map[K]V { return m })
 }
 
-// MapVal yields only values of a map in arbitrary order.
-func MapVal[K comparable, V any](m map[K]V) Iterator[V] {
-    return Map(m).V2()
+// MapVals yields only values of a map in arbitrary order.
+func MapVals[K comparable, V any](m map[K]V) Iterator[V] {
+    return MapSourceVals(func() map[K]V { return m })
 }
 
 // MapSource is like Map function, it serves similar purposes as SliceSource.
@@ -74,26 +89,40 @@ func MapSource[K comparable, V any](source SourceFunc[map[K]V]) Iterator2[K, V] 
     }
 }
 
-// MapSourceKey is like MapKey function, it serves similar purposes as SliceSource.
+// MapSourceKeys is like MapKeys function, it serves similar purposes as SliceSource.
 // see comments of SliceSource function for more details.
-func MapSourceKey[K comparable, V any](source SourceFunc[map[K]V]) Iterator[K] {
-    return MapSource(source).V1()
+func MapSourceKeys[K comparable, V any](source SourceFunc[map[K]V]) Iterator[K] {
+    return func(yield func(K) bool) {
+        m := source()
+        for key := range m {
+            if !yield(key) {
+                return
+            }
+        }
+    }
 }
 
-// MapSourceVal is like MapVal function, it serves similar purposes as SliceSource.
+// MapSourceVals is like MapVals function, it serves similar purposes as SliceSource.
 // see comments of SliceSource function for more details.
-func MapSourceVal[K comparable, V any](source SourceFunc[map[K]V]) Iterator[V] {
-    return MapSource(source).V2()
+func MapSourceVals[K comparable, V any](source SourceFunc[map[K]V]) Iterator[V] {
+    return func(yield func(V) bool) {
+        m := source()
+        for _, val := range m {
+            if !yield(val) {
+                return
+            }
+        }
+    }
 }
 
-// Channel yields the values from a channel, it will stop when the channel is closed.
-func Channel[T any](c <-chan T) Iterator[T] {
-    return ChannelSource(func() <-chan T { return c })
+// Chan yields the values from a channel, it will stop when the channel is closed.
+func Chan[T any](c <-chan T) Iterator[T] {
+    return ChanSource(func() <-chan T { return c })
 }
 
-// ChannelSource is like Channel function, it serves similar purposes as SliceSource.
+// ChanSource is like Chan function, it serves similar purposes as SliceSource.
 // see comments of SliceSource function for more details.
-func ChannelSource[T any](source SourceFunc[<-chan T]) Iterator[T] {
+func ChanSource[T any](source SourceFunc[<-chan T]) Iterator[T] {
     return func(yield func(T) bool) {
         c := source()
         for v := range c {
@@ -104,9 +133,9 @@ func ChannelSource[T any](source SourceFunc[<-chan T]) Iterator[T] {
     }
 }
 
-// IterSource serves similar purposes as SliceSource, the difference is that the SourceFunc returns an iterator.
+// SeqSource serves similar purposes as SliceSource, the difference is that the SourceFunc returns an iter.Seq-like iterator.
 // see comments of SliceSource function for more details.
-func IterSource[TIter SeqX[T], T any](source SourceFunc[TIter]) Iterator[T] {
+func SeqSource[TIter SeqX[T], T any](source SourceFunc[TIter]) Iterator[T] {
     return func(yield func(T) bool) {
         seq := source()
         for v := range seq {
@@ -117,9 +146,9 @@ func IterSource[TIter SeqX[T], T any](source SourceFunc[TIter]) Iterator[T] {
     }
 }
 
-// Iter2Source serves similar purposes as SliceSource.
+// Seq2Source serves similar purposes as SliceSource.
 // see comments of SliceSource function for more details.
-func Iter2Source[TIter Seq2X[T1, T2], T1, T2 any](source SourceFunc[TIter]) Iterator2[T1, T2] {
+func Seq2Source[TIter Seq2X[T1, T2], T1, T2 any](source SourceFunc[TIter]) Iterator2[T1, T2] {
     return func(yield func(T1, T2) bool) {
         seq := source()
         for v1, v2 := range seq {

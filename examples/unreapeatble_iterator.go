@@ -12,7 +12,7 @@ func OnceDemo() {
 
     // this is an example for Once function.
     // iterator returned by Once can be only used once.
-    iterator := goiter.Once(goiter.SliceElem(data))
+    iterator := goiter.Once(goiter.SliceElems(data))
 
     // break the loop or finish the iteration will make the iterator unusable.
     for v := range iterator {
@@ -35,7 +35,7 @@ func FinishOnceDemo() {
     data := []int{1, 2, 3, 4, 5, 6}
 
     // this is an example for FinishOnce function.
-    iterator := goiter.FinishOnce(goiter.SliceElem(data))
+    iterator := goiter.FinishOnce(goiter.SliceElems(data))
 
     // break the loop midway will not make the iterator unusable until all elements have been yielded.
     for v := range iterator {

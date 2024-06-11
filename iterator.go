@@ -98,7 +98,7 @@ func (it Iterator[T]) Cache() Iterator[T] {
         }
     }
     dynIter = originalIter
-    sIter := IterSource(func() iter.Seq[T] {
+    sIter := SeqSource(func() iter.Seq[T] {
         return dynIter
     })
 

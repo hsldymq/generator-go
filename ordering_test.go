@@ -11,7 +11,7 @@ import (
 func TestOrder(t *testing.T) {
     // case 1: asc
     actual1 := make([]int, 0, 3)
-    for v := range Order(SliceElem([]int{4, 1, 6})) {
+    for v := range Order(SliceElems([]int{4, 1, 6})) {
         actual1 = append(actual1, v)
     }
     expect1 := []int{1, 4, 6}
@@ -21,7 +21,7 @@ func TestOrder(t *testing.T) {
 
     // case 2: desc
     actual2 := make([]string, 0, 3)
-    for v := range Order(SliceElem([]string{"bob", "alice", "eve"}), true) {
+    for v := range Order(MapVals(map[int]string{1: "bob", 2: "alice", 3: "eve"}), true) {
         actual2 = append(actual2, v)
     }
     expect2 := []string{"eve", "bob", "alice"}
@@ -30,7 +30,7 @@ func TestOrder(t *testing.T) {
     }
 
     // won't panic
-    for _ = range Order(SliceElem([]int{1, 2, 3})) {
+    for _ = range Order(SliceElems([]int{1, 2, 3})) {
         break
     }
 }
@@ -131,7 +131,7 @@ func TestOrderBy(t *testing.T) {
         {"eve", 21},
     }
     actual := []person{}
-    for each := range SliceElem(input).OrderBy(func(a, b person) int { return cmp.Compare(a.age, b.age) }) {
+    for each := range SliceElems(input).OrderBy(func(a, b person) int { return cmp.Compare(a.age, b.age) }) {
         actual = append(actual, each)
     }
     expect := []person{
@@ -155,7 +155,7 @@ func TestStableOrderBy(t *testing.T) {
         {"eve", 20},
     }
     actual := []person{}
-    for each := range SliceElem(input).StableOrderBy(func(a, b person) int { return cmp.Compare(a.age, b.age) }) {
+    for each := range SliceElems(input).StableOrderBy(func(a, b person) int { return cmp.Compare(a.age, b.age) }) {
         actual = append(actual, each)
     }
     expect := []person{
