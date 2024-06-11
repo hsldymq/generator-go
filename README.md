@@ -42,7 +42,7 @@ type School struct {
 
 // Students returns an iterator that yields each student, instead of exposing the slice of students directly
 func (s *School) Students() goiter.Iterator[*Student] {
-    return goiter.SliceElem(s.students)
+    return goiter.SliceElems(s.students)
 }
 
 func PrintNames(school *School) {
@@ -140,7 +140,7 @@ type School struct {
 }
 
 func (s *School) Students() goiter.Iterator[*Student] {
-    return goiter.SliceElem(s.students)
+    return goiter.SliceElems(s.students)
 }
 
 func PrintNamesAges(school *School) {
@@ -169,7 +169,7 @@ import (
 
 func FilterDemo() {
     input := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-    iterator := goiter.SliceElem(input).Filter(func(v int) bool {
+    iterator := goiter.SliceElems(input).Filter(func(v int) bool {
         return v % 2 == 0
     }) 
     // this will print 2 4 6 8 10
@@ -181,7 +181,7 @@ func FilterDemo() {
 func DistinctDemo() {
     input := []int{1, 2, 3, 3, 2, 1}
     // this will print 1 2 3
-    for each := range goiter.Distinct(goiter.SliceElem(input)) {
+    for each := range goiter.Distinct(goiter.SliceElems(input)) {
         fmt.Printf("%d ", each)
     }
 }
@@ -201,13 +201,13 @@ import (
 func Demo() {
     input := []int{1, 4, 3, 2}
     // this will print 1 2 3 4
-    for each := range goiter.Order(goiter.SliceElem(input)) {
+    for each := range goiter.Order(goiter.SliceElems(input)) {
         fmt.Printf("%d ", each)
     }
 
     // pass true as the second argument to sort in descending order
     // this will print 4 3 2 1
-    for each := range goiter.Order(goiter.SliceElem(input), true) {
+    for each := range goiter.Order(goiter.SliceElems(input), true) {
         fmt.Printf("%d ", each)
     }
 }
@@ -285,19 +285,19 @@ For example, `goiter.Filter` is for iter.Seq and `goiter.Filter2` is for iter.Se
 
 ### creating iterator
 * `goiter.Slice`
-* `goiter.SliceElem`
+* `goiter.SliceElems`
 * `goiter.SliceSource`
-* `goiter.SliceSourceElem`
+* `goiter.SliceSourceElems`
 * `goiter.Map`
-* `goiter.MapVal`
-* `goiter.MapKey`
+* `goiter.MapVals`
+* `goiter.MapKeys`
 * `goiter.MapSource`
-* `goiter.MapSourceVal`
-* `goiter.MapSourceKey`
-* `goiter.Channel`
-* `goiter.ChannelSource`
-* `goiter.IterSource`
-* `goiter.Iter2Source`
+* `goiter.MapSourceVals`
+* `goiter.MapSourceKeys`
+* `goiter.Chan`
+* `goiter.ChanSource`
+* `goiter.SeqSource`
+* `goiter.Seq2Source`
 * `goiter.Empty`
 * `goiter.Empty2`
 
@@ -308,14 +308,14 @@ This two types have its own methods, you can use them to chain multiple operatio
 ```go
 // instead of:
 input := []int{1, 2, 3, 4, 5, 6}
-iterator := goiter.SliceElem(input)
+iterator := goiter.SliceElems(input)
 iterator = iterator.Filter(func(v int) bool {
     return v % 2 == 0
 })
 
 // you can also write like this:
 input := []int{1, 2, 3, 4, 5, 6}
-iterator := goiter.SliceElem(input).Filter(func(v int) bool {
+iterator := goiter.SliceElems(input).Filter(func(v int) bool {
     return v % 2 == 0
 })
 ```
