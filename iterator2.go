@@ -17,17 +17,13 @@ func (it Iterator2[T1, T2]) Seq() iter.Seq2[T1, T2] {
     return iter.Seq2[T1, T2](it)
 }
 
-// V1 returns an iterator that yields the first value of each pair.
-// So if the original iterator yields values from a slice, the new iterator yields the indexes of the slice,
-// if the original iterator yields values from a map, the new iterator yields the keys of the map.
-func (it Iterator2[T1, T2]) V1() Iterator[T1] {
+// PickV1 returns an iterator that yields the first value of each pair.
+func (it Iterator2[T1, T2]) PickV1() Iterator[T1] {
     return PickV1(it)
 }
 
-// V2 returns an iterator that yields the second value of each pair.
-// So if the original iterator yields values from a slice, the new iterator yields the values of the slice,
-// if the original iterator yields values from a map, the new iterator yields the values of the map.
-func (it Iterator2[T1, T2]) V2() Iterator[T2] {
+// PickV2 returns an iterator that yields the second value of each pair.
+func (it Iterator2[T1, T2]) PickV2() Iterator[T2] {
     return PickV2(it)
 }
 

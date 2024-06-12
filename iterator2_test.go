@@ -15,7 +15,7 @@ func TestIterator2_V1(t *testing.T) {
         "c": 3,
     }
     actual := make([]string, 0, 3)
-    for v := range Order(Map(input).V1()) {
+    for v := range Order(Map(input).PickV1()) {
         actual = append(actual, v)
     }
     expect := []string{"a", "b", "c"}
@@ -26,7 +26,7 @@ func TestIterator2_V1(t *testing.T) {
 
 func TestIterator2_V2(t *testing.T) {
     actual := make([]int, 0, 3)
-    for idx := range Slice([]int{7, 8, 9}).V2() {
+    for idx := range Slice([]int{7, 8, 9}).PickV2() {
         actual = append(actual, idx)
     }
     expect := []int{7, 8, 9}
