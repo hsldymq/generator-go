@@ -4,7 +4,6 @@ package goiter
 
 import (
     "iter"
-    "sync/atomic"
 )
 
 type Seq2X[T1, T2 any] interface {
@@ -72,50 +71,5 @@ func (it Iterator2[T1, T2]) Through(f func(T1, T2) (T1, T2)) Iterator2[T1, T2] {
 }
 
 func (it Iterator2[T1, T2]) Cache() Iterator2[T1, T2] {
-    var cached []*Combined[T1, T2]
-    var cacheFlag int32
-
-    var dynIter iter.Seq2[T1, T2]
-    cachedIter := func(yield func(T1, T2) bool) {
-        for _, v := range cached {
-            if !yield(v.V1, v.V2) {
-                return
-            }
-        }
-    }
-
-    originalIter := func(yield func(T1, T2) bool) {
-        cTemp := make([]*Combined[T1, T2], 0)
-        next, stop := iter.Pull2(iter.Seq2[T1, T2](it))
-        defer stop()
-        for {
-            v1, v2, ok := next()
-            if !ok {
-                break
-            }
-            if !yield(v1, v2) {
-                return
-            }
-            cTemp = append(cTemp, &Combined[T1, T2]{
-                V1: v1,
-                V2: v2,
-            })
-        }
-        if atomic.CompareAndSwapInt32(&cacheFlag, 0, 1) {
-            cached = cTemp
-            dynIter = cachedIter
-        }
-    }
-    dynIter = originalIter
-    sIter := Seq2Source(func() iter.Seq2[T1, T2] {
-        return dynIter
-    })
-
-    return func(yield func(T1, T2) bool) {
-        for v1, v2 := range sIter {
-            if !yield(v1, v2) {
-                return
-            }
-        }
-    }
+    return Cache2(it)
 }
