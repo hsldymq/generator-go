@@ -1,5 +1,3 @@
-//go:build goexperiment.rangefunc
-
 package goiter
 
 import "iter"
@@ -51,7 +49,10 @@ func Filter2[TIter Seq2X[T1, T2], T1 any, T2 any](
 }
 
 // OfType returns an iterator that only yields the values of the input iterator that are of the specified type.
-// this is useful when you have an iterator that yields any values, and you want to filter them by their type.
+// this is useful when you have an iterator that yields interfaces, and you want to filter them by their type.
+// For example:
+//  iterator := goiter.Items[any](1, "hello", true, 3, "world")     // iterator will yield 1 "hello" true 3 "world"
+//  newIterator := goiter.OfType[int](iterator)                     // after calling OfType, newIterator will only yield 1 3
 func OfType[U any, TIter SeqX[T], T any](
     iterator TIter,
 ) Iterator[U] {
@@ -73,6 +74,10 @@ func OfType[U any, TIter SeqX[T], T any](
 }
 
 // Take returns an iterator that yields the first n values of the input iterator.
+// If the input iterator has less than n values, it will yield all the values.
+//
+// So if an iterator yields 1 2 3 4 5, goiter.Take(iterator, 3) will yield 1 2 3.
+// And if an iterator yields 1 2, goiter.Take(iterator, 3) will yield 1 2.
 func Take[TIter SeqX[T], T any](
     iterator TIter,
     n int,
@@ -101,7 +106,7 @@ func Take[TIter SeqX[T], T any](
     }
 }
 
-// Take2 is the Iterator2 version of Take function.
+// Take2 is the iter.Seq2 version of Take function.
 func Take2[TIter Seq2X[T1, T2], T1, T2 any](
     iterator TIter,
     n int,
@@ -131,7 +136,10 @@ func Take2[TIter Seq2X[T1, T2], T1, T2 any](
 }
 
 // TakeLast returns an iterator that yields the last n values of the input iterator.
-// if the input iterator has less than n values, it will yield all the values.
+// If the input iterator has less than n values, it will yield all the values.
+//
+// So if an iterator yields 1 2 3 4 5, goiter.Take(iterator, 3) will yield 3 4 5.
+// And if an iterator yields 1 2, goiter.Take(iterator, 3) will yield 1 2.
 func TakeLast[TIter SeqX[T], T any](
     iterator TIter,
     n int,
@@ -181,7 +189,7 @@ func TakeLast[TIter SeqX[T], T any](
     }
 }
 
-// TakeLast2 is the Iterator2 version of TakeLast function.
+// TakeLast2 is the iter.Seq2 version of TakeLast function.
 func TakeLast2[TIter Seq2X[T1, T2], T1, T2 any](
     iterator TIter,
     n int,
@@ -232,6 +240,10 @@ func TakeLast2[TIter Seq2X[T1, T2], T1, T2 any](
 }
 
 // Skip returns an iterator that suppress the first n values of the input iterator and yields the rest.
+// If the input iterator has less than n values, it will yield nothing.
+//
+// So if an iterator yields 1 2 3 4 5, goiter.Skip(iterator, 3) will yield 4 5.
+// And if an iterator yields 1 2, goiter.Skip(iterator, 3) will yield nothing.
 func Skip[TIter SeqX[T], T any](
     iterator TIter,
     n int,
@@ -260,7 +272,7 @@ func Skip[TIter SeqX[T], T any](
     }
 }
 
-// Skip2 is the Iterator2 version of Skip function.
+// Skip2 is the iter.Seq2 version of Skip function.
 func Skip2[TIter Seq2X[T1, T2], T1, T2 any](
     iterator TIter,
     n int,
@@ -290,7 +302,10 @@ func Skip2[TIter Seq2X[T1, T2], T1, T2 any](
 }
 
 // SkipLast returns an iterator that suppress the last n values of the input iterator and yields the rest.
-// if the input iterator has less than n values, it will yield nothing.
+// If the input iterator has less than n values, it will yield nothing.
+//
+// So if an iterator yields 1 2 3 4 5, goiter.SkipLast(iterator, 3) will yield 1 2.
+// And if an iterator yields 1 2, goiter.SkipLast(iterator, 3) will yield nothing.
 func SkipLast[TIter SeqX[T], T any](
     iterator TIter,
     n int,
@@ -302,7 +317,7 @@ func SkipLast[TIter SeqX[T], T any](
     return func(yield func(T) bool) {
         idxHead := -1
         idxTail := -1
-        buffer := make([]T, n)
+        ringBuff := make([]T, n)
 
         next, stop := iter.Pull(iter.Seq[T](iterator))
         defer stop()
@@ -312,26 +327,26 @@ func SkipLast[TIter SeqX[T], T any](
                 break
             }
             if idxHead == -1 {
-                buffer[0] = v
+                ringBuff[0] = v
                 idxHead = 0
                 idxTail = 0
             } else if (idxHead+n-1)%n == idxTail {
-                yieldVal := buffer[idxHead]
+                yieldVal := ringBuff[idxHead]
                 idxTail = idxHead
                 idxHead = (idxHead + 1) % n
-                buffer[idxTail] = v
+                ringBuff[idxTail] = v
                 if !yield(yieldVal) {
                     return
                 }
             } else {
                 idxTail = (idxTail + 1) % n
-                buffer[idxTail] = v
+                ringBuff[idxTail] = v
             }
         }
     }
 }
 
-// SkipLast2 is the Iterator2 version of SkipLast function.
+// SkipLast2 is the iter.Seq2 version of SkipLast function.
 func SkipLast2[TIter Seq2X[T1, T2], T1, T2 any](
     iterator TIter,
     n int,
@@ -343,7 +358,7 @@ func SkipLast2[TIter Seq2X[T1, T2], T1, T2 any](
     return func(yield func(T1, T2) bool) {
         idxHead := -1
         idxTail := -1
-        buffer := make([]*Combined[T1, T2], n)
+        ringBuff := make([]*Combined[T1, T2], n)
 
         next, stop := iter.Pull2(iter.Seq2[T1, T2](iterator))
         defer stop()
@@ -353,20 +368,20 @@ func SkipLast2[TIter Seq2X[T1, T2], T1, T2 any](
                 break
             }
             if idxHead == -1 {
-                buffer[0] = &Combined[T1, T2]{V1: v1, V2: v2}
+                ringBuff[0] = &Combined[T1, T2]{V1: v1, V2: v2}
                 idxHead = 0
                 idxTail = 0
             } else if (idxHead+n-1)%n == idxTail {
-                yieldVal := buffer[idxHead]
+                yieldVal := ringBuff[idxHead]
                 idxTail = idxHead
                 idxHead = (idxHead + 1) % n
-                buffer[idxTail] = &Combined[T1, T2]{V1: v1, V2: v2}
+                ringBuff[idxTail] = &Combined[T1, T2]{V1: v1, V2: v2}
                 if !yield(yieldVal.V1, yieldVal.V2) {
                     return
                 }
             } else {
                 idxTail = (idxTail + 1) % n
-                buffer[idxTail] = &Combined[T1, T2]{V1: v1, V2: v2}
+                ringBuff[idxTail] = &Combined[T1, T2]{V1: v1, V2: v2}
             }
         }
     }
@@ -377,7 +392,7 @@ func SkipLast2[TIter Seq2X[T1, T2], T1, T2 any](
 //
 //	if the input iterator yields 1 2 3 3 2 1, Distinct function will yield 1 2 3.
 //
-// be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
+// Note: if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func Distinct[TIter SeqX[T], T comparable](iterator TIter) Iterator[T] {
     return func(yield func(T) bool) {
         yielded := map[any]bool{}
@@ -406,7 +421,7 @@ func Distinct[TIter SeqX[T], T comparable](iterator TIter) Iterator[T] {
 //	if the input iterator yields ("john", 20) ("anne", 21) ("john", 22)
 //	DistinctV1 function will yield ("john", 20) ("anne", 21) because ("john", 22) has the same key as ("john", 20).
 //
-// be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
+// Note: if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func DistinctV1[TIter Seq2X[T1, T2], T1 comparable, T2 any](iterator TIter) Iterator2[T1, T2] {
     return func(yield func(T1, T2) bool) {
         yielded := newDistinctor[T1]()
@@ -429,7 +444,7 @@ func DistinctV1[TIter Seq2X[T1, T2], T1 comparable, T2 any](iterator TIter) Iter
 }
 
 // DistinctV2 is similar to DistinctV1, but it deduplicates by the second element of the 2-tuple.
-// be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
+// Note: if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func DistinctV2[TIter Seq2X[T1, T2], T1 any, T2 comparable](iterator TIter) Iterator2[T1, T2] {
     return func(yield func(T1, T2) bool) {
         yielded := newDistinctor[T2]()
@@ -452,7 +467,7 @@ func DistinctV2[TIter Seq2X[T1, T2], T1 any, T2 comparable](iterator TIter) Iter
 }
 
 // DistinctBy accepts a custom function to determine the deduplicate-key.
-// be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
+// Note: if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func DistinctBy[TIter SeqX[T], T any, K comparable](
     iterator TIter,
     keySelector func(T) K,
@@ -478,7 +493,7 @@ func DistinctBy[TIter SeqX[T], T any, K comparable](
 }
 
 // Distinct2By is an Iterator2 version of DistinctBy.
-// be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
+// Note: if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func Distinct2By[TIter Seq2X[T1, T2], T1 any, T2 any, K comparable](
     iterator TIter,
     keySelector func(T1, T2) K,
