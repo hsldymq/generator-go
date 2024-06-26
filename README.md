@@ -207,9 +207,11 @@ func Demo() {
 # List of goiter functions
 Below are the functions provided by goiter.
 
-As you can see, some functions are provided in two versions, such as `Filter` and `Filter2`, `Take` and `Take2`. These functions correspond to the two versions of `iter.Seq` and `iter.Seq2`.
+As you can see, some functions are provided in two versions, such as `Filter` and `Filter2`, `Take` and `Take2`. These functions are respectively used for iterators of the `iter.Seq` or `iter.Seq2` versions.
 
 Additionally, some functions have the suffix V1 or V2 in their names. These functions are for iter.Seq2 iterators, with V1 applying operations to the first element of each 2-tuple in the iteration, and V2 applying operations to the second element.
+
+The comments at the function definitions include simple examples to help you better understand how to use these functions.
 
 ### transformation
 * `goiter.PickV1`
