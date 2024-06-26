@@ -1,5 +1,3 @@
-//go:build goexperiment.rangefunc
-
 package goiter
 
 import (
@@ -12,7 +10,6 @@ import (
 
 func TestRangeStep(t *testing.T) {
     var actual []int
-    // equivalent to RangeStep(0, 3, 1)
     for each := range Range(0, 3) {
         actual = append(actual, each)
     }
