@@ -58,6 +58,23 @@ func Once2[TIter Seq2X[T1, T2], T1, T2 any](iterator TIter) Iterator2[T1, T2] {
 // This means you can break out of the iteration midway and then continue iterating from where you left off.
 // You can also iterate over it concurrently; FinishOnce will ensure that all values are yielded exactly once.
 // once all values have been yielded, it will not yield any more values.
+// For example:
+//  iterator := goiter.FinishOnce(goiter.Items(1, 2, 3, 4, 5, 6))   // we have this FinishOnce iterator that yields 1, 2, 3, 4, 5, 6
+//
+//  for v := range iterator {   // in this loop, it will print 1, 2, 3
+//      fmt.Printf("%d ", v)
+//      if v == 3 {
+//          break
+//      }
+//  }
+//
+//  for v := range iterator {   // in this loop, it will print remaining values 4, 5, 6
+//      fmt.Printf("%d ", v)
+//  }
+//
+//  for v := range iterator {   // and in this loop, it will not print anything, because all values have been yielded
+//      fmt.Printf("%d ", v)    // so this line won't be executed
+//  }
 func FinishOnce[TIter SeqX[T], T any](iterator TIter) Iterator[T] {
     fetchLock := &sync.Mutex{}
     next, stop := iter.Pull(iter.Seq[T](Once(iterator)))
