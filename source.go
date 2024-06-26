@@ -158,6 +158,7 @@ func Seq2Source[TIter Seq2X[T1, T2], T1, T2 any](source SourceFunc[TIter]) Itera
 }
 
 // Items returns an iterator that simply yields the input values.
+// So goiter.Items[any](1, true, 1.5, "hello") will yield 1, true, 1.5, "hello".
 func Items[T any](t ...T) Iterator[T] {
     return SliceElems(t)
 }
