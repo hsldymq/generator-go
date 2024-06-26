@@ -85,7 +85,7 @@ func RangeStep[T TInt, S TInt](start, end T, stepSize S) Iterator[T] {
 //	from := time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC)
 //	to := time.Date(2021, 1, 1, 5, 0, 0, 0, time.UTC)
 //	for t := range RangeTime(from, to, time.Hour) {
-//			fmt.Println(t.Format("15:04:05"))
+//	    fmt.Println(t.Format(time.TimeOnly))
 //	}
 //	the above code will print:
 //		00:00:00
