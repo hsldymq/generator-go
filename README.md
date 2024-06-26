@@ -4,25 +4,24 @@
 ![GitHub License](https://img.shields.io/github/license/hsldymq/goiter?color=blue)
 [![Test](https://github.com/hsldymq/goiter/actions/workflows/test.yml/badge.svg)](https://github.com/hsldymq/goiter/actions/workflows/test.yml)
 
-Go 1.22 introduced an experimental feature called [Rangefunc](https://go.dev/wiki/RangefuncExperiment), this is similar to the Generator in other languages (JavaScript, PHP, etc...). With this feature you can iterate data over any data structure.
+This package provides a set of functions for creating iterators using the range-over function feature.
 
-The feature itself is simplistic designed, it does not provide many convenient functions for common use cases, such as sequence generation, data transformation, filtering, etc... 
+With this feature, you can iterate over any data structure and perform operations on the data at each iteration, such as transformation, filtering, aggregation, and more.
 
-So this package do the job.
+However, the standard library lacks convenient functions for these use cases.
 
-To use this package, you must enable rangefunc feature.
+This package fills that gap.
 
 # Requirements
-* golang version >= 1.22.0
-* enable rangefunc feature by building with GOEXPERIMENT=rangefunc
+* go version >= 1.23.0
 
 # Examples
 ### Example 1: Traversal of an encapsulated collection
 Suppose you want to provide traversal capability for a slice in a struct to outside, but do not want to expose the slice, you can use the `goiter.Slice` or `goiter.SliceElem` function.
 
-```go
-//go:build goexperiment.rangefunc
+`goiter.Slice` and `goiter.SliceElem` are similar to the `slices.All` and `slices.Values` functions in the standard library, but they also offer reverse traversal capabilities like slices.Backward. You can enable reverse traversal by passing true as the second optional parameter.
 
+```go
 package example1
 
 import (
@@ -40,13 +39,13 @@ type School struct {
     students []*Student
 }
 
-// Students returns an iterator that yields each student, instead of exposing the slice of students directly
+// Students method uses the goiter to return an iterator that yields each student, rather than directly exposing the internal slice.
 func (s *School) Students() goiter.Iterator[*Student] {
     return goiter.SliceElems(s.students)
 }
 
 func PrintNames(school *School) {
-    // iterate each student like a regular slice
+    // So you can iterate through each student like a regular slice.
     for student := range school.Students() {
         fmt.Println(student.Name)
     }
@@ -55,8 +54,6 @@ func PrintNames(school *School) {
 
 ### Example 2: Sequence generation
 ```go
-//go:build goexperiment.rangefunc
-
 package example2
 
 import (
@@ -64,10 +61,10 @@ import (
     "github.com/hsldymq/goiter"
 )
 
-// goiter.Range and goiter.RangeStep provide similar functionality to the Python's range function
+// goiter.Range and goiter.RangeStep provide similar functionality to Python's range function.
+// The difference is that goiter.Range and goiter.RangeStep generate a range of numbers as a closed interval, unlike Python's range function which generates a half-open interval
 func RangeDemo() {
-    // This will print 0 1 2 3 4 5
-    // It is equivalent to Python `range(0, 6)` or Golang `for v := range 6`
+    // So this will print 0 1 2 3 4 5, it is equivalent to Python `range(0, 6)` or Golang `for v := range 6`
     for v := range goiter.Range(0, 5) {
         fmt.Printf("%d ", v)
     }
@@ -87,7 +84,8 @@ func RangeDemo() {
 
     // This will print 5 3 1 -1 -3 -5
     // When iterating in reverse, you still need to provide a positive step value, so you don't need to adjust the sign of the step based on the direction of the iteration.
-    // If you provide a step of 0 or a negative number, RangeStep will not yield any values, this is different from the range function in Python.
+    // This is another difference from Python's range function, which requires a negative step value when iterating in reverse.
+    // So if you provide a step of 0 or a negative number, RangeStep will not yield any values, 
     for v := range goiter.RangeStep(5, -5, 2) {
         fmt.Printf("%d ", v)
     }
@@ -120,8 +118,6 @@ func SequenceDemo() {
 You can chain an iterator to another iterator for chained processing, so you can implement functions such as data transformation
 
 ```go
-//go:build goexperiment.rangefunc
-
 package example3
 
 import (
@@ -130,36 +126,34 @@ import (
     "iter"
 )
 
-type Student struct {
+type Product struct {
     Name string
-    Age  int
+    Price float64
+    Quantity int
 }
 
-type School struct {
-    students []*Student
+type Cart struct {
+    products []*Product
 }
 
-func (s *School) Students() goiter.Iterator[*Student] {
-    return goiter.SliceElems(s.students)
-}
-
-func PrintNamesAges(school *School) {
-    // this iterator yields the age and name of each student
-    iterator := goiter.Transform12(school.Students(), func(student *Student) (string, int) {
-        return student.Name, student.Age
+// The Checkout method demonstrates how to use the goiter Transform function to convert the data type in each iteration.
+func (c *Cart) Checkout() goiter.Iterator2[string, float64] {
+    // It returns an iterator that yields the name and the cost of each product in the cart.
+    return goiter.Transform12(goiter.SliceElems(c.products), func(p *Product) (string, float64) {
+        return p.Name, float64(p.Quantity) * p.Price
     })
-    
-    // so each round of iteration will yield a student's name and age, instead of a student struct
-    for name, age := range iterator {
-        fmt.Printf("name: %s, age: %d\n", name, age)
+}
+
+func PrintNamesAges(cart *Cart) {
+    // Checkout hides the internal details and provides only the necessary data during iteration.
+    for name, cost := range cart.Checkout() {
+        fmt.Printf("The %s costs %.2f\n", name, cost)
     }
 }
 ```
 
 ### Example 4: Filtering
 ```go
-//go:build goexperiment.rangefunc
-
 package example4
 
 import (
@@ -172,7 +166,7 @@ func FilterDemo() {
     iterator := goiter.SliceElems(input).Filter(func(v int) bool {
         return v % 2 == 0
     }) 
-    // this will print 2 4 6 8 10
+    // This will print 2 4 6 8 10
     for each := range iterator {
         fmt.Printf("%d ", each)
     }
@@ -180,7 +174,7 @@ func FilterDemo() {
 
 func DistinctDemo() {
     input := []int{1, 2, 3, 3, 2, 1}
-    // this will print 1 2 3
+    // This will print 1 2 3
     for each := range goiter.Distinct(goiter.SliceElems(input)) {
         fmt.Printf("%d ", each)
     }
@@ -189,8 +183,6 @@ func DistinctDemo() {
 
 ### Example 5: Ordering
 ```go
-//go:build goexperiment.rangefunc
-
 package example5
 
 import (
@@ -199,24 +191,25 @@ import (
 )
 
 func Demo() {
-    input := []int{1, 4, 3, 2}
-    // this will print 1 2 3 4
-    for each := range goiter.Order(goiter.SliceElems(input)) {
+    // This will print 1 2 3 4
+    for each := range goiter.Order(goiter.Items(1, 4, 3, 2)) {
         fmt.Printf("%d ", each)
     }
 
     // pass true as the second argument to sort in descending order
-    // this will print 4 3 2 1
-    for each := range goiter.Order(goiter.SliceElems(input), true) {
+    // So this will print 4 3 2 1
+    for each := range goiter.Order(goiter.Items(1, 4, 3, 2), true) {
         fmt.Printf("%d ", each)
     }
 }
 ```
 
 # List of goiter functions
-Some functions listed below have two versions, one is for single value iterator, the other is for two values iterator.
+Below are the functions provided by goiter.
 
-For example, `goiter.Filter` is for iter.Seq and `goiter.Filter2` is for iter.Seq2. 
+As you can see, some functions are provided in two versions, such as `Filter` and `Filter2`, `Take` and `Take2`. These functions correspond to the two versions of `iter.Seq` and `iter.Seq2`.
+
+Additionally, some functions have the suffix V1 or V2 in their names. These functions are for iter.Seq2 iterators, with V1 applying operations to the first element of each 2-tuple in the iteration, and V2 applying operations to the second element.
 
 ### transformation
 * `goiter.PickV1`
@@ -284,6 +277,7 @@ For example, `goiter.Filter` is for iter.Seq and `goiter.Filter2` is for iter.Se
 * `goiter.FinishOnce2`
 
 ### creating iterator
+* `goiter.Items`
 * `goiter.Slice`
 * `goiter.SliceElems`
 * `goiter.SliceSource`
@@ -302,20 +296,18 @@ For example, `goiter.Filter` is for iter.Seq and `goiter.Filter2` is for iter.Se
 * `goiter.Empty2`
 
 # Iterator & Iterator2 Types
-Many functions listed above return an iter.Seq-like function, it has a type `goiter.Iterator[T]`(or `goiter.Iterator2[T1, T2]` for `iter.Seq2`).
+Many functions listed above return an iter.Seq-like function, which is a type of `goiter.Iterator[T]` (or `goiter.Iterator2[T1, T2]` for iter.Seq2).
 
-This two types have its own methods, you can use them to chain multiple operations together, for example:
+These two types have their own methods, which you can use to chain multiple operations together. For example:
 ```go
 // instead of:
-input := []int{1, 2, 3, 4, 5, 6}
-iterator := goiter.SliceElems(input)
-iterator = iterator.Filter(func(v int) bool {
+iterator := goiter.Items(1, 2, 3, 4, 5, 6)
+iterator = goiter.Filter(iterator, func(v int) bool {
     return v % 2 == 0
 })
 
-// you can also write like this:
-input := []int{1, 2, 3, 4, 5, 6}
-iterator := goiter.SliceElems(input).Filter(func(v int) bool {
+// you can do like this:
+iterator := goiter.Items(1, 2, 3, 4, 5, 6).Filter(func(v int) bool {
     return v % 2 == 0
 })
 ```
