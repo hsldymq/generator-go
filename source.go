@@ -1,5 +1,3 @@
-//go:build goexperiment.rangefunc
-
 package goiter
 
 // SourceFunc delegates data retrieval from elsewhere.
@@ -157,6 +155,11 @@ func Seq2Source[TIter Seq2X[T1, T2], T1, T2 any](source SourceFunc[TIter]) Itera
             }
         }
     }
+}
+
+// Items returns an iterator that simply yields the input values.
+func Items[T any](t ...T) Iterator[T] {
+    return SliceElems(t)
 }
 
 // Empty returns an empty iterator.

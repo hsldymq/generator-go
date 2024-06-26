@@ -1,5 +1,3 @@
-//go:build goexperiment.rangefunc
-
 package goiter
 
 import (
@@ -288,6 +286,18 @@ func TestSeq2Source(t *testing.T) {
         {"alice", 30},
         {"bob", 31},
     }
+    if !slices.Equal(expect, actual) {
+        t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
+    }
+}
+
+func TestItems(t *testing.T) {
+    actual := make([]any, 0, 4)
+    for each := range Items[any](1, "sadf", true, 1.5) {
+        actual = append(actual, each)
+    }
+
+    expect := []any{1, "sadf", true, 1.5}
     if !slices.Equal(expect, actual) {
         t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
     }
