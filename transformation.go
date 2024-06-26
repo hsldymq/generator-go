@@ -1,12 +1,13 @@
-//go:build goexperiment.rangefunc
-
 package goiter
 
-import "iter"
+import (
+    "iter"
+)
 
 // PickV1 returns an iterator that yields the first element of each 2-tuple provided by the input iterator.
-// So if the original iterator yields index-values from a slice, the new iterator yields the indexes of the slice,
-// if the original iterator yields key-values from a map, the new iterator yields the keys of the map.
+// For example:
+//  iterator := goiter.Slice([]string{"a", "b", "c"})       // iterator will yield (1, "a") (2, "b") (3, "c")
+//  newIterator := goiter.PickV1(iterator)                  // after calling PickV1, newIterator will yield 1 2 3
 func PickV1[TIter Seq2X[T1, T2], T1, T2 any](iterator TIter) Iterator[T1] {
     return Transform21(iterator, func(v1 T1, _ T2) T1 {
         return v1
@@ -14,8 +15,9 @@ func PickV1[TIter Seq2X[T1, T2], T1, T2 any](iterator TIter) Iterator[T1] {
 }
 
 // PickV2 returns an iterator that yields the second element of each 2-tuple provided by the input iterator.
-// So if the original iterator yields index-value tuples from a slice, the new iterator yields the values of the slice,
-// if the original iterator yields key-value tuples from a map, the new iterator yields the values of the map.
+// For example:
+//  iterator := goiter.Slice([]string{"a", "b", "c"})       // iterator will yield (1, "a") (2, "b") (3, "c")
+//  newIterator := goiter.PickV2(iterator)                  // after calling PickV2, newIterator will yield "a" "b" "c"
 func PickV2[TIter Seq2X[T1, T2], T1, T2 any](iterator TIter) Iterator[T2] {
     return Transform21(iterator, func(_ T1, v2 T2) T2 {
         return v2
@@ -23,6 +25,9 @@ func PickV2[TIter Seq2X[T1, T2], T1, T2 any](iterator TIter) Iterator[T2] {
 }
 
 // Swap returns an iterator that yields new 2-tuples by swapping the positions of the elements within each 2-Tuple provided by the input iterator.
+// For example:
+//  iterator := goiter.Slice([]string{"a", "b", "c"})       // iterator will yield (1, "a") (2, "b") (3, "c")
+//  newIterator := goiter.Swap(iterator)                    // after calling Swap, newIterator will yield ("a", 1) ("b", 2) ("c", 3)
 func Swap[TIter Seq2X[T1, T2], T1, T2 any](iterator TIter) Iterator2[T2, T1] {
     return Transform2(iterator, func(v1 T1, v2 T2) (T2, T1) {
         return v2, v1
@@ -30,6 +35,9 @@ func Swap[TIter Seq2X[T1, T2], T1, T2 any](iterator TIter) Iterator2[T2, T1] {
 }
 
 // Transform returns an iterator, it yields new values by applying the transformer function to each value provided by the input iterator.
+// For example:
+//  iterator := goiter.SliceElems([]int{1, 2, 3})               // iterator will yield 1 2 3
+//  newIterator := goiter.Transform(iterator, strconv.Itoa)     // after calling Transform, newIterator will yield "1" "2" "3"
 func Transform[TIter SeqX[T], TOut, T any](
     iterator TIter,
     transformer func(T) TOut,
@@ -50,7 +58,7 @@ func Transform[TIter SeqX[T], TOut, T any](
     }
 }
 
-// Transform2 is the Iterator2 version of Transform function.
+// Transform2 is the iter.Seq2 version of Transform function, it transforms each 2-tuple values from the input iterator and yields the transformed 2-tuple values.
 func Transform2[TIter Seq2X[T1, T2], TOut1, TOut2, T1, T2 any](
     iterator TIter,
     transformer func(T1, T2) (TOut1, TOut2),
@@ -71,7 +79,12 @@ func Transform2[TIter Seq2X[T1, T2], TOut1, TOut2, T1, T2 any](
     }
 }
 
-// Transform12 is similar to Transform, but it yields 2-tuple values after transformation instead of single-values.
+// Transform12 is similar to Transform, but it transforms each value from the input iterator to 2-tuple values.
+// For example:
+//  iterator := goiter.SliceElems([]string{"hello", "golang"})               // iterator will yield "hello" "golang"
+//  newIterator := goiter.Transform12(iterator, func(s string) (string, int) {
+//      return s, len(s)
+//  })     // after calling Transform12, newIterator will yield ("hello", 5) ("golang", 6)
 func Transform12[TIter SeqX[T], OutT1, OutT2, T any](
     iterator TIter,
     transformer func(T) (OutT1, OutT2),
@@ -92,7 +105,7 @@ func Transform12[TIter SeqX[T], OutT1, OutT2, T any](
     }
 }
 
-// Transform21 is similar to Transform2, but it only yields transform single-values instead of 2-tuple values
+// Transform21 is similar to Transform12, but it is reversed, it transforms each 2-tuple value from the input iterator to single-values.
 func Transform21[TIter Seq2X[T1, T2], TOut, T1, T2 any](
     iterator TIter,
     transformer func(T1, T2) TOut,
