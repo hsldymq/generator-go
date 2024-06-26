@@ -1,5 +1,3 @@
-//go:build goexperiment.rangefunc
-
 package goiter
 
 import "iter"
@@ -23,14 +21,16 @@ func Count2[TIter Seq2X[T1, T2], T1 any, T2 any](iterator TIter) int {
 }
 
 // Reduce is basically Reduce function in functional programming.
-// so you want to sum up 1 to 10, using Reduce, you can do it like this:
+// The following example uses Reduce to sum up the numbers from 1 to 10:
 //
-//	sum := goiter.Reduce(goiter.Range(0, 11), 0, func(acc, v int) int { return acc + v })
-func Reduce[TIter SeqX[T], Acc any, T any](
+//  sum := goiter.Reduce(goiter.Range(1, 10), 0, func(acc, v int) int {
+//      return acc + v
+// 	})
+func Reduce[TIter SeqX[T], TAcc any, T any](
     iterator TIter,
-    init Acc,
-    folder func(Acc, T) Acc,
-) Acc {
+    init TAcc,
+    folder func(TAcc, T) TAcc,
+) TAcc {
     var result = init
     for v := range iterator {
         result = folder(result, v)
@@ -38,14 +38,17 @@ func Reduce[TIter SeqX[T], Acc any, T any](
     return result
 }
 
-// Scan is similar to Reduce, but unlike Reduce, it reduces a complete sequence to a single value,
-// Scan returns an iterator that will yield the folded value of each round.
-func Scan[TIter SeqX[T], Acc any, T any](
+// Scan is similar to Reduce function, but it returns an iterator that will yield the reduced value of each round.
+// So, the following code will create an iterator that yields 1, 3, 6, 10, 15, 21, 28, 36, 45, 55, where each value is the sum of numbers from 1 to the current number.
+//  iterator := goiter.Scan(goiter.Range(1, 10), 0, func(acc, v int) int {
+//      return acc + v
+// 	})
+func Scan[TIter SeqX[T], TAcc any, T any](
     iterator TIter,
-    init Acc,
-    folder func(Acc, T) Acc,
-) Iterator[Acc] {
-    return func(yield func(Acc) bool) {
+    init TAcc,
+    folder func(TAcc, T) TAcc,
+) Iterator[TAcc] {
+    return func(yield func(TAcc) bool) {
         next, stop := iter.Pull(iter.Seq[T](iterator))
         defer stop()
 
