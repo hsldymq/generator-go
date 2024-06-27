@@ -4,6 +4,8 @@
 ![GitHub License](https://img.shields.io/github/license/hsldymq/goiter?color=blue)
 [![Test](https://github.com/hsldymq/goiter/actions/workflows/test.yml/badge.svg)](https://github.com/hsldymq/goiter/actions/workflows/test.yml)
 
+[中文](./README_zh-CN.md)
+
 This package provides a series of iterator creation functions for the range-over-func feature, simplifying the iterator creation logic for users in various common scenarios, such as transformation, filtering, aggregation, sorting, and more.
 
 # Why do we need this package?

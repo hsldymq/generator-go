@@ -4,6 +4,8 @@
 ![GitHub License](https://img.shields.io/github/license/hsldymq/goiter?color=blue)
 [![Test](https://github.com/hsldymq/goiter/actions/workflows/test.yml/badge.svg)](https://github.com/hsldymq/goiter/actions/workflows/test.yml)
 
+[English](./README.md)
+
 这个包针对range-over-func特性提供了一系列迭代器创建函数，简化使用者在各种常见场景下的迭代器创建逻辑, 例如转换、过滤、聚合、排序等。
 
 # 为什么要有这个包?
