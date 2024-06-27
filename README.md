@@ -141,7 +141,7 @@ type Cart struct {
     products []*Product
 }
 
-// The Checkout method demonstrates how to use the goiter Transform function to convert the data type in each iteration.
+// Checkout demonstrates how to use the goiter Transform function to convert data during iteration.
 func (c *Cart) Checkout() goiter.Iterator2[string, float64] {
     // This transformer function creates a new iterator. It converts each product from the source iterator into the corresponding product name and cost.
     return goiter.Transform12(goiter.SliceElems(c.products), func(p *Product) (string, float64) {

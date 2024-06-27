@@ -141,7 +141,7 @@ type Cart struct {
     products []*Product
 }
 
-// Checkout 方法演示了如何使用 goiter Transform 函数在每次迭代中转换数据类型
+// Checkout 方法演示了如何使用 goiter Transform 函数在迭代中对数据进行转换
 func (c *Cart) Checkout() goiter.Iterator2[string, float64] {
     // 这个转换器函数生成一个新的迭代器，它将源迭代器中输出的每个产品, 转换为对应的商品名称及金额
     return goiter.Transform12(goiter.SliceElems(c.products), func(p *Product) (string, float64) {
@@ -150,7 +150,7 @@ func (c *Cart) Checkout() goiter.Iterator2[string, float64] {
 }
 
 func PrintNamesAges(cart *Cart) {
-    // Checkout 隐藏了cart的内部细节，因此外部代码在遍历过程中只能拿到转换之后的数据
+    // 因此 Checkout 方法隐藏了Cart的内部细节，这样外部代码在遍历过程中只会拿到转换之后的数据
     for name, cost := range cart.Checkout() {
         fmt.Printf("The %s costs %.2f\n", name, cost)
     }
