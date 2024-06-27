@@ -52,7 +52,7 @@ func Cache[TIter SeqX[T], T any](it TIter) Iterator[T] {
     }
 }
 
-// Cache2 is Seq2 version of Cache.
+// Cache2 is iter.Seq2 version of Cache.
 func Cache2[TIter Seq2X[T1, T2], T1 any, T2 any](it TIter) Iterator2[T1, T2] {
     var cached []*Combined[T1, T2]
     var cacheFlag int32

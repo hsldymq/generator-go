@@ -96,6 +96,7 @@ func ZipAs[TIter1 SeqX[T1], TIter2 SeqX[T2], TOut, T1, T2 any](
 }
 
 // Concat returns an iterator that allows you to traverse multiple iterators in sequence.
+// So if iterator1 yields 1 2 3 and iterator2 yields 4 5 6, then goiter.Concat(iterator1, iterator2) will yield 1 2 3 4 5 6.
 func Concat[TIter SeqX[T], T any](
     iterator TIter,
     more ...TIter,
@@ -120,7 +121,7 @@ func Concat[TIter SeqX[T], T any](
     }
 }
 
-// Concat2 returns an iterator that allows you to traverse multiple iterators in sequence.
+// Concat2 is the iter.Seq2 version of Concat function.
 func Concat2[TIter Seq2X[T1, T2], T1 any, T2 any](
     iterator TIter,
     more ...TIter,

@@ -174,7 +174,7 @@ func Empty[T any]() Iterator[T] {
     }
 }
 
-// Empty2 is Iterator2 version of Empty
+// Empty2 is the iter.Seq2 version of Empty
 func Empty2[T1 any, T2 any]() Iterator2[T1, T2] {
     return func(yield func(T1, T2) bool) {
         return

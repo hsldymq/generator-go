@@ -25,7 +25,7 @@ func Filter[TIter SeqX[T], T any](
     }
 }
 
-// Filter2 returns an iterator that only yields the 2-tuples of the input iterator that satisfy the predicate.
+// Filter2 is the iter.Seq2 version of Filter function.
 func Filter2[TIter Seq2X[T1, T2], T1 any, T2 any](
     iterator TIter,
     predicate func(T1, T2) bool,
@@ -51,7 +51,7 @@ func Filter2[TIter Seq2X[T1, T2], T1 any, T2 any](
 // OfType returns an iterator that only yields the values of the input iterator that are of the specified type.
 // this is useful when you have an iterator that yields interfaces, and you want to filter them by their type.
 // For example:
-//  iterator := goiter.Items[any](1, "hello", true, 3, "world")     // iterator will yield 1 "hello" true 3 "world"
+//  iterator := goiter.Items[any](1, "hello", true, 3, "world")     // iterator yields 1 "hello" true 3 "world"
 //  newIterator := goiter.OfType[int](iterator)                     // after calling OfType, newIterator will only yield 1 3
 func OfType[U any, TIter SeqX[T], T any](
     iterator TIter,
@@ -443,7 +443,7 @@ func DistinctV1[TIter Seq2X[T1, T2], T1 comparable, T2 any](iterator TIter) Iter
     }
 }
 
-// DistinctV2 is similar to DistinctV1, but it deduplicates by the second element of the 2-tuple.
+// DistinctV2 is similar to DistinctV1 function, but it deduplicates by the second element of the 2-tuple.
 // Note: if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func DistinctV2[TIter Seq2X[T1, T2], T1 any, T2 comparable](iterator TIter) Iterator2[T1, T2] {
     return func(yield func(T1, T2) bool) {
@@ -492,7 +492,7 @@ func DistinctBy[TIter SeqX[T], T any, K comparable](
     }
 }
 
-// Distinct2By is an Iterator2 version of DistinctBy.
+// Distinct2By is the iter.Seq2 version of DistinctBy function.
 // Note: if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func Distinct2By[TIter Seq2X[T1, T2], T1 any, T2 any, K comparable](
     iterator TIter,

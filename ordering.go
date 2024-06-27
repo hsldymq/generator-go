@@ -89,7 +89,7 @@ func OrderBy[TIter SeqX[T], T any](
     return doOrderBy(iterator, cmp, slices.SortFunc[[]T, T])
 }
 
-// Order2By is the Iterator2 version of OrderBy.
+// Order2By is the iter.Seq2 version of OrderBy.
 // Note: if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func Order2By[TIter Seq2X[T1, T2], T1, T2 any](
     iterator TIter,

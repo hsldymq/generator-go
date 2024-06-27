@@ -161,7 +161,7 @@ func Sequence[T any](generator func() (T, bool)) Iterator[T] {
     }
 }
 
-// Sequence2 is the Iterator2 version of Sequence function.
+// Sequence2 is the iter.Seq2 version of Sequence function.
 func Sequence2[T1, T2 any](generator func() (T1, T2, bool)) Iterator2[T1, T2] {
     return func(yield func(T1, T2) bool) {
         for {
@@ -177,6 +177,8 @@ func Sequence2[T1, T2 any](generator func() (T1, T2, bool)) Iterator2[T1, T2] {
 }
 
 // Reverse returns an iterator that yields the values of the input iterator in reverse order.
+// So if the input iterator yields "a" "b" "c", then goiter.Reverse(iterator) will yield "c" "b" "a".
+//
 // be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func Reverse[TIter SeqX[T], T any](iterator TIter) Iterator[T] {
     return func(yield func(T) bool) {
@@ -198,7 +200,7 @@ func Reverse[TIter SeqX[T], T any](iterator TIter) Iterator[T] {
     }
 }
 
-// Reverse2 is the Iterator2 version of Reverse function.
+// Reverse2 is the iter.Seq2 version of Reverse function.
 // be careful, if this function is used on iterators that has massive amount of data, it might consume a lot of memory.
 func Reverse2[TIter Seq2X[T1, T2], T1, T2 any](iterator TIter) Iterator2[T1, T2] {
     return func(yield func(T1, T2) bool) {
