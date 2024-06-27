@@ -65,3 +65,11 @@ func (it Iterator[T]) Through(f func(T) T) Iterator[T] {
 func (it Iterator[T]) Cache() Iterator[T] {
     return Cache(it)
 }
+
+func (it Iterator[T]) Once() Iterator[T] {
+    return Once(it)
+}
+
+func (it Iterator[T]) FinishOnce() Iterator[T] {
+    return FinishOnce(it)
+}

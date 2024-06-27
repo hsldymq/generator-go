@@ -29,7 +29,7 @@ func TestOnce(t *testing.T) {
     }
 
     // case 2
-    iterator = Once(SliceElems(input))
+    iterator = SliceElems(input).Once()
     actual = make([]int, 0)
     for v := range iterator {
         actual = append(actual, v)
@@ -94,7 +94,7 @@ func TestOnce2(t *testing.T) {
     }
 
     // case 2
-    iterator = Once2(Slice(input))
+    iterator = Slice(input).Once()
     actual = make([]int, 0)
     for _, v := range iterator {
         actual = append(actual, v)
@@ -162,7 +162,7 @@ func TestFinishOnce(t *testing.T) {
     }
 
     // case 2
-    iterator = FinishOnce(SliceElems(input))
+    iterator = SliceElems(input).FinishOnce()
     actual = make([]int, 0)
     for v := range iterator {
         actual = append(actual, v)
@@ -236,7 +236,7 @@ func TestFinishOnce2(t *testing.T) {
     }
 
     // case 2
-    iterator = FinishOnce2(Slice(input))
+    iterator = Slice(input).FinishOnce()
     actual = make([]int, 0)
     for _, v := range iterator {
         actual = append(actual, v)

@@ -71,3 +71,11 @@ func (it Iterator2[T1, T2]) Through(f func(T1, T2) (T1, T2)) Iterator2[T1, T2] {
 func (it Iterator2[T1, T2]) Cache() Iterator2[T1, T2] {
     return Cache2(it)
 }
+
+func (it Iterator2[T1, T2]) Once() Iterator2[T1, T2] {
+    return Once2(it)
+}
+
+func (it Iterator2[T1, T2]) FinishOnce() Iterator2[T1, T2] {
+    return FinishOnce2(it)
+}
