@@ -80,6 +80,7 @@ func RangeDemo() {
     }
     fmt.Println()
 
+    // RangeStep function allows you to specify a step value as the third parameter
     // This will print 0 2 4 6 8 10
     for v := range goiter.RangeStep(0, 10, 2) {
         fmt.Printf("%d ", v)
