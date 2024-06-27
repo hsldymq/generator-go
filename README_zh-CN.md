@@ -157,7 +157,7 @@ func PrintNamesAges(cart *Cart) {
 }
 ```
 
-### 实例4: 过滤
+### 示例4: 过滤
 ```go
 package example4
 
@@ -166,7 +166,7 @@ import (
     "github.com/hsldymq/goiter"
 )
 
-// 这个实例演示了使用 goiter.Filter 函数过滤迭代器中的元素
+// 这个示例演示了使用 goiter.Filter 函数过滤迭代器中的元素
 func FilterDemo() {
     input := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
     iterator := goiter.SliceElems(input).Filter(func(v int) bool {
@@ -178,7 +178,7 @@ func FilterDemo() {
     }
 }
 
-// 这个实例演示了使用 goiter.Distinct 函数去重迭代器中的元素
+// 这个示例演示了使用 goiter.Distinct 函数去重迭代器中的元素
 func DistinctDemo() {
     input := []int{1, 2, 3, 3, 2, 1}
     // 这个循环会打印出 1 2 3
