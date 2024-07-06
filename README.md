@@ -224,88 +224,88 @@ Additionally, some functions have the suffix V1 or V2 in their names. These func
 The comments at the function definitions include simple examples to help you better understand how to use these functions.
 
 ### transformation
-* `goiter.PickV1`
-* `goiter.PickV2`
-* `goiter.Swap`
-* `goiter.Transform`
-* `goiter.Transform2`
-* `goiter.Transform12`
-* `goiter.Transform21`
+* `PickV1`
+* `PickV2`
+* `Swap`
+* `Transform`
+* `Transform2`
+* `Transform12`
+* `Transform21`
 
 ### aggregation
-* `goiter.Count`
-* `goiter.Count2`
-* `goiter.Reduce`
-* `goiter.Scan`
+* `Count`
+* `Count2`
+* `Reduce`
+* `Scan`
 
 ### sequence
-* `goiter.Range`
-* `goiter.RangeStep`
-* `goiter.RangeTime`
-* `goiter.Counter`
-* `goiter.Sequence`
-* `goiter.Sequence2`
-* `goiter.Reverse`
-* `goiter.Reverse2`
+* `Range`
+* `RangeStep`
+* `RangeTime`
+* `Counter`
+* `Sequence`
+* `Sequence2`
+* `Reverse`
+* `Reverse2`
 
 ### combining
-* `goiter.Combine`
-* `goiter.Zip`
-* `goiter.ZipAs`
-* `goiter.Concat`
-* `goiter.Concat2`
+* `Combine`
+* `Zip`
+* `ZipAs`
+* `Concat`
+* `Concat2`
 
 ### filtering
-* `goiter.Filter`
-* `goiter.Filter2`
-* `goiter.OfType`
-* `goiter.Take`
-* `goiter.Take2`
-* `goiter.TakeLast`
-* `goiter.TakeLast2`
-* `goiter.Skip`
-* `goiter.Skip2`
-* `goiter.SkipLast`
-* `goiter.SkipLast2`
-* `goiter.Distinct`
-* `goiter.DistinctV1`
-* `goiter.DistinctV2`
-* `goiter.DistinctBy`
-* `goiter.Distinct2By`
+* `Filter`
+* `Filter2`
+* `OfType`
+* `Take`
+* `Take2`
+* `TakeLast`
+* `TakeLast2`
+* `Skip`
+* `Skip2`
+* `SkipLast`
+* `SkipLast2`
+* `Distinct`
+* `DistinctV1`
+* `DistinctV2`
+* `DistinctBy`
+* `Distinct2By`
 
 ### ordering
-* `goiter.Order`
-* `goiter.OrderBy`
-* `goiter.Order2V1`
-* `goiter.Order2V2`
-* `goiter.Order2By`
-* `goiter.StableOrderBy`
-* `goiter.StableOrder2By`
+* `Order`
+* `OrderBy`
+* `Order2V1`
+* `Order2V2`
+* `Order2By`
+* `StableOrderBy`
+* `StableOrder2By`
 
 ### unrepeatable iterator
-* `goiter.Once`
-* `goiter.Once2`
-* `goiter.FinishOnce`
-* `goiter.FinishOnce2`
+* `Once`
+* `Once2`
+* `FinishOnce`
+* `FinishOnce2`
 
 ### Creating iterators from sources
-* `goiter.Items`
-* `goiter.Slice`
-* `goiter.SliceElems`
-* `goiter.SliceSource`
-* `goiter.SliceSourceElems`
-* `goiter.Map`
-* `goiter.MapVals`
-* `goiter.MapKeys`
-* `goiter.MapSource`
-* `goiter.MapSourceVals`
-* `goiter.MapSourceKeys`
-* `goiter.Chan`
-* `goiter.ChanSource`
-* `goiter.SeqSource`
-* `goiter.Seq2Source`
-* `goiter.Empty`
-* `goiter.Empty2`
+* `Items`
+* `Slice`
+* `SliceElems`
+* `SliceSource`
+* `SliceSourceElems`
+* `Map`
+* `MapVals`
+* `MapKeys`
+* `MapSource`
+* `MapSourceVals`
+* `MapSourceKeys`
+* `Chan`
+* `ChanSource`
+* `SeqSource`
+* `Seq2Source`
+* `Empty`
+* `Empty2`
 
 # Method chaining
 Many of the functions listed above return an iterator of type goiter.Iterator[T] (or goiter.Iterator2[T1, T2]).
