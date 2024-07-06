@@ -241,7 +241,6 @@ func Demo() {
 ### 序列生成
 * `Range`
 * `RangeStep`
-* `RangeTime`
 * `Counter`
 * `Sequence`
 * `Sequence2`

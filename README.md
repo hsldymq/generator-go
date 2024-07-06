@@ -241,7 +241,6 @@ The comments at the function definitions include simple examples to help you bet
 ### sequence
 * `Range`
 * `RangeStep`
-* `RangeTime`
 * `Counter`
 * `Sequence`
 * `Sequence2`
