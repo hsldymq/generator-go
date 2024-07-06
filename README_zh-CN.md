@@ -214,7 +214,7 @@ func Demo() {
 }
 ```
 
-# List of goiter functions
+# goiter 函数列表
 以下是goiter所提供的函数.
 
 如你所见, 有些函数提供了两个版本, 例如 `Filter` 和 `Filter2`, `Take` 和 `Take2`,  这些函数各自用于`iter.Seq`或`iter.Seq2`这两种版本的迭代器.
@@ -224,88 +224,88 @@ func Demo() {
 函数定义处的注释包含了简单的示例,以帮助你更好地理解如何使用这些函数.
 
 ### 数据转换
-* `goiter.PickV1`
-* `goiter.PickV2`
-* `goiter.Swap`
-* `goiter.Transform`
-* `goiter.Transform2`
-* `goiter.Transform12`
-* `goiter.Transform21`
+* `PickV1`
+* `PickV2`
+* `Swap`
+* `Transform`
+* `Transform2`
+* `Transform12`
+* `Transform21`
 
 ### 聚合
-* `goiter.Count`
-* `goiter.Count2`
-* `goiter.Reduce`
-* `goiter.Scan`
+* `Count`
+* `Count2`
+* `Reduce`
+* `Scan`
 
 ### 序列生成
-* `goiter.Range`
-* `goiter.RangeStep`
-* `goiter.RangeTime`
-* `goiter.Counter`
-* `goiter.Sequence`
-* `goiter.Sequence2`
-* `goiter.Reverse`
-* `goiter.Reverse2`
+* `Range`
+* `RangeStep`
+* `RangeTime`
+* `Counter`
+* `Sequence`
+* `Sequence2`
+* `Reverse`
+* `Reverse2`
 
 ### 组合
-* `goiter.Combine`
-* `goiter.Zip`
-* `goiter.ZipAs`
-* `goiter.Concat`
-* `goiter.Concat2`
+* `Combine`
+* `Zip`
+* `ZipAs`
+* `Concat`
+* `Concat2`
 
 ### 过滤
-* `goiter.Filter`
-* `goiter.Filter2`
-* `goiter.OfType`
-* `goiter.Take`
-* `goiter.Take2`
-* `goiter.TakeLast`
-* `goiter.TakeLast2`
-* `goiter.Skip`
-* `goiter.Skip2`
-* `goiter.SkipLast`
-* `goiter.SkipLast2`
-* `goiter.Distinct`
-* `goiter.DistinctV1`
-* `goiter.DistinctV2`
-* `goiter.DistinctBy`
-* `goiter.Distinct2By`
+* `Filter`
+* `Filter2`
+* `OfType`
+* `Take`
+* `Take2`
+* `TakeLast`
+* `TakeLast2`
+* `Skip`
+* `Skip2`
+* `SkipLast`
+* `SkipLast2`
+* `Distinct`
+* `DistinctV1`
+* `DistinctV2`
+* `DistinctBy`
+* `Distinct2By`
 
 ### 排序
-* `goiter.Order`
-* `goiter.OrderBy`
-* `goiter.Order2V1`
-* `goiter.Order2V2`
-* `goiter.Order2By`
-* `goiter.StableOrderBy`
-* `goiter.StableOrder2By`
+* `Order`
+* `OrderBy`
+* `Order2V1`
+* `Order2V2`
+* `Order2By`
+* `StableOrderBy`
+* `StableOrder2By`
 
 ### 不可重读迭代器
-* `goiter.Once`
-* `goiter.Once2`
-* `goiter.FinishOnce`
-* `goiter.FinishOnce2`
+* `Once`
+* `Once2`
+* `FinishOnce`
+* `FinishOnce2`
 
 ### 从数据源创建迭代器
-* `goiter.Items`
-* `goiter.Slice`
-* `goiter.SliceElems`
-* `goiter.SliceSource`
-* `goiter.SliceSourceElems`
-* `goiter.Map`
-* `goiter.MapVals`
-* `goiter.MapKeys`
-* `goiter.MapSource`
-* `goiter.MapSourceVals`
-* `goiter.MapSourceKeys`
-* `goiter.Chan`
-* `goiter.ChanSource`
-* `goiter.SeqSource`
-* `goiter.Seq2Source`
-* `goiter.Empty`
-* `goiter.Empty2`
+* `Items`
+* `Slice`
+* `SliceElems`
+* `SliceSource`
+* `SliceSourceElems`
+* `Map`
+* `MapVals`
+* `MapKeys`
+* `MapSource`
+* `MapSourceVals`
+* `MapSourceKeys`
+* `Chan`
+* `ChanSource`
+* `SeqSource`
+* `Seq2Source`
+* `Empty`
+* `Empty2`
 
 # 链式调用
 上面列出的很多函数返回的迭代器类型是 goiter.Iterator[T] (或者 goiter.Iterator2[T1, T2]). 
