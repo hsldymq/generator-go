@@ -299,8 +299,6 @@ The comments at the function definitions include simple examples to help you bet
 * `MapSource`
 * `MapSourceVals`
 * `MapSourceKeys`
-* `Chan`
-* `ChanSource`
 * `SeqSource`
 * `Seq2Source`
 * `Empty`

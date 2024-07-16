@@ -299,8 +299,6 @@ func Demo() {
 * `MapSource`
 * `MapSourceVals`
 * `MapSourceKeys`
-* `Chan`
-* `ChanSource`
 * `SeqSource`
 * `Seq2Source`
 * `Empty`

@@ -117,24 +117,6 @@ func MapSourceVals[K comparable, V any](source SourceFunc[map[K]V]) Iterator[V] 
     }
 }
 
-// Chan yields the values from a channel, it will stop when the channel is closed.
-func Chan[T any](c <-chan T) Iterator[T] {
-    return ChanSource(func() <-chan T { return c })
-}
-
-// ChanSource is like Chan function, it serves similar purposes as SliceSource.
-// See comments of SliceSource function for more details.
-func ChanSource[T any](source SourceFunc[<-chan T]) Iterator[T] {
-    return func(yield func(T) bool) {
-        c := source()
-        for v := range c {
-            if !yield(v) {
-                return
-            }
-        }
-    }
-}
-
 // SeqSource serves similar purposes as SliceSource, the difference is that the SourceFunc returns an iter.Seq-like iterator.
 // See comments of SliceSource function for more details.
 func SeqSource[TIter SeqX[T], T any](source SourceFunc[TIter]) Iterator[T] {
