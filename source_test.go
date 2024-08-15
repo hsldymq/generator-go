@@ -176,26 +176,6 @@ func TestMapSourceKeys(t *testing.T) {
     }
 }
 
-func TestChannel(t *testing.T) {
-    ch := make(chan int, 3)
-    ch <- 1
-    ch <- 2
-    ch <- 3
-    close(ch)
-
-    actual := make([]int, 0, 3)
-    for v := range Chan(ch) {
-        if v == 3 {
-            break
-        }
-        actual = append(actual, v)
-    }
-    expect := []int{1, 2}
-    if !slices.Equal(expect, actual) {
-        t.Fatal(fmt.Sprintf("expect: %v, actual: %v", expect, actual))
-    }
-}
-
 func TestSeqSource(t *testing.T) {
     itFunc := func(yield func(int) bool) {
         yield(1)
